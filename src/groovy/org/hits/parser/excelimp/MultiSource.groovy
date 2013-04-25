@@ -88,8 +88,8 @@ class MultiSource implements Source{
         }
     }
     
-    def traverse(action){ //how this is done depends on the action. actually quite fundamentally different ways of calling them
-        println "traversing..." 
+        def traverse(action){ //how this is done depends on the action. actually quite fundamentally different ways of calling them
+        println "multi source traversing..." 
         println sourceType
         if (sourceType==SourceType.CONCAT){ //not all sources need to be of the same dimensions, but does 
          def cells=[]                           //the best it can until it runs out of cells in all sources
@@ -133,11 +133,13 @@ class MultiSource implements Source{
             }
             cellLists<<cellList
 
-            }   
+            }
+             println "finish sources cellLists"   
+             
             action.call(cellLists)
         }
         
-    
+     println "finish multi source traversing"
     }
     
    def getFirstRow(){

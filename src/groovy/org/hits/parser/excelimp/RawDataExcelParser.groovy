@@ -166,26 +166,29 @@ class RawDataExcelParser implements Parser{
     }
     
     def parseCell(Cell cell){
-
-        switch (cell.getCellType()) {
-        case cell.CELL_TYPE_STRING :
-            return cell.getStringCellValue()
-        case cell.CELL_TYPE_NUMERIC :
-            return cell.getNumericCellValue()
-        case cell.CELL_TYPE_BOOLEAN :
-            return cell.getBooleanCellValue()
-        case cell.CELL_TYPE_FORMULA :
-            return cell.getCellFormula()
-        case cell.CELL_TYPE_ERROR :
-            return cell.getErrorCellValue()
-        case cell.CELL_TYPE_BLANK:
-            blankcells = true
-            // defaultErrorHandler(cell)
-            //cell.setCellStyle(colourCell)
-            return ""
+     println"rawdata $cell"
+     if(cell){
+            switch (cell.getCellType()) {
+            case cell.CELL_TYPE_STRING :
+                return cell.getStringCellValue()
+            case cell.CELL_TYPE_NUMERIC :
+                return cell.getNumericCellValue()
+            case cell.CELL_TYPE_BOOLEAN :
+                return cell.getBooleanCellValue()
+            case cell.CELL_TYPE_FORMULA :
+                return cell.getCellFormula()
+            case cell.CELL_TYPE_ERROR :
+                return cell.getErrorCellValue()
+            case cell.CELL_TYPE_BLANK:
+                blankcells = true
+                // defaultErrorHandler(cell)
+                //cell.setCellStyle(colourCell)
+                return ""
            
-        }
-  
+            }
+     }else{
+        return "" 
+     }
     }
     
     def doAction={cells->
@@ -209,7 +212,7 @@ class RawDataExcelParser implements Parser{
    
     def matchLaneAndCopy={List cellLists ->
         //we assume we have done the 
-        println cellLists
+        println "copy $cellLists"
         def bandNumList=cellLists[2]  //we know the position of each of the cellLists from the ordering of sources in the bootstrap.
         // otherwise it would be good to make use of the "knowledge" in Lei's templates.
         
@@ -225,6 +228,7 @@ class RawDataExcelParser implements Parser{
         
         bandSet.eachWithIndex{it,n -> 
             // first check for dupes
+            
             def dupIt=0
             def headerIt = headerRow.cellIterator()
             while (headerIt.hasNext()){
@@ -238,7 +242,7 @@ class RawDataExcelParser implements Parser{
             }
             
             Cell headerCell = headerRow.getCell(target.firstColumn+n)?:headerRow.createCell(target.firstColumn+n)
-            println dupIt
+            println "band $dupIt"
             def headerLabel= dupIt>0?"$dataName-${it}($dupIt)":"$dataName-${it}"
             headerCell.setCellValue(headerLabel)
         }
@@ -247,28 +251,87 @@ class RawDataExcelParser implements Parser{
         
         
         dataList.eachWithIndex{dataCell,n->
-            
-            if (dataCell!=null){
+                    println "dataCell $dataCell n $n"
+            if (dataCell!=null && indexList[n]!=null && bandNumList[n]!=null){
                 log.info "valid dataCell"
                 def data = parseCell(dataCell)
                 
                 def laneNumber = parseCell(indexList[n]).tokenize().get(1) as int
                 def colNumber = parseCell(bandNumList[n])-1 as int
-            
+                  println "laneNumber $laneNumber  colNumber $colNumber"
                 Row row = target.sheet.getRow(target.firstRow-1+laneNumber)?:target.sheet.createRow(target.firstRow-1+laneNumber)
                 Cell cell = row.getCell(target.firstColumn+colNumber)?:row.createCell(target.firstColumn+colNumber)
                 cell.setCellValue(data)
             }
         }
+        println "finish copy"
     }
     
     // new strategy get the lane and name from the loading sheet, 
     
+    //    def matchAndSplit={List cellLists-> 
+    //        //format for first cellLi
+    //        println "cellLists $cellLists"
+    //        def matchLists=cellLists[0]
+    //        println "matchLists $matchLists"
+    //        def times=[] 
+    //        def doses=[] 
+    //        def inhibitors=[]
+    //        cellLists[2].each{times<<"${parseCell(it)}"}
+    //        // print "times $times"
+    //        cellLists[3].each{doses<<"${parseCell(it)}"}
+    //        
+    //        if(cellLists[4]){
+    //            cellLists[4].each{inhibitors<<"${parseCell(it)}"}
+    //        }else{
+    //          inhibitors<<"n/a"
+    //        }
+    //        //cellLists[1].each{times<<"${parseCell(it)}"}
+    //        
+    //        def cellNames = []
+    //        cellLists[1].each{cellNames<<parseCell(it)}
+    //        // cellLists[2].each{cellNames<<parseCell(it)}
+    //        println "cellNames $cellNames"
+    //        def stimuli=["+","-"] // the two kinds of stimulus markers we have
+    //        
+    //        for (int i=0;i<matchLists.size();i=i+2){
+    //            def thisRowCells=[]
+    //           
+    //            def laneNumber=parseCell(matchLists.get(i)) as int //lane number
+    //            //  println "matchLists.get $i = ${matchLists.get(i)} -> $laneNumber"
+    //            def cellLabel=parseCell(matchLists.get(i+1))   //cellLabel 60.0 primary mouse hepatocytes 1.0 inhibitor
+    //            thisRowCells<< times.find{it=="${cellLabel.split(" ")[0]}"} //need that space so that we don't match all to 0.0
+    //            
+    //            thisRowCells<< doses.find{it=="${cellLabel.split(" ")[-2]}"}
+    //            
+    //            thisRowCells<< inhibitors.find{it=="${cellLabel.split(" ")[-1]}"}
+    //            
+    //            thisRowCells<< cellNames.findAll{cellLabel.contains(it)}.max{it.length()}             
+    //            thisRowCells<< stimuli.find{ cellLabel.contains(" $it")}?:""
+    //            // println "thisRowCells $thisRowCells"
+    //            // now write each of them for each row
+    //            Row row=target.sheet.getRow(target.firstRow-1+laneNumber)
+    //            if(row==null){
+    //                row=target.sheet.createRow(target.firstRow-1+laneNumber)
+    //            }
+    //            def indexCell=row.getCell(target.firstColumn)?:row.createCell(target.firstColumn) //set the lane numbers
+    //            indexCell.setCellValue("$laneNumber")
+    //            thisRowCells.eachWithIndex{cellValue,m->
+    //                Cell targetCell = row.getCell(target.firstColumn+1+m)?:row.createCell(target.firstColumn+1+m)
+    //                targetCell.setCellValue(cellValue)
+    //                  
+    //            }
+    //     
+    //        }
+    //         
+    //          
+    //    }
+       
     def matchAndSplit={List cellLists-> 
         //format for first cellLi
-        println "cellLists $cellLists"
+        println "rawdata parser cellLists $cellLists"
         def matchLists=cellLists[0]
-        println "matchLists $matchLists"
+        println "rawdata parser matchLists $matchLists"
         def times=[] 
         def doses=[] 
         def inhibitors=[]
@@ -279,7 +342,7 @@ class RawDataExcelParser implements Parser{
         if(cellLists[4]){
             cellLists[4].each{inhibitors<<"${parseCell(it)}"}
         }else{
-          inhibitors<<"n/a"
+            inhibitors<<"n/a"
         }
         //cellLists[1].each{times<<"${parseCell(it)}"}
         
@@ -296,21 +359,21 @@ class RawDataExcelParser implements Parser{
             //  println "matchLists.get $i = ${matchLists.get(i)} -> $laneNumber"
             def cellLabel=parseCell(matchLists.get(i+1))   //cellLabel 60.0 primary mouse hepatocytes 1.0 inhibitor
             thisRowCells<< times.find{it=="${cellLabel.split(" ")[0]}"} //need that space so that we don't match all to 0.0
-             if(cellLabel.split(" ")[-1]=="+" ||cellLabel.split(" ")[-1]=="-"){
+            if(cellLabel.split(" ")[-1]=="+" ||cellLabel.split(" ")[-1]=="-"){
                 stimulipos=1
             }
             if(!cellLists[4] & cellLabel.split(" ")[-1-stimulipos]!="n/a"){  //only for dirty experiments
                 
-                    thisRowCells<< doses.find{it=="${cellLabel.split(" ")[-1-stimulipos]}"}
+                thisRowCells<< doses.find{it=="${cellLabel.split(" ")[-1-stimulipos]}"}
             
-            thisRowCells<< "n/a"
+                thisRowCells<< "n/a"
             
             }else{
                
             
-            thisRowCells<< doses.find{it=="${cellLabel.split(" ")[-2-stimulipos]}"}
+                thisRowCells<< doses.find{it=="${cellLabel.split(" ")[-2-stimulipos]}"}
             
-            thisRowCells<< inhibitors.find{it=="${cellLabel.split(" ")[-1-stimulipos]}"}
+                thisRowCells<< inhibitors.find{it=="${cellLabel.split(" ")[-1-stimulipos]}"}
             }
             
             thisRowCells<< cellNames.findAll{cellLabel.contains(it)}.max{it.length()}             
@@ -334,7 +397,6 @@ class RawDataExcelParser implements Parser{
           
     }
     
-    
     def outerProductMatch={List cellLists ->  //flattens to one column //we use this closure to set up the cells/time/lanenumber/stimulation columns in the sheet, problem is with stimulation
         //Sheet targetSheet=target.sheet
         //first two lists  
@@ -348,11 +410,11 @@ class RawDataExcelParser implements Parser{
             nameToLaneMap.putAt((name), "n/a")
         }
           
-        println nameToLaneMap
+        println "rawdata outerProduct match" nameToLaneMap
         //all remaining lists we do the combos stuff with
         def allcombos=cellLists[1..-1].combinations()
          
-        println "allcombos $allcombos"
+        println "rawdata outerProduct match allcombos $allcombos"
           
         allcombos.eachWithIndex{it,n->
              

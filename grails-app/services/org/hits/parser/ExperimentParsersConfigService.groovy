@@ -30,9 +30,6 @@ import org.hits.ui.Resource
 import org.hits.ui.KnowledgeFetcher
 
 class ExperimentParsersConfigService {
-    static INNERRAWDATATEMPLATENAME="rawdata_template.xls"
-    static INNERLOADINGTEMPLATENAME="laneloading_template_inner.xls"
-    static INNERGELINSPECTORTEMPLATENAME="gelInspectorTemplate_inner.xls"
     
     def delete(Experiment experiment){
         def configs=ExperimentToParserDef.findAllByExperiment(experiment)
@@ -42,27 +39,6 @@ class ExperimentParsersConfigService {
         
         
     }
-    def defaultConfig(Experiment experiment){
-        
-        if(!experiment.stages){
-            def setUpTemplate=Template.findByTemplateName(experiment.setUpTemplateName)
-            def setUpStage=new Stage(stageIndex:1, stageName:'setup', stageTemplate:setUpTemplate) 
-        
-            def loadingTemplate=Template.findByTemplateName(INNERLOADINGTEMPLATENAME)
-            def rawDataTemplate= Template.findByTemplateName(INNERRAWDATATEMPLATENAME) 
-            def gelInspectorTemplate= Template.findByTemplateName(INNERGELINSPECTORTEMPLATENAME)   
-            def loadingStage=new Stage(stageIndex:2, stageName:'loading', stageTemplate:loadingTemplate)
-            def rawdataStage=new Stage(stageIndex:3, stageName:'rawdata', stageTemplate:rawDataTemplate)      
-            def gelInspectorStage=new Stage(stageIndex:4, stageName:'gelInspector', stageTemplate:gelInspectorTemplate)
-            experiment.addToStages(setUpStage)
-            experiment.addToStages(loadingStage)
-            experiment.addToStages(rawdataStage)
-            experiment.addToStages(gelInspectorStage)  
-            experiment.save(failOnError: true)          
-        }
-        config(experiment)
-    }
-    
     def config(Experiment experiment) {
         //
         println "start config parsers for such experiment $experiment.id"

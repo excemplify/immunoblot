@@ -28,6 +28,7 @@ import groovy.util.Eval
 import org.hits.parser.core.*
 import org.hits.parser.excelimp.*
 import org.hits.ui.Template
+import org.hits.ui.TemplateToParserDef
 import org.hits.ui.Experiment
 import org.hits.ui.ExperimentToParserDef
 import org.hits.ui.exceptions.RuleViolateException

@@ -5,6 +5,7 @@ class Stage {
     int stageIndex
     String stageName
     Template stageTemplate
+
     static constraints = {
      stageName(inList:["setup","loading","rawdata","rawdatatext","gelInspector"])
     }
