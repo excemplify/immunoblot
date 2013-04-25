@@ -1,0 +1,41 @@
+package org.hits.parser
+
+import org.hits.parser.core.*
+import org.hits.parser.excelimp.*
+
+class ParserConfigService {
+
+    def addParserConfig(List<Map> sources, String action, Map target, String name, String parserType){
+        ParserDef pdef = ParserDef.findByName(name)?:new ParserDef(name:name)
+        def sourceDefList=[]
+        sources.each{
+            sourceDefList<<createSourceDef(it)
+        }
+        def targetDef = createTargetDef(target)
+        ParserConfiguration pconfig = new ParserConfiguration(sources:sourceDefList,action:action,
+            target:targetDef, name:name, parserType:"ImmunoExcelParser")
+        pdef.parserConfigurations.add(pconfig).save(failOnError: true)
+    }
+    
+    def getListParserTypes(){
+        return ["ImmunoExcelParser"]
+    }
+    
+    def saveFileAsTargetTemplate(File filename,String templateName){
+        TemplateFile template = new TemplateFile(name:filename, binaryData:filename.getBytes()).save(failOnError:true)
+    }
+    
+    private SourceDef createSourceDef(Map params){
+        SourceDef sdef = new SourceDef("cellRange":params.cellRange,"sheetNum":params.sheetNum,"sourceType":params.sourceType)
+        return sdef
+    }
+    
+   
+    
+    private Target createTargetDef(Map params){
+//        ExcelTemplate template = ExcelTemplate.findByName(params.templateName)
+//        TargetDef tdef = new TargetDef(cellRange:params.cellRange, sheetNum:params.sheetNum, template:template )
+    }
+    
+    
+}

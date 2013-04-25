@@ -1,0 +1,13 @@
+<ul>
+	<li>
+		<a href="#">Menu</a>
+		<ul>
+<!--			<li><a onclick="sheetInstance.newSheet(); return false;" title="Creates a new spreadsheet.">New</a></li>-->
+			 <li> <a id="openSheet" onclick="javascript:document.getElementById('myFile').click()" title="Open a source spreadsheet file.">Open File</a></li>
+<!--                         <li><a id="updateTemplate" onclick="openExistTemplate()" title="Open an existing template" >Open Template</a></li>-->
+			<li><a id="saveSheet" onclick="saveTemplate()" title="Save the current spreadsheet with instructions (template).">Save Template</a></li>
+			<li><a onclick="sheetInstance.s.fnClose(); return false;" title="Close the current spreadsheet without saving.">Close</a></li>
+		</ul>
+	</li>
+
+</ul>
