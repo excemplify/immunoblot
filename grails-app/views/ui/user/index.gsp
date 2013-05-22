@@ -585,8 +585,8 @@ ${remoteFunction(controller:'experiment', action:'stopShareExperiment',  params:
     <h5><a href="#section3">Template Library</a></h5>
     <div id="updateTemplate" style=" max-height: 350px; overflow:  auto" >
 
-      <g:render template="/ui/user/template" model="['templateInstanceList': Template?.findAll('from Template as b where b.type =:templateType',[templateType:'public']), 'templateInstanceTotal': Template?.findAll('from Template as b where b.type =:templateType',[templateType:'public']).size(), params:params]"/>
-    </div>
+      <g:render template="/ui/user/template" model="['templateInstanceList': Template?.findAll('from Template as b where b.type =:templateType and b.visible=:visibility',[templateType:'public', visibility:true]), 'templateInstanceTotal': Template?.findAll('from Template as b where b.type =:templateType and b.visible=:visibility',[templateType:'public', visibility:true]).size(), params:params]"/>
+  </div>
   </div>
   <div class="hiddencontent">
     <div id="dialog-form" title="Initialize A New Experiment" >
@@ -617,7 +617,7 @@ ${remoteFunction(controller:'experiment', action:'stopShareExperiment',  params:
           </td>
         </tr>
         <tr><td>
-        <g:render template="/ui/user/templateSelec" model="['templateInstanceList': Template?.findAll('from Template as b where b.type =:templateType and b.purpose=:purpose', [templateType:'public', purpose:'setup']), 'templateLoadingInstanceList': Template?.findAll('from Template as b where b.type =:templateType and b.purpose=:purpose', [templateType:'public', purpose:'loading']),'templateRawDataInstanceList': Template?.findAll('from Template as b where b.type =:templateType and b.purpose=:purpose', [templateType:'public', purpose:'rawdata']),'templateGelInstanceList': Template?.findAll('from Template as b where b.type =:templateType and b.purpose=:purpose', [templateType:'public', purpose:'gelInspector'])]"/>
+         <g:render template="/ui/user/templateSelec" model="['templateInstanceList': Template?.findAll('from Template as b where b.type =:templateType and b.purpose=:purpose and b.visible=:visibility', [templateType:'public', purpose:'setup', visibility:true]), 'templateLoadingInstanceList': Template?.findAll('from Template as b where b.type =:templateType and b.purpose=:purpose and b.visible=:visibility', [templateType:'public', purpose:'loading',visibility:true]),'templateRawDataInstanceList': Template?.findAll('from Template as b where b.type =:templateType and b.purpose=:purpose and b.visible=:visibility', [templateType:'public', purpose:'rawdata',visibility:true]),'templateGelInstanceList': Template?.findAll('from Template as b where b.type =:templateType and b.purpose=:purpose and b.visible=:visibility', [templateType:'public', purpose:'gelInspector',visibility:true])]"/>
         <br></td>
         </tr>
 
@@ -684,7 +684,7 @@ ${remoteFunction(controller:'experiment', action:'stopShareExperiment',  params:
           </td>
         </tr>
         <tr>
-        <g:render template="/ui/user/templateSelec3" model="['templateInstanceList': Template?.findAll('from Template as b where b.type =:templateType and b.purpose=:purpose', [templateType:'public', purpose:'setup']), 'templateLoadingInstanceList': Template?.findAll('from Template as b where b.type =:templateType and b.purpose=:purpose', [templateType:'public', purpose:'loading']),'templateRawDataInstanceList': Template?.findAll('from Template as b where b.type =:templateType and b.purpose=:purpose', [templateType:'public', purpose:'rawdata']),'templateGelInstanceList': Template?.findAll('from Template as b where b.type =:templateType and b.purpose=:purpose', [templateType:'public', purpose:'gelInspector'])]"/>
+        <g:render template="/ui/user/templateSelec3" model="['templateInstanceList': Template?.findAll('from Template as b where b.type =:templateType and b.purpose=:purpose and b.visible=:visibility', [templateType:'public', purpose:'setup', visibility:true]), 'templateLoadingInstanceList': Template?.findAll('from Template as b where b.type =:templateType and b.purpose=:purpose and b.visible=:visibility', [templateType:'public', purpose:'loading',visibility:true]),'templateRawDataInstanceList': Template?.findAll('from Template as b where b.type =:templateType and b.purpose=:purpose and b.visible=:visibility', [templateType:'public', purpose:'rawdata',visibility:true]),'templateGelInstanceList': Template?.findAll('from Template as b where b.type =:templateType and b.purpose=:purpose and b.visible=:visibility', [templateType:'public', purpose:'gelInspector',visibility:true])]"/>
         <br>
         </tr>
 
@@ -721,7 +721,7 @@ ${remoteFunction(controller:'experiment', action:'stopShareExperiment',  params:
           </td>
         </tr>
         <tr>
-        <g:render template="/ui/user/templateSelec2" model="['templateInstanceList': Template?.findAll('from Template as b where b.type =:templateType and b.purpose=:purpose', [templateType:'public', purpose:'setup']), 'templateLoadingInstanceList': Template?.findAll('from Template as b where b.type =:templateType and b.purpose=:purpose', [templateType:'public', purpose:'loading']),'templateRawDataInstanceList': Template?.findAll('from Template as b where b.type =:templateType and b.purpose=:purpose', [templateType:'public', purpose:'rawdata']),'templateGelInstanceList': Template?.findAll('from Template as b where b.type =:templateType and b.purpose=:purpose', [templateType:'public', purpose:'gelInspector'])]"/>
+        <g:render template="/ui/user/templateSelec2" model="['templateInstanceList': Template?.findAll('from Template as b where b.type =:templateType and b.purpose=:purpose and b.visible=:visibility', [templateType:'public', purpose:'setup', visibility:true]), 'templateLoadingInstanceList': Template?.findAll('from Template as b where b.type =:templateType and b.purpose=:purpose and b.visible=:visibility', [templateType:'public', purpose:'loading',visibility:true]),'templateRawDataInstanceList': Template?.findAll('from Template as b where b.type =:templateType and b.purpose=:purpose and b.visible=:visibility', [templateType:'public', purpose:'rawdata',visibility:true]),'templateGelInstanceList': Template?.findAll('from Template as b where b.type =:templateType and b.purpose=:purpose and b.visible=:visibility', [templateType:'public', purpose:'gelInspector',visibility:true])]"/>
         <br>
         </tr>
         <tr><td><label for="attribute"><b>Properties: </b></label></td></tr>

@@ -99,6 +99,32 @@ class TemplateController {
         redirect(action: "show", id: templateInstance.id)
     }
 
+    def display(){
+        Template templateInstance = Template.get(params.id)  
+        if(templateInstance){
+            templateInstance.visible=true
+            templateInstance.save(flush: true)
+        }  else{
+            flash.message = message(code: 'default.not.found.message', args: [message(code: 'template.label', default: 'Template'), params.id])
+
+        }   
+        render(text: """<script type="text/javascript"> refreshTableSorter(); </script>""", contentType: 'text/javascript')
+        render(template:"/template/list", model: [templateInstanceList:Template.list()])
+    }
+    
+    def stopDisplay(){
+        Template templateInstance = Template.get(params.id)  
+        if(templateInstance){
+            templateInstance.visible=false
+            templateInstance.save(flush: true)
+        }  else{
+            flash.message = message(code: 'default.not.found.message', args: [message(code: 'template.label', default: 'Template'), params.id])
+
+        }   
+        render(text: """<script type="text/javascript"> refreshTableSorter(); </script>""", contentType: 'text/javascript')
+        render(template:"/template/list", model: [templateInstanceList:Template.list()])
+    }
+    
 
     def download={
         def templateInstance = Template.get(params.id)
@@ -127,16 +153,23 @@ class TemplateController {
         if(templateInstance){
             def templateInstanceName=templateInstance.templateName
  
-                if(templateInstance.type=="public"&& !Stage.findAllByStageTemplate(templateInstance)){       
-                    println "yes you can delete this template"
-                    templateInstance.delete()
+            if(templateInstance.type=="public"&& !Stage.findAllByStageTemplate(templateInstance)){       
+                println "yes you can delete this template"
+                def k = []
+                k += templateInstance.knowledgeList
+                k.each{knowledge->
+                    templateInstance.removeFromKnowledgeList(knowledge)
+                    knowledge.delete()   
+                    log.info "delete template knowledge ${knowledge.knowledgeName}" 
+                }
+                templateInstance.delete()
                    
-                    log.info "delete ${params.id} template"
-                    render(text: """<script type="text/javascript"> alert("$templateInstanceName is deleted!"); </script>""", contentType: 'text/javascript')
+                log.info "delete ${params.id} template"
+                render(text: """<script type="text/javascript"> alert("$templateInstanceName is deleted!"); </script>""", contentType: 'text/javascript')
              
-                }else{        
-                    render(text: """<script type="text/javascript"> warning('You can not delete it because some existing experiments are using such template!'); </script>""", contentType: 'text/javascript')         
-                }   
+            }else{        
+                render(text: """<script type="text/javascript"> warning('You can not delete it because some existing experiments are using such template!'); </script>""", contentType: 'text/javascript')         
+            }   
            
       
         }  else{

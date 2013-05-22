@@ -13,26 +13,32 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  * ========================================================== */
-package org.hits.ui
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 
-class Template {
-    String templateName
-    String type
-    String purpose
-    boolean visible
-    // boolean containValidaion
 
-    byte[] binaryFileData
-    static hasMany=[knowledgeList:Knowledge]
-    //    static hasMany=[constraint:Constraint]  
-    //    static hasMany=[analyzeAction:Analyze]
-    static constraints = {
- 
-        binaryFileData maxSize: 1024 * 1024 * 2 // 2MB
-        templateName(unique:true)
-        type(inList:["public","inner"])
-        purpose(inList:["setup","loading","rawdata","rawdata text","gelInspector"])
+package org.hits.ui.exceptions
+
+/**
+ *
+ * @author rongji
+ */
+class CustomizedAction {
+    
+    def actionOrder="do no action"
+    
+    def CustomizedAction(){
+        println actionOrder
+        
     }
-
- 
+    
+     def CustomizedAction(String givenOrder){
+         actionOrder=givenOrder
+        println actionOrder
+        
+    }
+	
 }
+

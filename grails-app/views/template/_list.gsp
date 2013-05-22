@@ -32,6 +32,7 @@
             <th>Template Type</th>
             <th>Download Template</th>
             <th>Include Concepts</th>
+            <th>Visible</th>
             <th></th>
           </tr>
         </thead>
@@ -45,6 +46,17 @@
             <td>${fieldValue(bean: templateInstance, field: "type")}</td>
             <td><g:link class="menuButton" action="download" id="${templateInstance.id}"><img src="${createLinkTo(dir:'images/ui', file:'download.png')}" alt="download resource" >download template</g:link></td>
           <td>${templateInstance.knowledgeList.size()}</td>
+             <td>
+            <g:if test="${(templateInstance.visible==false)&&(templateInstance.type=='public')}">
+              <img style="cursor: pointer" onclick="Display('${templateInstance.id}')" src="${createLinkTo(dir:'images/ui', file:'invisible.png')}" alt="click to make your template visible to experimentalists" >
+
+            </g:if> 
+            <g:elseif test="${(templateInstance.visible==true)&&(templateInstance.type=='public')}">
+              <img style="cursor: pointer" onclick="StopDisplay('${templateInstance.id}')" src="${createLinkTo(dir:'images/ui', file:'visible.png')}" alt="click to hide your template from experimentalists" >         
+            </g:elseif>
+              
+            </td>
+       
           <td> 
           <g:if test="${templateInstance.type=="public"}">
             <img style="cursor: pointer" onclick="DeleteTemplate('${templateInstance.id}','${templateInstance.templateName}')" src="${createLinkTo(dir:'images/ui', file:'trash.png')}" alt="delete such template" >

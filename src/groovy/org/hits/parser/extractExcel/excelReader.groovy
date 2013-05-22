@@ -24,14 +24,9 @@ package org.hits.parser.extractExcel
  *
  * @author rongji
  */
-import org.apache.poi.hssf.usermodel.HSSFWorkbook
-import org.apache.poi.hssf.usermodel.HSSFSheet
-import org.apache.poi.hssf.usermodel.HSSFRow
-import org.apache.poi.hssf.usermodel.HSSFCell
-import org.apache.poi.hssf.usermodel.HSSFDateUtil
+
 import groovy.xml.MarkupBuilder
 import groovy.util.IndentPrinter
-import org.apache.poi.ss.usermodel.*
 import org.apache.poi.ss.util.CellRangeAddress
 
 
@@ -40,6 +35,8 @@ import org.apache.poi.ss.util.CellRangeAddress
 import java.util.*
 import org.apache.poi.hssf.usermodel.HSSFDataValidation
 import org.apache.poi.hssf.usermodel.DVConstraint
+import org.apache.poi.ss.usermodel.*
+import org.apache.poi.hssf.usermodel.HSSFSheet
 //import org.apache.poi.hssf.util.CellRangeAddress
 
 class excelReader {
@@ -55,54 +52,26 @@ class excelReader {
     def ONTOLOGY_ROW_KEY="ontology";
     def validationTypes=["DIRECTSUBCLASSES", "SUBCLASSES", "INDIVIDUALS","DIRECTINDIVIDUALS"]
 
-   Map annotationList=new HashMap()
-     Map annotationTypeList=new HashMap()
+    Map annotationList=new HashMap()
+    Map annotationTypeList=new HashMap()
     def sheetAnnotationList=new HashSet()
     Map locations=new HashMap()
 	  
-    excelReader(String fileName) {
-        HSSFRow.metaClass.getAt = {int idx ->
-            def cell = delegate.getCell(idx)
-            if(! cell) {
-                return null
-            }
-            def value
-            switch(cell.cellType) {
-            case HSSFCell.CELL_TYPE_NUMERIC:
-                if(HSSFDateUtil.isCellDateFormatted(cell)) {
-                    value = cell.dateCellValue
-                } else {
-                    value = cell.numericCellValue
-                }
-                break
-            case HSSFCell.CELL_TYPE_BOOLEAN:
-                value = cell.booleanCellValue
-                break
-               
-            default:
-                value = cell.stringCellValue
-                break
-            }
-            return value
-        }
-	  
-        new File(fileName).withInputStream{is->
-            workbook = new HSSFWorkbook(is)
-            numberOfSheet=workbook.getNumberOfSheets();
-        }
+    excelReader(File file) {
+        
+        println "reading ${file.getName()} "
+       
+        workbook=WorkbookFactory.create(file) 
+        numberOfSheet=workbook.getNumberOfSheets();
+
 
     }
     
-    excelReader(byte[] binaryData){
 
-        ByteArrayInputStream bis = new ByteArrayInputStream(binaryData)     
-        workbook = new HSSFWorkbook(bis)
-        numberOfSheet=workbook.getNumberOfSheets();
-    }
     
     def getValidations(HSSFSheet sheet) {
         def validationList = new ArrayList<Validation>();
-      //def patchPOI=new patchPOI()
+        //def patchPOI=new patchPOI()
        
         for (HSSFDataValidation validation : getValidationData(sheet)) {
 
@@ -119,111 +88,40 @@ class excelReader {
         }
         return validationList;
     }
-      public List<HSSFDataValidation> getValidationData(HSSFSheet sheet) {    	    	
+    public List<HSSFDataValidation> getValidationData(HSSFSheet sheet) {    	    	
     	return PatchedPoi.getInstance().getValidationData(sheet, workbook);
     }
 
     
-    def getCellValue(HSSFCell cell){
-        def value
-        switch(cell.cellType) {
-        case HSSFCell.CELL_TYPE_NUMERIC:
-            if(HSSFDateUtil.isCellDateFormatted(cell)) {
-                value = cell.dateCellValue
-            } else {
-                value = cell.numericCellValue
-            }
-            break
-        case HSSFCell.CELL_TYPE_BOOLEAN:
-            value = cell.booleanCellValue
-            break
-        default:
-            value = cell.stringCellValue
-            break
+    def getCellValue(Cell cell){
+
+       // println "type ${cell.getCellType()}"      
+        switch (cell.getCellType()) {                
+        case Cell.CELL_TYPE_STRING:   
+            String value
+            String newvalue      
+            value= cell.getStringCellValue().toString().replaceAll(/\n\[/,"(")      
+            newvalue=value.replaceAll(/\]/,")")        
+            return newvalue
+        case Cell.CELL_TYPE_NUMERIC:
+            return cell.getNumericCellValue()
+        case Cell.CELL_TYPE_BOOLEAN:
+            return cell.getBooleanCellValue()
+        case Cell.CELL_TYPE_FORMULA:
+            return cell.getCellFormula()
+        case Cell.CELL_TYPE_ERROR:
+            return cell.getErrorCellValue()
+        case Cell.CELL_TYPE_BLANK:           
+            return ""
+           
         }
-        return value
+       
+     
     }
-    //
-    //
-    //    /**
-    //     *convention=[sheetName:"setup", labelSign:"#", finishCondition:HSSFCell.CELL_TYPE_BLANK]
-    //     *
-    //     *convention1:sheet name must contains "setup"
-    //     *convention2: set up information category must starts with "#"
-    //     *convention3: the process of set up information category stops when the blank cell occurs
-    //     *
-    //     *implicit convention: the label (after labelSign) match the predefined category name in the loading experiment model
-    //     */
-    //
-    //    def processSheetAgainstConvention (HSSFSheet sheet, Map convention=[sheetName:"setup", labelSign:"#", finishCondition:HSSFCell.CELL_TYPE_BLANK]){ //if the cells start with #
-    //        Map setUpMap=[:]
-    //        if(sheet.getSheetName().toLowerCase().trim().indexOf(convention.sheetName)!=-1){
-    //            def labelFlag=false
-    //            def lastRowNum=sheet.getLastRowNum()
-    //            (0..lastRowNum).each{currentRow->
-    //                if(labelFlag){
-    //                    return
-    //                }else{
-    //                    HSSFRow row=sheet.getRow(currentRow)
-    //                    def lastColNum=row.getLastCellNum()
-    //                    (0..lastColNum).each{currentCol->
-    //                        HSSFCell cell=row.getCell(col)
-    //                        if (cell.cellType==HSSFCell.CELL_TYPE_STRING){
-    //                            String cellValue=cell.stringCellValue
-    //                            if (cellValue.trim().startsWith(convention.labelSign)){
-    //                                labvelFlag=true
-    //                                def category=cellValue.trim().split(convention.labelSign)[1]
-    //                                def subList=getColumnContentUntilFinishCondition(sheet, currentRow, currentCol, convention.finishCondition)
-    //                                setUpMap.put(category, subList)
-    //                                print "category $category $convention.sheetName starts at row $currentRow col $currentCol vertically"
-    //
-    //                            }
-    //
-    //                        }
-    //
-    //                    }
-    //
-    //                }
-    //
-    //            }
-    //
-    //            if(!labelFlag){
-    //                println "The entire sheet was processed, do not find labelSign $convention.labelSign"
-    //            }
-    //        }else{
-    //            println "What you try to process is not a kid of $convention.sheetName file"
-    //        }
-    //        return setUpMap
-    //    }
-    //
-    //
-    //    def getColumnContentUntilFinishCondition(HSSFSheet sheet, int startRow, int startCol, int finishCondition){  //when cell.cellType=finishCondition stop
-    //        def columnContent=[]
-    //        def continueFlag=true
-    //        def rowNum=startRow+1
-    //        def colNum=startCol
-    //        while (continueFlag){
-    //            def cell=sheet.getRow(rowNum).getCell(colNum)
-    //            if(cell!=null){
-    //                if(cell.cellType!=finishCondition){
-    //                    columnContent.add(getCellValue(cell))
-    //                    rowNum++
-    //                }else{
-    //                    println "finish condition fullfiled"
-    //                    continueFlag=false
-    //                }
-    //            }else{
-    //                println "null cell"
-    //                continueFlag=false
-    //            }
-    //
-    //        }
-    //
-    //        return columnContent
-    //    }
+    
 
 
-    def getMergedRegions(HSSFSheet sheet){
+    def getMergedRegions(sheet){
        
         def numberOfMergedArea=sheet.getNumMergedRegions()
         print "this sheet has $numberOfMergedArea merged area"
@@ -262,16 +160,16 @@ class excelReader {
         return sheet
     }
 	  
-    def cell(idx) {
-        if(labels && (idx instanceof String)) {
-            idx = labels.indexOf(idx.toLowerCase())
-        }
-        return row[idx]
-    }
-	  
-    def propertyMissing(String name) {
-        cell(name)
-    }
+//    def cell(idx) {
+//        if(labels && (idx instanceof String)) {
+//            idx = labels.indexOf(idx.toLowerCase())
+//        }
+//        return row[idx]
+//    }
+//	  
+//    def propertyMissing(String name) {
+//        cell(name)
+//    }
 
     def traverseMergedRegions(Map map){
         def skipList=[];
@@ -383,71 +281,74 @@ class excelReader {
     
     def fetchValidationTerms(){
         (0..< numberOfSheet).each{currentSheetIndex ->
-            HSSFSheet  sheet = getSheet(currentSheetIndex)
-                     
-            def validationList=getValidations(sheet) 
-            if(validationList){               
-                validationList?.each{annotationList.put("${it.list}", []); sheetAnnotationList<< it.sheet; locations.put("${it.fromRow}and${it.fromColumn}",it.list)}
-                println annotationList 
-                println  sheetAnnotationList
-                println  locations
-            }
-            def title=sheet.getSheetName();
-            if(annotationList.containsKey("$title")){
-                def rows=sheet.getLastRowNum()+1;
-              
-                def cols=0;
-                def rowIterator = sheet.rowIterator()
-                while(rowIterator.hasNext()) {
-                    def row = rowIterator.next()
-                    cols=row.getLastCellNum()>cols? row.getLastCellNum():cols
-
+            def sheet = getSheet(currentSheetIndex)
+            if(sheet instanceof HSSFSheet){   
+                println "it is a HSSFSheet"
+                def validationList=getValidations(sheet) 
+                if(validationList){               
+                    validationList?.each{annotationList.put("${it.list}", []); sheetAnnotationList<< it.sheet; locations.put("${it.fromRow}and${it.fromColumn}",it.list)}
+                    println annotationList 
+                    println  sheetAnnotationList
+                    println  locations
                 }
-                if(cols>0){
-                      def type
-                    (0..< rows).each{currentRowIndex ->
-                        def currentRow=sheet.getRow(currentRowIndex)
-                        if (currentRow!=null){
+                def title=sheet.getSheetName();
+                if(annotationList.containsKey("$title")){
+                    def rows=sheet.getLastRowNum()+1;
+              
+                    def cols=0;
+                    def rowIterator = sheet.rowIterator()
+                    while(rowIterator.hasNext()) {
+                        def row = rowIterator.next()
+                        cols=row.getLastCellNum()>cols? row.getLastCellNum():cols
+
+                    }
+                    if(cols>0){
+                        def type
+                        (0..< rows).each{currentRowIndex ->
+                            def currentRow=sheet.getRow(currentRowIndex)
+                            if (currentRow!=null){
                            
-                            for(int currentIndex=0; currentIndex<currentRow.getLastCellNum(); currentIndex++){
+                                for(int currentIndex=0; currentIndex<currentRow.getLastCellNum(); currentIndex++){
                    
-                                def currentCell=currentRow.getCell(currentIndex)
-                                if(currentCell!=null){
-                                    if(validationTypes.contains(currentCell.toString())){
-                                        type=currentCell
-//                                        println"type: $type"
-                                        currentIndex=currentIndex+1
-                                       def annotationCell=currentRow.getCell(currentIndex)
-//                                        println"annotation:$annotationCell"
-                                    }else if(currentCell.toString().equals(ONTOLOGY_ROW_KEY)){
-                                        currentIndex=currentIndex+1
-                                        def keyCell=currentRow.getCell(currentIndex)
-                                        currentIndex=currentIndex+1
-                                        def keyFileCell=currentRow.getCell(currentIndex)
+                                    def currentCell=currentRow.getCell(currentIndex)
+                                    if(currentCell!=null){
+                                        if(validationTypes.contains(currentCell.toString())){
+                                            type=currentCell
+                                            //                                        println"type: $type"
+                                            currentIndex=currentIndex+1
+                                            def annotationCell=currentRow.getCell(currentIndex)
+                                            //                                        println"annotation:$annotationCell"
+                                        }else if(currentCell.toString().equals(ONTOLOGY_ROW_KEY)){
+                                            currentIndex=currentIndex+1
+                                            def keyCell=currentRow.getCell(currentIndex)
+                                            currentIndex=currentIndex+1
+                                            def keyFileCell=currentRow.getCell(currentIndex)
                                          
-//                                        println"key: $keyCell : $keyFileCell"
+                                            //                                        println"key: $keyCell : $keyFileCell"
                                       
-                                    }else if(currentCell.toString().contains("#")){ 
-                                        def optionannotation=currentCell.toString().split("#")[1].split(">")[0]
+                                        }else if(currentCell.toString().contains("#")){ 
+                                            def optionannotation=currentCell.toString().split("#")[1].split(">")[0]
                               
-                                        currentIndex=currentIndex+1
-                                        def optionCell=currentRow.getCell(currentIndex)
-//                                        println "option: $optionCell"  
-//                                        
-//                                        println "hiddenkey $title $type"
-                                        annotationList.get("$title")<<"$optionCell($optionannotation)"
-                                        annotationTypeList.put("$title", "$type")
-                                    }
+                                            currentIndex=currentIndex+1
+                                            def optionCell=currentRow.getCell(currentIndex)
+                                            //                                        println "option: $optionCell"  
+                                            //                                        
+                                            //                                        println "hiddenkey $title $type"
+                                            annotationList.get("$title")<<"$optionCell($optionannotation)"
+                                            annotationTypeList.put("$title", "$type")
+                                        }
                             
                                                                    
+                                    }
                                 }
-                            }
                             
-                        }        
+                            }        
+                        }
                     }
                 }
-            }
-                   
+            }else{
+                println " it is not a HSSFSheet, we can not fetch the validation term! sorry"
+            }          
         }
     }
     def excelXmlBuilder(){
@@ -460,9 +361,7 @@ class excelReader {
         
         xml.DOCUMENTS(){
             (0..< numberOfSheet).each{currentSheetIndex ->
-                HSSFSheet  sheet = getSheet(currentSheetIndex)
-      
-          
+                def sheet = getSheet(currentSheetIndex)
                  
                 def title=sheet.getSheetName();
              
@@ -491,22 +390,23 @@ class excelReader {
                                     if (currentRow!=null){
                                 "R$currentRowIndex"(){
                                             (0 .. currentRow.getLastCellNum()-1).each{currentIndex->
-                                                def currentCell=currentRow.getCell(currentIndex)
+                                                Cell currentCell=currentRow.getCell(currentIndex)
                                                 if(currentCell!=null){
                                                     
                                                     if(locations.containsKey("${currentRowIndex}and${currentIndex}")){
                                                         def hiddenkey=locations.get("${currentRowIndex}and${currentIndex}")
                                                         def options=annotationList.get("$hiddenkey")
                                                         def optiontype=annotationTypeList.get("$hiddenkey")
-                                                       String optionsString="'"
+                                                        String optionsString="'"
                                                         optionsString=optionsString+options.join('\',\'')
-                                                         optionsString=optionsString+"','$optiontype'"
-                                                       // println optionsString
+                                                        optionsString=optionsString+"','$optiontype'"
+                                                        // println optionsString
                                                         
                                                         // println "contains"
                                                     "C$currentIndex"("=DROPDOWN($optionsString)")   
                                                     }else{
-                                                 "C$currentIndex"("$currentCell")    
+                                                        def cellValue=getCellValue(currentCell)
+                                                 "C$currentIndex"("$cellValue")    
                                                     }  
                                                                    
                                                 }else{
@@ -522,32 +422,7 @@ class excelReader {
                         }
                     }
                 }
-                
-                //                }else{
-                //                    def valuelist
-                //                                 (0..< rows).each{currentRowIndex ->
-                //                                    def currentRow=sheet.getRow(currentRowIndex)
-                //                                    if (currentRow!=null){
-                //                                //"R$currentRowIndex"(){
-                //                                            (0 .. currentRow.getLastCellNum()-1).each{currentIndex->
-                //                                                def currentCell=currentRow.getCell(currentIndex)
-                //                                                if(currentCell!=null){
-                //                                                    String value=currentCell.toString()    
-                //                                                
-                //                                    if(!value.contains("&lt")&& !value.contains("&gt") && !value.equals("ontology")){
-                //                                        valuelist.add(value)
-                //                                    }   
-                //                                                
-                ////                                           "C$currentIndex"("$currentCell")                                   
-                ////                                                }else{
-                ////                                           "C$currentIndex"("")
-                ////                                                }
-                //                                            }
-                //                                       // }
-                //                                    }
-                //                                }
-                //                }  
-                //
+  
             }
         }
             
@@ -562,69 +437,6 @@ class excelReader {
         
         
   
-        
-        
-    
-   
-
-    //    def processSetUpWorkBook(){
-    //        (0..< numberOfSheet).each{currentSheetIndex ->
-    //            def sheet=getSheet(currentSheet)
-    //            def firstRow=sheet.getRow(0)  //assume the first row contains the label info
-    //            def signallCell=firstRow.getCell(0).toString()
-    //            switch(signallCell){
-    //                case 'IMMUNOBLOT_SETUP':
-    //                println "loading IMMUNOBLOT_SETUP"
-    //
-    //                break
-    //
-    //                default:
-    //                println "$signatureCell"
-    //            }
-    //
-    //
-    //
-    //            if(firstRow!=null){
-    //                (0 .. firstRow.getLastCellNum()-1).each{currentIndex->
-    //                    def currentCell=currentRow.getCell(currentIndex)
-    //                    if(currentCell!=null){
-    //
-    //                             //check model
-    //                             //
-    //                    }
-    //
-    //                }
-    //
-    //
-    //
-    //            }
-    //        }
-    //    }
-
-
-    //    def eachLine(Map params = [:], Closure closure) {//open/Closure closure
-    //        print "params $params"
-    //        def offset = params.offset ?: 0
-    //        def max = params.max ?: 9999999
-    //        print "numberOfSheet $numberOfSheet"
-    //        def currentSheet=params.sheet>numberOfSheet? 0: (params.sheet-1)
-    //        def sheet = getSheet(currentSheet)
-    //        def rowIterator = sheet.rowIterator()
-    //        def linesRead = 0
-    //
-    //        if(params.labels) {
-    //            labels = rowIterator.next().collect{it.toString().toLowerCase()}
-    //        }
-    //        offset.times{ rowIterator.next() }
-    //
-    //        closure.setDelegate(this)
-    //
-    //        while(rowIterator.hasNext() && linesRead++ < max) {
-    //            row = rowIterator.next()
-    //            closure.call(row)
-    //        }
-    //    }
-	  
 }
 
 

@@ -85,14 +85,14 @@ and open the template in the editor.
 
   $("#purposeOptions").dialog({
                       autoOpen: false,
-                        height: 200,
-                        width: 300,
+                        height: 300,
+                        width: 400,
                         modal: true,
                         buttons:{
                            "Save":function(){
-                             
+                            var saveas= $("#saveas").val()
                           var purpose=$("#purpose").val()   //purpose -> stage
-${remoteFunction(controller:'admin', action:'saveTemplate',  params:'\'purpose=\'+purpose', update:'warning') };  
+${remoteFunction(controller:'admin', action:'saveTemplate',  params:'\'purpose=\'+purpose+\'&saveas=\'+saveas', update:'warning') };  
                            $( this ).dialog( "close" );
                            },
                            "Close": function() {
@@ -173,7 +173,7 @@ followMe();
 //  $('#Player').draggable({appendTo: 'body',cursor:'move', containment:'#area', helper: "clone" ,scroll:false});
   $('#Doses').draggable({appendTo: 'body',cursor:'move', containment:'#area', helper: "clone", scroll:false});
 //  $('#Normalizer').draggable({appendTo: 'body',cursor:'move', containment:'#area', helper: "clone", scroll:false});
- $('#SampleNames').draggable({appendTo: 'body',cursor:'move', containment:'#area', helper: "clone", scroll:false});
+// $('#SampleNames').draggable({appendTo: 'body',cursor:'move', containment:'#area', helper: "clone", scroll:false});
   $('#Lanes').draggable({appendTo: 'body',cursor:'move', containment:'#area', helper: "clone", scroll:false});
   $('#Bands').draggable({appendTo: 'body',cursor:'move', containment:'#area', helper: "clone", scroll:false});
   $('#Volumes').draggable({appendTo: 'body',cursor:'move', containment:'#area', helper: "clone", scroll:false});
@@ -241,20 +241,24 @@ function updateKnowledge(fromr, fromc, endr, endc, sheet, updateClassStr){
         }
 }
 
-function handleDropEvent( event, ui ) {
+function handleDropEvent( event, ui) {
 
 var draggable = ui.draggable;
 var knowledgeName=draggable.attr('id');
 var knowledgeClass=draggable.attr("title");
 var templateObject=$.sheet.instance[0];
 var row=(templateObject.getTdLocation([event.target])).row;
-var col=(templateObject.getTdLocation([event.target])).col
+var col=(templateObject.getTdLocation([event.target])).col;
+var endrow=templateObject.sheetSize().height;
+
 var location=jSE.parseCellName(col,row);
  var excel="${session.getAttribute('openFileName')}";
 //alert(location);
  $(this).removeClass('ui-droppable');
-${remoteFunction(controller:'admin', action:'updateKnowledge', params:'\'location=\'+location+\'&knowledgeName=\'+knowledgeName+\'&knowledgeClass=\'+knowledgeClass+\'&file=\'+excel', update:'knowledge') };
+${remoteFunction(controller:'admin', action:'updateKnowledge', params:'\'location=\'+location+\'&endrow=\'+endrow+\'&knowledgeName=\'+knowledgeName+\'&knowledgeClass=\'+knowledgeClass+\'&file=\'+excel', update:'knowledge') };
 }
+
+
 
 
 function followMe(){
@@ -362,20 +366,34 @@ function inlineMenu(I, id){
 
 
 
-function notifyMark(fromr, fromc, endr, endc, sheetIndex, sheetInstanceIndex){
+function notifyMark(fromr, fromc, endr, endc, sheetIndex, sheetInstanceIndex){ //not used anymore
     var cols=endc-fromc+1;
     var start=jSE.parseCellName(fromc, fromr);
     var end=jSE.parseCellName(endc, endr);
     var colsNum=cols.toString();
+    
   makeThemDroppable(sheetInstanceIndex,sheetIndex,fromr,endr,fromc,endc);
  
 }
 
-function  buildKnowledgeForLabel(text, fromr, fromc, sheetIndex,sheetInstanceIndex){
+
+
+
+function  buildKnowledgeForLabel(text, fromr, endr, fromc, endc, sheetIndex,sheetInstanceIndex, autoend){
+//alert(jS.sheetSize(jQuery('#' + jS.id.sheet + jS.i)));
  var excel="${session.getAttribute('openFileName')}";
-  var node=jSE.parseCellName(fromc, fromr);
-  makeThemDroppable(sheetInstanceIndex,sheetIndex,fromr,fromr,fromc,fromc);
-${remoteFunction(controller:'admin', action:'buildKnowledge', params:'\'columnName=\'+text+\'&row=\'+fromr+\'&sheetIndex=\'+sheetIndex+\'&col=\'+fromc+\'&location=\'+node+\'&file=\'+excel', update:'knowledge') };
+  var fromnode=jSE.parseCellName(fromc, fromr);
+  var endnode=jSE.parseCellName(endc, endr);
+ var auto=autoend
+   makeThemDroppable(sheetInstanceIndex,sheetIndex,fromr,endr,fromc,endc);
+ if(auto){
+   ${remoteFunction(controller:'admin', action:'buildKnowledge', params:'\'columnName=\'+text+\'&frow=\'+fromr+\'&sheetIndex=\'+sheetIndex+\'&fcol=\'+fromc+\'&ecol=\'+endc+\'&erow=\'+endr+\'&fromlocation=\'+fromnode+\'&endlocation=\'+fromnode+\'&file=\'+excel', update:'knowledge') };
+
+ }else{
+ ${remoteFunction(controller:'admin', action:'buildKnowledge', params:'\'columnName=\'+text+\'&frow=\'+fromr+\'&sheetIndex=\'+sheetIndex+\'&fcol=\'+fromc+\'&ecol=\'+endc+\'&erow=\'+endr+\'&fromlocation=\'+fromnode+\'&endlocation=\'+endnode+\'&file=\'+excel', update:'knowledge') };
+  
+ }
+
 }
 
  function warningMessage(str){
@@ -521,7 +539,7 @@ ${remoteFunction(controller:'admin', action:'buildKnowledge', params:'\'columnNa
   <p style="font-family: serif; color: blue;"> ${flash.message}</p>
 </div>
 
-<g:render template="/ui/admin/stageoptions" />
+<g:render template="/ui/admin/stageoptions"  model="['oldname': session.getAttribute('openFileName')]"/>
 <div id="follower" style="display:none"> mark </div>
 
 <g:form controller="admin" action="openSheet"  method="post" enctype="multipart/form-data"  >

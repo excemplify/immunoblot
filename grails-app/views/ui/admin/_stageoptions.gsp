@@ -21,13 +21,11 @@ and open the template in the editor.
 <%@ page contentType="text/html;charset=UTF-8" %>
 
 <div id="purposeOptions" title="Stages">
+ The template will be saved under the name:  <input id="saveas" type="text" size="30" value="${oldname}">
   <p style="font-family: serif; color: blue;"> Please select the <b>Stage</b> in which such template is used.</p>
   <select id="purpose" style="width:60%" >
     <optgroup label="Considered Stages">
       <option selected="">setup</option>
-      <option>loading</option>
-      <option>rawdata</option>
-      <option>gelInspector</option>
     </optgroup>
   </select>
 </div>

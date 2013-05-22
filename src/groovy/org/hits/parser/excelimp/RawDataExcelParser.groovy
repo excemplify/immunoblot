@@ -166,7 +166,7 @@ class RawDataExcelParser implements Parser{
     }
     
     def parseCell(Cell cell){
-     println"rawdata $cell"
+
      if(cell){
             switch (cell.getCellType()) {
             case cell.CELL_TYPE_STRING :
@@ -186,8 +186,6 @@ class RawDataExcelParser implements Parser{
                 return ""
            
             }
-     }else{
-        return "" 
      }
     }
     
