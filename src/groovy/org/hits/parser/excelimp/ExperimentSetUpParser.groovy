@@ -132,7 +132,7 @@ class ExperimentSetUpParser implements Parser{
          
         }
         else this.sheet=wbook.getSheetAt(wbook.getNumberOfSheets()-1)
-         //  PatchedPoi.getInstance().clearValidationData(this.sheet)
+        //  PatchedPoi.getInstance().clearValidationData(this.sheet)
         state.state.sheet=sheet
            
         //  }
@@ -143,7 +143,7 @@ class ExperimentSetUpParser implements Parser{
         if (state.state.newsource){
             this.source=new ExcelSource(state.state.newsource, state)
         }
-       // else this.source=new ExpandingExcelSource(state.state.source, state)
+        // else this.source=new ExpandingExcelSource(state.state.source, state)
         else this.source=new TwoExcelSource(state.state.source, state)
 
         println "source in state $state.state.source"
@@ -192,17 +192,17 @@ class ExperimentSetUpParser implements Parser{
     def parseCell(Cell cell){
    
         switch (cell.getCellType()) {
-            case cell.CELL_TYPE_STRING :
+        case cell.CELL_TYPE_STRING :
             return cell.getStringCellValue()
-            case cell.CELL_TYPE_NUMERIC :
+        case cell.CELL_TYPE_NUMERIC :
             return cell.getNumericCellValue()
-            case cell.CELL_TYPE_BOOLEAN :
+        case cell.CELL_TYPE_BOOLEAN :
             return cell.getBooleanCellValue()
-            case cell.CELL_TYPE_FORMULA :
+        case cell.CELL_TYPE_FORMULA :
             return cell.getCellFormula()
-            case cell.CELL_TYPE_ERROR :
+        case cell.CELL_TYPE_ERROR :
             return cell.getErrorCellValue()
-            case cell.CELL_TYPE_BLANK:
+        case cell.CELL_TYPE_BLANK:
             blankcells = true
             defaultErrorHandler(cell)
             //cell.setCellStyle(colourCell)
@@ -226,22 +226,22 @@ class ExperimentSetUpParser implements Parser{
     def doAction={cells->
         
         switch (action.getAction()) {
-            case ImmunoParserAction.TRANSPOSE :
+        case ImmunoParserAction.TRANSPOSE :
             transpose(cells)
             break
-            case   ImmunoParserAction.COPY:
+        case   ImmunoParserAction.COPY:
             copy(cells)
             break
-            case    ImmunoParserAction.OUTERPRODUCT_COLUMNS:
+        case    ImmunoParserAction.OUTERPRODUCT_COLUMNS:
             outerproduct(cells)
             break
-            case   ImmunoParserAction.MERGE_COLUMNS:
+        case   ImmunoParserAction.MERGE_COLUMNS:
             merge(cells)
             break
-            case ImmunoParserAction.SPLIT_COLUMNS:
+        case ImmunoParserAction.SPLIT_COLUMNS:
             split(cells)
             break
-            case ImmunoParserAction.ADD_COLUMN_DATA:
+        case ImmunoParserAction.ADD_COLUMN_DATA:
             addColumnData(cells)
             break
                  
@@ -293,27 +293,28 @@ class ExperimentSetUpParser implements Parser{
     
     }
     
-      def outerproduct={Map cells ->
-          Sheet targetSheet=target.sheet
-          def list1=cells.source1
-          def list2=cells.source2
-          def appendRowNum=0
-          list1.each{cell->
-              list2.each{cellx->
-                  Row row=targetSheet.getRow(target.firstRow+appendRowNum)
-                  if(row==null){
-                      row=targetSheet.createRow(target.firstRow+appendRowNum)
-                  }
-                  Cell targetCell=row.createCell(target.firstColumn)
-                  cellx.setCellType(Cell.CELL_TYPE_STRING)
-                  String cellValue="${parseCell(cell)}   ${cellx.getStringCellValue()}h"
-                  println cellValue
-                  targetCell.setCellValue(cellValue)
-                  appendRowNum++
-              }
-
-          }
-      }
+    def outerproduct={Map cells ->
+        Sheet targetSheet=target.sheet
+        def list1=cells.source1
+        def list2=cells.source2
+        def appendRowNum=0
+        list1.each{cell->
+            if(cell){
+                list2.each{cellx->
+                    Row row=targetSheet.getRow(target.firstRow+appendRowNum)
+                    if(row==null){
+                        row=targetSheet.createRow(target.firstRow+appendRowNum)
+                    }
+                    Cell targetCell=row.createCell(target.firstColumn)
+                    cellx.setCellType(Cell.CELL_TYPE_STRING)
+                    String cellValue="${parseCell(cell)}   ${cellx.getStringCellValue()}h"
+                    println cellValue
+                    targetCell.setCellValue(cellValue)
+                    appendRowNum++
+                }
+            }
+        }
+    }
 
 
 

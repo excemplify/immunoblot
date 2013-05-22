@@ -91,9 +91,12 @@ class RawDataExcelParser implements Parser{
                 
             }
             source= new MultiSource(configurations.sources, state)
-            if (action==ImmunoParserAction.OUTERPRODUCT_COLUMNS_MATCH || action==ImmunoParserAction.COPY || action==ImmunoParserAction.MATCH_AND_SPLIT)
+            
+            if ( action==ImmunoParserAction.MATCH_AND_SPLIT)
             {
                 source.setSourceType(SourceType.OUTERPRODUCT)
+            }else if(action==ImmunoParserAction.OUTERPRODUCT_COLUMNS_MATCH || action==ImmunoParserAction.COPY){
+                source.setSourceType(SourceType.OUTERPRODUCTALLOWNULL) 
             }
            
         
@@ -167,7 +170,7 @@ class RawDataExcelParser implements Parser{
     
     def parseCell(Cell cell){
 
-     if(cell){
+        if(cell){
             switch (cell.getCellType()) {
             case cell.CELL_TYPE_STRING :
                 return cell.getStringCellValue()
@@ -186,7 +189,7 @@ class RawDataExcelParser implements Parser{
                 return ""
            
             }
-     }
+        }
     }
     
     def doAction={cells->
@@ -213,14 +216,14 @@ class RawDataExcelParser implements Parser{
         println "copy $cellLists"
         def bandNumList=cellLists[2]  //we know the position of each of the cellLists from the ordering of sources in the bootstrap.
         // otherwise it would be good to make use of the "knowledge" in Lei's templates.
-        
+        println "bandNumList $bandNumList"
         def bandSet= new HashSet()
         bandNumList.each{
             if (it!=null){
                 bandSet.add(parseCell(it) as int)
             }
         }
-        
+        println "bandSet $bandSet"
         Row headerRow = target.sheet.getRow(target.firstRow-1)
         
         
@@ -246,17 +249,18 @@ class RawDataExcelParser implements Parser{
         }
         def indexList=cellLists[0]
         def dataList=cellLists[1]
-        
+        println "indexList $indexList"
+        println "dataList $dataList"
         
         dataList.eachWithIndex{dataCell,n->
-                    println "dataCell $dataCell n $n"
+            println "dataCell $dataCell n $n"
             if (dataCell!=null && indexList[n]!=null && bandNumList[n]!=null){
                 log.info "valid dataCell"
                 def data = parseCell(dataCell)
                 
                 def laneNumber = parseCell(indexList[n]).tokenize().get(1) as int
                 def colNumber = parseCell(bandNumList[n])-1 as int
-                  println "laneNumber $laneNumber  colNumber $colNumber"
+                println "laneNumber $laneNumber  colNumber $colNumber"
                 Row row = target.sheet.getRow(target.firstRow-1+laneNumber)?:target.sheet.createRow(target.firstRow-1+laneNumber)
                 Cell cell = row.getCell(target.firstColumn+colNumber)?:row.createCell(target.firstColumn+colNumber)
                 cell.setCellValue(data)

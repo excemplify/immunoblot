@@ -37,12 +37,23 @@ class KnowledgeFetcher {
                 
         }else{
             def matcher=cellKnowledge.markCellRange=~ /(\w)(\d+)/
+            println matcher[0]
             def cols=matcher[0][1]  
             def rows=matcher[0][2] 
+            def nextRows=Integer.valueOf(rows)+1
+            if(matcher.size()>1){
+                 println matcher[1]
+                def endcols=matcher[1][1]  
+                def endrows=matcher[1][2]    
+                cellRangeString="$cols$nextRows:$endcols$endrows"
+            }else{
+                cellRangeString="$cols$nextRows"
+            }
+      
             //        println rows
             //        println cols
-            def nextRows=Integer.valueOf(rows)+1
-            cellRangeString="$cols$nextRows"
+          
+    
             println cellRangeString 
         }
       
@@ -53,17 +64,17 @@ class KnowledgeFetcher {
     
     static boolean containKnowledge(Template template, List knowledgeNames){
         boolean flag=true
-           knowledgeNames.each{k->
-               println k
-             Knowledge cellKnowledge=template.knowledgeList.find{it.knowledgeName==k}  
-             if(!cellKnowledge){
-                 println " no knowledge found return null"
-                 flag=false
+        knowledgeNames.each{k->
+            println k
+            Knowledge cellKnowledge=template.knowledgeList.find{it.knowledgeName==k}  
+            if(!cellKnowledge){
+                println " no knowledge found return null"
+                flag=false
                 
-             }
-           }
+            }
+        }
         
-      return flag
+        return flag
           
       
     }

@@ -91,7 +91,9 @@ class MultiSource implements Source{
         def traverse(action){ //how this is done depends on the action. actually quite fundamentally different ways of calling them
         println "multi source traversing..." 
         println sourceType
-        if (sourceType==SourceType.CONCAT){ //not all sources need to be of the same dimensions, but does 
+        if (sourceType==SourceType.CONCAT){
+            //not all sources need to be of the same dimensions, but does 
+               println "hello, traversing with the concat"
          def cells=[]                           //the best it can until it runs out of cells in all sources
          boolean allEmpty=false
         while (!allEmpty){
@@ -123,18 +125,55 @@ class MultiSource implements Source{
             for (int i=source.firstRow; i<=source.lastRow;i++){
                 
             Row row = source.sheet.getRow(i)
-            
+            if(row){
             for (int j=source.firstColumn; j<=source.lastColumn;j++){
 
                 Cell cell = row.getCell(j)
-                cellList.add(cell)
+                  if(cell){
+                       cellList.add(cell)    
+                  }
+                
+            
+               
 
                 }
+            }
             }
             cellLists<<cellList
 
             }
-             println "finish sources cellLists"   
+             println "finish sources cellLists $cellLists"   
+             
+            action.call(cellLists)
+        }else if (sourceType==SourceType.OUTERPRODUCTALLOWNULL){ //tricky to generalise to n sources.
+        
+        def cellLists=[]
+        println "hello, traversing with the outerproduct allow null action"
+        
+        sources.each{ source->
+            
+            def cellList=[]
+            for (int i=source.firstRow; i<=source.lastRow;i++){
+                
+            Row row = source.sheet.getRow(i)
+            if(row){
+            for (int j=source.firstColumn; j<=source.lastColumn;j++){
+
+                Cell cell = row.getCell(j)
+                 
+                       cellList.add(cell)    
+            
+                
+            
+               
+
+                }
+            }
+            }
+            cellLists<<cellList
+
+            }
+             println "finish sources cellLists $cellLists"   
              
             action.call(cellLists)
         }
@@ -162,7 +201,7 @@ class MultiSource implements Source{
 }
 
 enum SourceType{
-    CONCAT("CONCAT"), OUTERPRODUCT("OUTERPRODUCT"),TRACE("TRACE"), CURRWORKBOOK("CURRWORKBOOK"), SIMPLE("SIMPLE")
+    CONCAT("CONCAT"), OUTERPRODUCT("OUTERPRODUCT"),TRACE("TRACE"), CURRWORKBOOK("CURRWORKBOOK"), SIMPLE("SIMPLE"),OUTERPRODUCTALLOWNULL("OUTERPRODUCTALLOWNULL")
     
     private String type
     

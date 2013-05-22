@@ -78,7 +78,6 @@ class ExpandingExcelSource implements Source{
         if (lastRow==firstRow){
             this.lastRow = findColumnEnd(firstColumn,endOfColumnTest) //assuming we will count the first row
             println "last Row ${lastRow}"
-         //reset cra
              sourceCRA.setLastRow(lastRow)
         }
         this.size= sourceCRA.getNumberOfCells()
