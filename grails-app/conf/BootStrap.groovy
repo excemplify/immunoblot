@@ -14,23 +14,9 @@
  *  limitations under the License.
  * ========================================================== */
 import grails.util.GrailsUtil
-import org.hits.parser.User
-import org.hits.parser.SecRole
-import org.hits.parser.SecUser
-import org.hits.parser.SecUserSecRole
-import org.hits.parser.ParserDef
-import org.hits.parser.ParserConfiguration
-import org.hits.parser.excelimp.ImmunoParserAction
-import org.hits.parser.ExcelSourceDef
-import org.hits.parser.TextFileSourceDef
-import org.hits.parser.TargetDef
-import org.hits.parser.TemplateFile
-import org.hits.ui.Template
-import org.hits.ui.Knowledge
-import org.hits.ui.Resource
-import org.hits.ui.Experiment
-import org.hits.ui.KnowledgeFetcher
-import org.hits.ui.TemplateToParserDef
+import org.hits.parser.*
+import org.hits.ui.*
+
 import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
 import org.codehaus.groovy.grails.plugins.springsecurity.SecurityFilterPosition
 
@@ -40,7 +26,8 @@ class BootStrap {
     def securityContextPersistenceFilter
     def authenticationProcessingFilter
     def concurrentSessionControlStrategy
-
+    def experimentParsersConfigService
+    
     def init = { servletContext ->
         switch(GrailsUtil.environment){
         case "test":
@@ -49,13 +36,14 @@ class BootStrap {
 
         case "production":
             initialize(servletContext)        
-            dataclean();
-        
+            dataclean()
+       // dealDirtyExperiments()
             break
             
         case "development":
             initialize(servletContext)
-            dataclean();
+            dataclean()
+       //     dealDirtyExperiments()
             break
         
         }
@@ -68,22 +56,23 @@ class BootStrap {
     
     def initialize(servletContext){  //some default
    
-        def userRole = SecRole.findByAuthority('ROLE_USER') ?: new SecRole(authority: 'ROLE_USER').save(failOnError: true)
+      def userRole = SecRole.findByAuthority('ROLE_USER') ?: new SecRole(authority: 'ROLE_USER').save(failOnError: true)
         def adminRole = SecRole.findByAuthority('ROLE_ADMIN') ?: new SecRole(authority: 'ROLE_ADMIN').save(failOnError: true)
         
         
-        def adminUser = SecUser.findByUsername('jdoeadmin') ?: new SecUser(
-            username: 'jdoeadmin',
-            password: 'jdoeadmin',
+        def adminUser = SecUser.findByUsername('admin') ?: new SecUser(
+            username: 'admin',
+            password: 'adminpassword',
             enabled: true).save(failOnError: true)
  
         if (!adminUser.authorities.contains(adminRole)) {
             SecUserSecRole.create adminUser, adminRole
         }
             
-        def jdoe = SecUser.findByUsername('jdoe') ?: new User(username:"jdoe", password:"password", name:"John Doe",enabled: true).save(failOnError: true)
-        def jsmith = SecUser.findByUsername('jsmith') ?: new User(username:"jsmith", password:"wordpass", name:"Jane Smith",enabled: true).save(failOnError: true)
-      
+        def jdoe = SecUser.findByUsername('jdoe') ?: new User(username:"jdoe", password:"pass", name:"John Doe",enabled: true).save(failOnError: true)
+        def jsmith = SecUser.findByUsername('jsmith') ?: new User(username:"jsmith", password:"word", name:"Jane Smith",enabled: true).save(failOnError: true)
+
+
         if (!jsmith.authorities.contains(userRole)) {
             SecUserSecRole.create jsmith, userRole
         }
@@ -91,14 +80,16 @@ class BootStrap {
         if (!jdoe.authorities.contains(userRole)) {
             SecUserSecRole.create jdoe, userRole
         }
- 
+        if (!lei.authorities.contains(userRole)) {
+            SecUserSecRole.create lei, userRole
+        }
         
         def webRootDir = servletContext.getRealPath("/")
         def templatePath = webRootDir+"template/";
         def setUpTemplateFilePath=templatePath+"setup_template_hits.xls";
         def rawDataTemplateFilePath=templatePath+"rawdata_template.xls";
-        //            def laneloadingTemplateFilePath=templatePath+"laneloading_template.xls"
-        def laneloadingTemplateNewFilePath=templatePath+"laneloading_template_new.xls"
+      
+        def laneloadingTemplateNewFilePath=templatePath+"laneloading_template_0723.xls"
        
         def testSetUpTemplate=Template.findByTemplateName("setup_template_hits.xls")?:new Template(templateName:"setup_template_hits.xls", binaryFileData:new File(setUpTemplateFilePath).bytes,  knowledgeList:[
                 new Knowledge(knowledgeName:"Cells", columnName:"Cells", firstRow:"0", firstCol:"1", lastRow:"0", lastCol:"1", sheetIndex:"0", fileName:"setup_template_hits.xls", markCellRange:"B1", markColor:"ui-state-cell"),
@@ -114,22 +105,16 @@ class BootStrap {
                 new Knowledge(knowledgeName:"Volumes", columnName:"Volume", firstRow:"0", firstCol:"2", lastRow:"0", lastCol:"2", sheetIndex:"0", fileName:"rawdata_template.xls", markCellRange:"C1", markColor:"ui-state-volume")
             ], type:"inner", purpose:"rawdata").save(failOnError: true)
             
-   
-   
-                 
-        def laneloadingTemplateNew=Template.findByTemplateName("laneloading_template_new.xls")?:new Template(templateName:"laneloading_template_new.xls", binaryFileData:new File(laneloadingTemplateNewFilePath).bytes,  
-            knowledgeList:[new Knowledge(knowledgeName:"Lanes", columnName:"Lane", firstRow:"0", firstCol:"0", lastRow:"0", lastCol:"0", sheetIndex:"0", fileName:"laneloading_template_new.xls", markCellRange:"A1", markColor:"ui-state-lane"),
-                new Knowledge(knowledgeName:"SampleNames", columnName:" Time(min) Cells Dose(ng/ml)", firstRow:"0", firstCol:"2", lastRow:"0", lastCol:"2", sheetIndex:"0", fileName:"laneloading_template_new.xls", markCellRange:"B1", markColor:"ui-state-samples")
-            ],type:"inner", purpose:"loading").save(failOnError: true);
 
+
+        def laneloadingTemplate=Template.findByTemplateName("laneloading_template_0723.xls")?:new Template(templateName:"laneloading_template_0723.xls", binaryFileData:new File(laneloadingTemplateNewFilePath).bytes,  
+            knowledgeList:[new Knowledge(knowledgeName:"Lanes", columnName:"Lane", firstRow:"0", firstCol:"1", lastRow:"0", lastCol:"1", sheetIndex:"0", fileName:"laneloading_template_0723.xls", markCellRange:"A1", markColor:"ui-state-lane"),
+                new Knowledge(knowledgeName:"SampleNames", columnName:"Time | Cells | Treatment (Stimulation+Inhibition)", firstRow:"0", firstCol:"2", lastRow:"0", lastCol:"2", sheetIndex:"0", fileName:"laneloading_template_0723.xls", markCellRange:"B1", markColor:"ui-state-samples"),
+                new Knowledge(knowledgeName:"Condition", columnName:"Condition", firstRow:"0", firstCol:"3", lastRow:"0", lastCol:"3", sheetIndex:"0", fileName:"laneloading_template_0723.xls", markCellRange:"C1", markColor:"ui-state-conditions")
+            ],type:"inner", purpose:"loading").save(failOnError: true);
    
-        //            def laneloadingTemplate=new Template(templateName:"laneloading_template.xls", binaryFileData:new File(laneloadingTemplateFilePath).bytes,  
-        //                knowledgeList:[new Knowledge(knowledgeName:"Lanes", columnName:"Lane", firstRow:"0", firstCol:"0", lastRow:"0", lastCol:"0", sheetIndex:"0", fileName:"laneloading_template.xls", markCellRange:"A1", markColor:"ui-state-lane"),
-        //                    new Knowledge(knowledgeName:"SampleNames", columnName:"", firstRow:"0", firstCol:"2", lastRow:"0", lastCol:"2", sheetIndex:"0", fileName:"laneloading_template.xls", markCellRange:"B1", markColor:"ui-state-samples")
-        //                ],type:"inner").save(failOnError: true);
-        //            
-      
-        def gelInspectorTemplate = Template.findByTemplateName("gelInspectorTemplate")?:new Template(templateName:"gelInspectorTemplate", binaryFileData: new File(webRootDir,'template/gelInspectorTemplate.xls').bytes,  knowledgeList:[],type:"inner",purpose:"gelInspector").save(failOnError: true)
+
+        def gelInspectorTemplate = Template.findByTemplateName("gelInspectorTemplate_0723.xls")?:new Template(templateName:"gelInspectorTemplate_0723.xls", binaryFileData: new File(webRootDir,'template/gelInspectorTemplate_0723.xls').bytes,  knowledgeList:[],type:"inner",purpose:"gelInspector").save(failOnError: true)
      
 
         def rawTextDataTemplate = Template.findByTemplateName("rawTextDataTemplate")?:new Template(templateName:"rawTextDataTemplate", binaryFileData: new File(webRootDir,'template/rawTextDataTemplate.txt').bytes,  knowledgeList:[],type:"inner",purpose:"rawdata text").save(failOnError: true)
@@ -173,4 +158,7 @@ class BootStrap {
             
         log.info "$num waste resources deleted"
     }
+
+    
+    
 }
