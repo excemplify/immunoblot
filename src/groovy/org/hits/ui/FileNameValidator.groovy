@@ -31,7 +31,7 @@ class FileNameValidator {
     static boolean validateRawDataFileName(String fileName){
         def proved=false
         def tokenList=fileName.tokenize(".")
-        def suffix=tokenList.last()
+        def suffix=tokenList.last().toLowerCase()
         if(suffix=='txt'||suffix=='xls'||suffix=='xlsx'){
             def pattern = ~/(.+)(_blot\d+.?)(.?)/
             def content=tokenList.first()
@@ -44,19 +44,33 @@ class FileNameValidator {
    
     }
     
-     static boolean validateGelDataFileName(String fileName){   //simplified validation, to reject other strange file formate
-        def proved=false
-        def tokenList=fileName.tokenize(".")
-        def suffix=tokenList.last()
-        if(suffix=='xls'||suffix=='xlsx'){    
-            proved=true 
-        }else{
-            println "File formate other than .xls or .xlsx is not acceptted."
-        }
-     
-        return proved
-   
-    }
+//     static boolean validateGelDataFileName(String fileName){   //simplified validation, to reject other strange file formate
+//        def proved=false
+//        def tokenList=fileName.tokenize(".")
+//        def suffix=tokenList.last().toLowerCase()
+//        if(suffix=='xls'||suffix=='xlsx'){    // to allow image files
+//            proved=true 
+//        }else{
+//            println "File formate other than .xls or .xlsx is not acceptted."
+//        }
+//     
+//        return proved
+//   
+//    }
+//    
+//         static boolean validateOtherDataFileName(String fileName){   //simplified validation, to reject other strange file formate
+//        def proved=false
+//        def tokenList=fileName.tokenize(".")
+//        def suffix=tokenList.last().toLowerCase()
+//        if(suffix!='xls'&& suffix!='xlsx'){    // to allow image files
+//            proved=true 
+//        }else{
+//            println "please upload excel file somewhere else"
+//        }
+//     
+//        return proved
+//   
+//    }
 
 	
 }

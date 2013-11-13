@@ -25,6 +25,7 @@ import org.apache.poi.ss.usermodel.*;
 
 
 import org.hits.ui.Resource
+import org.hits.ui.Experiment
 
 class AuxillarySpreadsheetService {
     
@@ -107,7 +108,7 @@ class AuxillarySpreadsheetService {
                     }catch(java.lang.IllegalArgumentException ex){
                         println "sheet name confliction"
                         sheetName="${resource.fileName}${datafileworkbook.getSheetAt(i).getSheetName()}"
-                       // sheetName="Confliction Name Resolver $i"
+                        // sheetName="Confliction Name Resolver $i"
                         copySheet(datafileworkbook,i,prefix,sheetName,workbook,evaluator)  
                     }
                 }
@@ -125,13 +126,44 @@ class AuxillarySpreadsheetService {
     }
     
    
+    def createExperimentZip(Experiment experiment, User user){ 
+        def resourceList
+        String zipFileName =File.createTempFile("${experiment.filename}_${user.name}", ".zip").toString()
+      
+        def thezipfile = new File(zipFileName)
+        ZipOutputStream zipFile = new ZipOutputStream(new FileOutputStream(zipFileName)) 
+        if(experiment.type=="new"){
+            resourceList=experiment.resources.findAll{it.state=="active" && it.type!="setup" } 
+            zipFile.putNextEntry(new ZipEntry("${experiment.filename}_setup_loading.xls"))
+            zipFile<<experiment.binaryData
+            zipFile.closeEntry() 
+        }else{
+            resourceList=experiment.resources.findAll{it.state=="active"}
+        }
+
+        resourceList.each{Resource resource->
+            zipFile.putNextEntry(new ZipEntry(resource.fileName))
+            zipFile << resource.binaryData
+            zipFile.closeEntry() 
+        }
+        zipFile.close()  
+        return thezipfile
+        
+    }
     
     
-    
-    def createGelInspectorZip(byte[] workbookBytes){
+    def createGelInspectorZip(Experiment experiment,User user, byte[] workbookBytes){
         
         def bis = new ByteArrayInputStream(workbookBytes)      
         def workbook = WorkbookFactory.create(bis)
+        def resourcesList=experiment.resources.findAll{it.type=="gelinspector" && it.state=="active" }
+        if(experiment.type=="new"){
+            resourcesList.each{resource->
+                experiment.removeFromResources(resource)
+                println "remove old export resource"
+                resource.delete()        
+            }
+        }
         //iterate thru sheets.
         def gelInspectorWBs=[]
         for (int i=0; i<workbook.getNumberOfSheets();i++){
@@ -139,21 +171,33 @@ class AuxillarySpreadsheetService {
                 def newWorkbook = new HSSFWorkbook()      
                 copySheet(workbook,i,"", workbook.getSheetAt(i).getSheetName(),newWorkbook,null)
                 //                def file = new File("${System.getProperty("user.home")}","${workbook.getSheetAt(i).getSheetName()}.xls")
-                def file = new File("/tmp","${workbook.getSheetAt(i).getSheetName()}.xls")
+               // def file = new File("/tmp","${workbook.getSheetAt(i).getSheetName()}.xls")
+                def file=File.createTempFile("${workbook.getSheetAt(i).getSheetName()}_",".xls")
+              
                 println "xls file path ${file.absolutePath}"
                 def fos = new FileOutputStream(file)
                 newWorkbook.write(fos)
                 gelInspectorWBs<<file
+                if(experiment.type=="new"){
+                    def  gelResource=new Resource(fileName:"${workbook.getSheetAt(i).getSheetName()}.xls", type:"gelinspector", binaryData: file.bytes, author:user,state:"active", fileversion: new Date());
+                    gelResource.save(failOnError: true);  
+           
+                    experiment.resources.add(gelResource) 
+                }
+             
             }
         }
+        experiment.save(flush:true) 
+        //        def resourcesList2=experiment.resources.findAll{it.type=="gelinspector" && it.state=="active"} 
+        //        println "current gelInspector resources size ${resourcesList2.size()}"
         //        String zipFileName = "${System.getProperty("user.home")}/GelInspectorFiles.zip"  
-           String zipFileName = "GelInspectorFiles.zip"  
-       // String zipFileName = "/tmp/GelInspectorFiles.zip"  
+        String zipFileName =File.createTempFile("GelInspectorFiles",".zip").toString() 
+        // String zipFileName = "/tmp/GelInspectorFiles.zip"  
         def thezipfile = new File(zipFileName)
         ZipOutputStream zipFile = new ZipOutputStream(new FileOutputStream(zipFileName))  
         gelInspectorWBs.each{ file -> 
             
-            zipFile.putNextEntry(new ZipEntry(file.getName()))  
+            zipFile.putNextEntry(new ZipEntry(file.getName().split("_")[0]+".xls"))  
            
             if( file.isFile() ){
                 zipFile << new FileInputStream(file)

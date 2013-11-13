@@ -38,6 +38,7 @@
               <th>Id</th>
               <th>Template Name</th>
               <th>Template Purpose</th>
+              <th>Explanation/Comment</th>
               <th>Download Template</th>
               <th>Included Concepts</th>
 
@@ -50,6 +51,11 @@
               <td>${i+1}</td>
             <td>${fieldValue(bean: templateInstance, field: "templateName")}</td>
              <td>${fieldValue(bean: templateInstance, field: "purpose")}</td>
+              <td>    
+      <g:if test="${(templateInstance.comment!=null)}">
+         ${fieldValue(bean: templateInstance, field: "comment")}
+      </g:if>
+      </td>
             <td><g:link  controller="template"  class="menuButton"  action="download" id="${templateInstance.id}"><img src="${createLinkTo(dir:'images/ui', file:'download.png')}" alt="download template" > </g:link></td>
             <td>
             <g:if test="${templateInstance.knowledgeList.size()>0}">

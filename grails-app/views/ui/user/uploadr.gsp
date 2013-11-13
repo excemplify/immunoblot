@@ -1,21 +1,21 @@
 %{--===================================================
-   Copyright 2010-2013 HITS gGmbH
+Copyright 2010-2013 HITS gGmbH
 
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
 
-       http://www.apache.org/licenses/LICENSE-2.0
+http://www.apache.org/licenses/LICENSE-2.0
 
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
-   ========================================================== 
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+limitations under the License.
+    ========================================================== 
 --}%<!--
-  To change this template, choose Tools | Templates
-  and open the template in the editor.
+To change this template, choose Tools | Templates
+and open the template in the editor.
 -->
 
 <%@ page contentType="text/html;charset=UTF-8" %>
@@ -30,7 +30,7 @@
     <link rel="stylesheet" href="${resource(dir:'css',file:'index.css')}" />
     <link rel="shortcut icon" href="${resource(dir: 'images/ui/', file: 'logo.ico')}" type="image/x-icon"/>
     <link rel="stylesheet" type="text/css" href="${createLinkTo(dir:'jquery-ui/sunny', file:'jquery-ui-1.8.20.custom.css')}" />
-   
+
 
     <script type="text/javascript">
       window.onload=function(){
@@ -63,11 +63,7 @@
 ${remoteFunction(controller:'experiment', action:'deleteResourceDuringUpload', params:'\'deleteFileName=\'+fileName') };
 
  }
-    function deleteGelResource(fileName){
-
-${remoteFunction(controller:'experiment', action:'deleteGelResourceDuringUpload', params:'\'deleteFileName=\'+fileName') };
-
- }
+   
      var BrowserDetect = {
         init: function () {
                 this.browser = this.searchString(this.dataBrowser) || "An unknown browser";
@@ -208,40 +204,54 @@ ${remoteFunction(controller:'experiment', action:'deleteGelResourceDuringUpload'
 </head>
 <body>
 
-<div class="ui-widget-header2" > 
-  <table style="width: 100%;  vertical-align:  middle ">
-    <tr><td colspan="1" style=" text-align: left; color: #ffffff; cursor: pointer" >  <a href="${createLink(uri:'/')}" > 
-          <img alt="logo"  title="Back to Welcome Page" src="${createLinkTo(dir:'images/ui', file:'excemplify.png')}" style="cursor: pointer" ></a></td></tr>
-    <tr>  <td style=" width: 100%;text-align: right;vertical-align: baseline; font-family: serif;font-size: 15px; font-weight:normal;  color: black">
-    <sec:ifLoggedIn>
-      <img alt="log in as"  src="${resource(dir: 'images/ui', file: 'user.png')}" /><sec:username/>(<g:link class="link" controller="logout">log out</g:link>)
-    
-    </sec:ifLoggedIn>
-    <sec:ifNotLoggedIn>
-      <g:link controller="login" class="link" action="auth" >Login</g:link>
-    </sec:ifNotLoggedIn>
-  </td></tr></table>
-</div>
+  <div class="ui-widget-header2" > 
+    <table style="width: 100%;  vertical-align:  middle ">
+      <tr><td colspan="2" style=" text-align: left; color: #ffffff; cursor: pointer" >  <a href="${createLink(uri:'/')}" > 
+            <img alt="logo"  title="Back to Welcome Page" src="${createLinkTo(dir:'images/ui', file:'excemplify.png')}" style="cursor: pointer" ></a></td></tr>
+      <tr>
+        <td style=" width: 10%;"><img alt="Back To Lab" src="${resource(dir: 'images/skin', file: 'house.png')}" />
+          <a class="link" href="${createLink(uri:'/lab')}" >Home</a> </td>
+        <td style=" width: 90%;text-align: right;vertical-align: baseline; font-family: serif;font-size: 15px; font-weight:normal;  color: black">
+      <sec:ifLoggedIn>
+        <img alt="log in as"  src="${resource(dir: 'images/ui', file: 'user.png')}" /><sec:username/>(<g:link class="link" controller="logout">log out</g:link>)
+
+      </sec:ifLoggedIn>
+      <sec:ifNotLoggedIn>
+        <g:link controller="login" class="link" action="auth" >Login</g:link>
+      </sec:ifNotLoggedIn>
+      </td>
+      </tr>
+    </table>
+  </div>
   <div class="maincontent" id="message">
     <g:if test="${flash.message}">
       <div class="message">${flash.message}</div>
     </g:if>
-   
+
     <g:set var="expId" value="${request.getParameter('experimentId')}"/>
     <g:set var="expType" value="${request.getParameter('experimentType')}"/>
+    <g:set var="resType" value="${request.getParameter('resourceType')}"/>
 
     <div style=" height: 500px">
       <table style="width:100%"> 
         <tr style="vertical-align: top; padding:20px ">
           <td style="width:40%; min-height: 400px">
-        <g:if test="${request.getParameter('experimentType')=="new"}">  
-          <uploadr:add name="uploadr" id="uploadr"  unsupported="/excemplify/lab/warning?experimentType=${request.getParameter('experimentType')}&&experimentId=${request.getParameter('experimentId')}"  path="rawdata" viewable="false" downloadable="false"   direction="up" maxVisible="10"  action="uploadrAction" controller="experiment">
+
+
+
+        <g:if test="${request.getParameter('resourceType')=="gelinspector"}">  
+          <uploadr:add name="uploadr" id="uploadr"  unsupported="/excemplify/lab/warning?experimentType=${request.getParameter('experimentType')}&&resourceType=${request.getParameter('resourceType')}&&experimentId=${request.getParameter('experimentId')}"  path="gelinspector" viewable="false" downloadable="false"   direction="up" maxVisible="10" allowedExtensions="xls, xlsx" maxSize="4194304"  action="uploadrAction" controller="experiment">
             <uploadr:onDelete>deleteResource(file.fileName); return true; </uploadr:onDelete>
           </uploadr:add>
         </g:if>
+        <g:elseif test="${request.getParameter('resourceType')=="other"}">  
+          <uploadr:add name="uploadr3" id="uploadr3"  unsupported="/excemplify/lab/warning?experimentType=${request.getParameter('experimentType')}&&resourceType=${request.getParameter('resourceType')}&&experimentId=${request.getParameter('experimentId')}"  path="other" viewable="false" downloadable="false"   direction="up" maxVisible="10"  action="uploadrAction" maxSize="4194304" controller="experiment">
+            <uploadr:onDelete>deleteResource(file.fileName); return true; </uploadr:onDelete>
+          </uploadr:add>
+        </g:elseif>
         <g:else>
-          <uploadr:add name="uploadr2" id="uploadr2"  unsupported="/excemplify/lab/warning?experimentType=${request.getParameter('experimentType')}&&experimentId=${request.getParameter('experimentId')}"  path="gelinspectordata" viewable="false" downloadable="false"   direction="up" maxVisible="10"  action="uploadrGelAction" controller="experiment">
-            <uploadr:onDelete>deleteGelResource(file.fileName); return true; </uploadr:onDelete>
+          <uploadr:add name="uploadr2" id="uploadr2"  unsupported="/excemplify/lab/warning?experimentType=${request.getParameter('experimentType')}&&resourceType=${request.getParameter('resourceType')}&&experimentId=${request.getParameter('experimentId')}"  path="rawdata" viewable="false" downloadable="false"   direction="up" maxVisible="10" allowedExtensions="xls,xlsx,txt" maxSize="4194304" action="uploadrAction" controller="experiment">
+            <uploadr:onDelete>deleteResource(file.fileName); return true; </uploadr:onDelete>
           </uploadr:add>
         </g:else>
         <br/>
@@ -265,19 +275,15 @@ ${remoteFunction(controller:'experiment', action:'deleteGelResourceDuringUpload'
       <!--    <input onclick="startUpload();" value="Send" type="submit">-->
     </div>
     <div style="text-align:left; font-size: 15px; padding: 10px;position:  relative">
-      <g:if test="${request.getParameter('experimentType')=="new"}">  
-        <g:link controller="experiment"  action="finishUpload" id="${expId}">Send</g:link>
-      </g:if>
-      <g:else>
-       <g:link controller="experiment"  action="finishGelUpload" id="${expId}">Send</g:link>
-      </g:else>
+      <g:link controller="experiment" action="finishUpload" id="${expId}" params="[exptype:expType, restype:resType]">Send</g:link>
+
     </div>
     <div id="upd">
 
     </div>
   </div>
- <g:applyLayout name="foot">
-  </g:applyLayout>
+<g:applyLayout name="foot">
+</g:applyLayout>
 
 <r:layoutResources/>
 </body>

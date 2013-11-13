@@ -22,9 +22,8 @@ package org.hits.parser.excelimp
 
 import org.hits.parser.core.*
 import org.apache.poi.ss.usermodel.*
-import org.apache.poi.hssf.usermodel.HSSFCell
 import org.hits.ui.Randomization
-import org.hits.ui.exceptions.RuleViolateException
+import org.hits.ui.exceptions.*
 
 /**
  *
@@ -41,15 +40,18 @@ class SetupExcelParser implements Parser{
     def origWorkbook
 
     Boolean randomization=true
-    Boolean stimulus=false
+    // Boolean stimulus=false
     int min1=2
     int min2=2
     int min3=2
     def blotNum
+    def warningMessage=""
  
     def knowledgeMap=[:]
     def requiredCellListOrdering=["TimePoints","Cells","Doses", "Inhibitors"] // this is the order we need the lists that we get from traversing the cells to come in
-    def defaultMaximumLanes=18
+    def defaultMaximumLanesWarning=18
+    def defaultMaximumLanesForbidden=22
+    def conditionMap=[:]
     
     final static actionsAvailable=[ImmunoParserAction.OUTERPRODUCT_COLUMNS_RANDOMIZE]
     
@@ -63,7 +65,8 @@ class SetupExcelParser implements Parser{
         }
         else origWorkbook=state.state.workbook
         this.action=ImmunoParserAction.valueOf(configurations.action)
-     
+        if(configurations.conditionMap!=null)
+        conditionMap=configurations.conditionMap
         blotNum = configurations.blotNum
         println "blotNum $blotNum"
         println "configs in parser config $configurations"
@@ -84,10 +87,10 @@ class SetupExcelParser implements Parser{
             }
         }
       
-        if (configurations.stimulus) {
-            stimulus=Boolean.valueOf(configurations.stimulus)
-            println "stimulus? $stimulus"
-        }
+        //        if (configurations.stimulus) {
+        //            stimulus=Boolean.valueOf(configurations.stimulus)
+        //            println "stimulus? $stimulus"
+        //        }
       
       
         if (configurations.sources.size()>1){
@@ -114,11 +117,16 @@ class SetupExcelParser implements Parser{
     
     StateAndQueue parse(StateAndQueue state) throws ParsingException{
         println "parsing spreadsheet now...${name}"
-       
+        warningMessage=""
         //sheet=source.traverse(doAction)
         source.traverse(doAction)
               
-        
+        if( warningMessage.size()>1){
+            state.state.warningMessage=warningMessage
+        }
+        if( conditionMap.size()>1){
+            state.state.conditionMap=conditionMap
+        }
         state.state.blankcells=blankcells
         byte[] parsedBook
         def outstream = new ByteArrayOutputStream()
@@ -161,21 +169,21 @@ class SetupExcelParser implements Parser{
     }
     
     def parseCell(cell){
-    // println "here SetupExcelParser parseCell"
+        // println "here SetupExcelParser parseCell"
         if (cell.class=="String".class) return cell
         else{
             switch (cell.getCellType()) {
-                case cell.CELL_TYPE_STRING :
+            case cell.CELL_TYPE_STRING :
                 return cell.getStringCellValue()
-                case cell.CELL_TYPE_NUMERIC :
+            case cell.CELL_TYPE_NUMERIC :
                 return cell.getNumericCellValue()
-                case cell.CELL_TYPE_BOOLEAN :
+            case cell.CELL_TYPE_BOOLEAN :
                 return cell.getBooleanCellValue()
-                case cell.CELL_TYPE_FORMULA :
+            case cell.CELL_TYPE_FORMULA :
                 return cell.getCellFormula()
-                case cell.CELL_TYPE_ERROR :
+            case cell.CELL_TYPE_ERROR :
                 return cell.getErrorCellValue()
-                case cell.CELL_TYPE_BLANK:
+            case cell.CELL_TYPE_BLANK:
                 blankcells = true
                 // defaultErrorHandler(cell)
                 //cell.setCellStyle(colourCell)
@@ -188,25 +196,25 @@ class SetupExcelParser implements Parser{
     def doAction={cells->
         
         switch (action) {
-            case ImmunoParserAction.TRANSPOSE :
+        case ImmunoParserAction.TRANSPOSE :
             transpose(cells)
             break
-            case   ImmunoParserAction.COPY:
+        case   ImmunoParserAction.COPY:
             copy(cells)
             break
-            case    ImmunoParserAction.OUTERPRODUCT_COLUMNS:
+        case    ImmunoParserAction.OUTERPRODUCT_COLUMNS:
             outerproduct(cells)
             break
-            case   ImmunoParserAction.MERGE_COLUMNS:
+        case   ImmunoParserAction.MERGE_COLUMNS:
             merge(cells)
             break
-            case ImmunoParserAction.SPLIT_COLUMNS:
+        case ImmunoParserAction.SPLIT_COLUMNS:
             split(cells)
             break
-            case ImmunoParserAction.ADD_COLUMN_DATA:
+        case ImmunoParserAction.ADD_COLUMN_DATA:
             addColumnData(cells)
             break
-            case ImmunoParserAction.OUTERPRODUCT_COLUMNS_RANDOMIZE:
+        case ImmunoParserAction.OUTERPRODUCT_COLUMNS_RANDOMIZE:
             outerProductRandomize(cells)
             break
                  
@@ -220,47 +228,80 @@ class SetupExcelParser implements Parser{
     
         cellLists=reorderLists(cellLists)
         if(cellLists.size()<requiredCellListOrdering.size())   // for the case there is no inhibitor
-        cellLists << ["n/a"]
-                println "celllists setup $cellLists"  
-          
-        if (stimulus==true) {
-            cellLists<<["+","-"]
-        }
+        cellLists << [" "]
         
+         if(cellLists.size()==requiredCellListOrdering.size()){
+             println "oh old data"
+                // cellLists.remove(cellLists.size()-1)
+         }   // for the case there is old innhibitor
+     
+        
+        println "celllists setup $cellLists"  
+
         
         def allcombos=cellLists.combinations()
-        if(allcombos.size()<=defaultMaximumLanes){
-       // println "allcombos setup $allcombos"  
-        def numlanes=allcombos.size()
-        def laneNumbers =[]
-        (1..numlanes).each{laneNumbers.add(it)}
+        if(allcombos.size()<=defaultMaximumLanesForbidden){
+            // println "allcombos setup $allcombos"  
+            def numlanes=allcombos.size()
+            def laneNumbers =[]
+            (1..numlanes).each{laneNumbers.add(it)}
           
-        laneNumbers=doRandomization(laneNumbers)
-          
-        allcombos.eachWithIndex{it,n->
+            laneNumbers=doRandomization(laneNumbers)
+        
+            def conditionNumberMap=conditionMap
+            int conditionNumber=0
+            allcombos.eachWithIndex{rowCombi,n->
               
-            Row row=target.sheet.getRow(target.firstRow+laneNumbers[n]-1) //no zero lane Number so have to -1 
-            if(row==null){
-                row=target.sheet.createRow(target.firstRow+laneNumbers[n]-1)
-            }
-                  
-            Cell targetCell=row.getCell(target.firstColumn)?:row.createCell(target.firstColumn)
-            Cell laneNumCell=row.getCell(target.firstColumn-1)?:row.createCell(target.firstColumn-1)
-            laneNumCell.setCellValue(laneNumbers[n])
-            println "target cords ${targetCell.getRowIndex()} ${targetCell.getColumnIndex()}"
-            String targetCellValue=""
-            it.each{
-                if (targetCellValue=="") targetCellValue=parseCell(it)
-                else
-                targetCellValue="${targetCellValue} ${parseCell(it)}"
-            }
-            println targetCellValue
-            targetCell.setCellType(Cell.CELL_TYPE_STRING)
-            targetCell.setCellValue(targetCellValue)
+                Row row=target.sheet.getRow(target.firstRow+laneNumbers[n]-1) //no zero lane Number so have to -1 
+                if(row==null){
+                    row=target.sheet.createRow(target.firstRow+laneNumbers[n]-1)
+                }
+       
+                Cell targetCell=row.getCell(target.firstColumn)?:row.createCell(target.firstColumn)
+                Cell laneNumCell=row.getCell(target.firstColumn-1)?:row.createCell(target.firstColumn-1)
+                Cell conditionTargetCell=row.getCell(target.firstColumn+1)?:row.createCell(target.firstColumn+1)    
+                laneNumCell.setCellValue(laneNumbers[n])
+                println "target cords ${targetCell.getRowIndex()} ${targetCell.getColumnIndex()}"
+                String targetCellValue=""
+                String conditionCellValue=""
+                String conditionString=""
+                rowCombi.each{
+                    if(parseCell(it)!=""&&parseCell(it)!=" "){
+                        if (targetCellValue==""){
+                            targetCellValue=parseCell(it)  
+                        } 
+                        else{
+                            targetCellValue="${targetCellValue} | ${parseCell(it)}"
+                          conditionString="${conditionString}${parseCell(it)}"
+                          
+                        }
+                       
+                    }
+                }
+                   
+               
+                if(conditionNumberMap.getAt(conditionString)!=null){
+                    println "get some existing condition"
+                  conditionCellValue=conditionNumberMap.getAt(conditionString)
+                }else{
+                    conditionNumber++
+                    conditionNumberMap.put(conditionString, conditionNumber)
+                    conditionCellValue=conditionNumber
+                   
+                }
                 
-        }
+                println "$targetCellValue  $conditionCellValue"
+                targetCell.setCellType(Cell.CELL_TYPE_STRING)
+                targetCell.setCellValue(targetCellValue)
+                 conditionTargetCell.setCellValue(conditionCellValue)
+            }
+            conditionMap=conditionNumberMap
+            if(allcombos.size()>defaultMaximumLanesWarning){
+                warningMessage="maximum 20-2(free) lanes rule is violated, It works but please consider replanning your experiment and update the setup file"
+            }
+        
         }else{
-              throw new RuleViolateException("maimum 20-2(free) lanes rule is violated", "please consider replanning your experiment and update the setup file");
+            throw new RuleViolateException("maximum 24-2(free) lanes rule is violated", "please replanning your experiment and update the setup file");
         }
           
     } 

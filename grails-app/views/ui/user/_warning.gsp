@@ -92,7 +92,7 @@ def msie = request.getHeader('user-agent').contains("MSIE")
         </div>
       </g:if>
       <div  class="message"> Or you can use the traditional one by one upload tool below.</div>
-      <g:form id="traditionalUpload" controller="experiment" action="traditionalUploadAction" params="[experimentId:request.getParameter('experimentId')]"  enctype="multipart/form-data"  method="POST">
+      <g:form id="traditionalUpload" controller="experiment" action="traditionalUploadAction" params="[experimentId:request.getParameter('experimentId'), resourceType:request.getParameter('resourceType'), experimentType:request.getParameter('experimentType')]"  enctype="multipart/form-data"  method="POST">
         <label for="myRawData"><b>Raw Data File:</b></label>
         <input name="myRawData" id="myRawData"  type="file" />
         <input id="traditionalUploadButton"  type="submit" name="submit" value="Upload" />

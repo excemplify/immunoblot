@@ -1,0 +1,115 @@
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+    xmlns:excemplify="http://hits.org/ontology/lab#" > 
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#Proteins7">
+    <excemplify:isA>Proteins</excemplify:isA>
+    <excemplify:hasValue>PDI</excemplify:hasValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#Proteins6">
+    <excemplify:isA>Proteins</excemplify:isA>
+    <excemplify:hasValue>tS6</excemplify:hasValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#Proteins5">
+    <excemplify:isA>Proteins</excemplify:isA>
+    <excemplify:hasValue>tErk</excemplify:hasValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#Cells0">
+    <excemplify:isA>Cells</excemplify:isA>
+    <excemplify:hasValue>BaF3-EpoR</excemplify:hasValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#Proteins4">
+    <excemplify:isA>Proteins</excemplify:isA>
+    <excemplify:hasValue>tAkt</excemplify:hasValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#Experiment">
+    <excemplify:hasMetaData rdf:resource="http://hits.org/ontology/lab#Proteins5"/>
+    <excemplify:hasMetaData rdf:resource="http://hits.org/ontology/lab#TimePoints1"/>
+    <excemplify:hasName>test01</excemplify:hasName>
+    <excemplify:hasMetaData rdf:resource="http://hits.org/ontology/lab#Treatments2"/>
+    <excemplify:hasMetaData rdf:resource="http://hits.org/ontology/lab#Proteins4"/>
+    <excemplify:hasMetaData rdf:resource="http://hits.org/ontology/lab#Treatments1"/>
+    <excemplify:hasMetaData rdf:resource="http://hits.org/ontology/lab#Proteins3"/>
+    <excemplify:hasMetaData rdf:resource="http://hits.org/ontology/lab#Treatments0"/>
+    <excemplify:hasMetaData rdf:resource="http://hits.org/ontology/lab#Proteins8"/>
+    <excemplify:hasMetaData rdf:resource="http://hits.org/ontology/lab#Proteins2"/>
+    <excemplify:hasTopic>Immunoblot</excemplify:hasTopic>
+    <excemplify:hasMetaData rdf:resource="http://hits.org/ontology/lab#Cells0"/>
+    <excemplify:hasMetaData rdf:resource="http://hits.org/ontology/lab#Proteins0"/>
+    <excemplify:hasMetaData rdf:resource="http://hits.org/ontology/lab#Proteins7"/>
+    <excemplify:hasMetaData rdf:resource="http://hits.org/ontology/lab#TimePoints3"/>
+    <excemplify:hasMetaData rdf:resource="http://hits.org/ontology/lab#Proteins1"/>
+    <excemplify:hasID>110</excemplify:hasID>
+    <excemplify:hasMetaData rdf:resource="http://hits.org/ontology/lab#Treatments4"/>
+    <excemplify:hasMetaData rdf:resource="http://hits.org/ontology/lab#Proteins6"/>
+    <excemplify:hasMetaData rdf:resource="http://hits.org/ontology/lab#TimePoints2"/>
+    <excemplify:hasMetaData rdf:resource="http://hits.org/ontology/lab#Treatments3"/>
+    <excemplify:hasMetaData rdf:resource="http://hits.org/ontology/lab#New Concept0"/>
+    <excemplify:hasMetaData rdf:resource="http://hits.org/ontology/lab#Proteins9"/>
+    <excemplify:hasMetaData rdf:resource="http://hits.org/ontology/lab#TimePoints0"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#Proteins1">
+    <excemplify:isA>Proteins</excemplify:isA>
+    <excemplify:hasValue>pErk</excemplify:hasValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#Proteins2">
+    <excemplify:isA>Proteins</excemplify:isA>
+    <excemplify:hasValue>pS6 235/236</excemplify:hasValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#Proteins3">
+    <excemplify:isA>Proteins</excemplify:isA>
+    <excemplify:hasValue>pS6 240/244</excemplify:hasValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#Proteins8">
+    <excemplify:isA>Proteins</excemplify:isA>
+    <excemplify:hasValue>pGSK</excemplify:hasValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#Proteins9">
+    <excemplify:isA>Proteins</excemplify:isA>
+    <excemplify:hasValue>tGSK</excemplify:hasValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#TimePoints0">
+    <excemplify:isA>TimePoints</excemplify:isA>
+    <excemplify:hasValue>0.0</excemplify:hasValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#Treatments2">
+    <excemplify:isA>Treatments</excemplify:isA>
+    <excemplify:hasValue>0.5</excemplify:hasValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#Treatments4">
+    <excemplify:isA>Treatments</excemplify:isA>
+    <excemplify:hasValue>50.0</excemplify:hasValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#Treatments1">
+    <excemplify:isA>Treatments</excemplify:isA>
+    <excemplify:hasValue>0.05</excemplify:hasValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#Proteins0">
+    <excemplify:isA>Proteins</excemplify:isA>
+    <excemplify:hasValue>pAkt Ser473</excemplify:hasValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#Treatments0">
+    <excemplify:isA>Treatments</excemplify:isA>
+    <excemplify:hasValue>0.0</excemplify:hasValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#TimePoints3">
+    <excemplify:isA>TimePoints</excemplify:isA>
+    <excemplify:hasValue>60.0</excemplify:hasValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#Treatments3">
+    <excemplify:isA>Treatments</excemplify:isA>
+    <excemplify:hasValue>5.0</excemplify:hasValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#TimePoints1">
+    <excemplify:isA>TimePoints</excemplify:isA>
+    <excemplify:hasValue>10.0</excemplify:hasValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#TimePoints2">
+    <excemplify:isA>TimePoints</excemplify:isA>
+    <excemplify:hasValue>30.0</excemplify:hasValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#New Concept0">
+    <excemplify:isA>New Concept</excemplify:isA>
+    <excemplify:hasValue>5.0</excemplify:hasValue>
+  </rdf:Description>
+</rdf:RDF>

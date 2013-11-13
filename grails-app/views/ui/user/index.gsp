@@ -13,10 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
 limitations under the License.
     ========================================================== 
---}%<!--
-To change this template, choose Tools | Templates
-and open the template in the editor.
--->
+--}%
 
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ page import="org.hits.ui.Template" %>
@@ -64,7 +61,7 @@ and open the template in the editor.
     <script type="text/javascript" src="${createLinkTo(dir:'js', file:'jquery.ui.resizable.js')}"></script>
     <!--Other Required jQuery UI Widget-->
 
-
+    <script src="${createLinkTo(dir:'js/TogetherJS', file:'togetherjs-min.js')}"></script>
 
 
     <title>Excemplify</title>
@@ -139,10 +136,12 @@ ${remoteFunction(controller:'user', action:'updateProfile', params:'\'id=\'+curr
                            "Send": function() {
                            var emailaddress= $("#email").val(); 
                            var id= $("#sendSEEKExpId").html();
-${remoteFunction(controller:'lab', action:'mailToSeek', params:'\'id=\'+id+\'&email=\'+emailaddress', update:[success:'updatePMe',failure:'resource'], onFailure:'warning()', onLoading:'showSpinner()', onComplete:'hideSpinner()') };
+                           var type= $("#sendType").html();
+${remoteFunction(controller:'experiment', action:'mailToSeek', params:'\'id=\'+id+\'&email=\'+emailaddress+\'&type=\'+type', update:[success:'resource', failure:'resource'], onFailure:'warning()', onLoading:'showSpinner()', onComplete:'hideSpinner()') };
                               $( this ).dialog( "close" );
                             $("#email").html(""); 
                           $("#sendSEEKExpId").html(""); 
+                           $("#sendType").html(""); 
                                 }
                         },
                        close: function() {
@@ -211,35 +210,39 @@ ${remoteFunction(controller:'experiment', action:'deleteExperiment',  params:'\'
        	$( "#dialog-form" ).dialog({
                         autoOpen: false,
                         height: 760,
-                        width: 600,
+                        width: 650,
                         modal: true,
                         buttons: {
                                 "Create an experiment": function() {
                                   var experimentName= $("#expname1").val();
                                   var experimentTopic=$("#topic1").val();
                                   var setuptemplate=$("#template").val();
-                                  var loadingtemplate=$("#templateloading").val();
-                                  var rawdatatemplate=$("#templaterawdata").val();
-                                  var gelinspectortemplate=$("#templategelinspector").val();
+                                  var loadingtemplate="default";
+                                  var rawdatatemplate="default";
+                                  var gelinspectortemplate="default";
+//                                  var loadingtemplate=$("#templateloading").val();
+//                                  var rawdatatemplate=$("#templaterawdata").val();
+//                                  var gelinspectortemplate=$("#templategelinspector").val();
                                  // alert(experimentName+":"+experimentTopic+":"+setuptemplate+":"+loadingtemplate+":"+rawdatatemplate+":"+gelInspectortemplate)
                                   var setUpResourceId="${session.getAttribute('setUpResourceId')}";
-                                  var stimulus
+                                 // var stimulus
+                                 var blotnum=$("#blotnum").val();
                                   var randomization
                                   var min1=$("#minDis1").val();
                                   var min2=$("#minDis2").val();
                                   var min3=$("#minDis3").val();
-                                  if($('input[name=attribute1]').is(':checked')){
-                                    stimulus=true
-                                  }else{
-                                    stimulus=false
-                                  }
+//                                  if($('input[name=attribute1]').is(':checked')){
+//                                    stimulus=true
+//                                  }else{
+//                                    stimulus=false
+//                                  }
                                    if($('input[name=attribute2]').is(':checked')){
                                     randomization=true
                                   }else{
                                     randomization=false
                                   }
                                  // alert('\'experimentName=\'+experimentName+\'&experimentTopic=\'+experimentTopic+\'&setuptemplate=\'+setuptemplate+\'&loadingtemplate=\'+loadingtemplate+\'&rawdatatemplate=\'+rawdatatemplate+\'&gelinspectortemplate=\'+gelinspectortemplate+\'&setUpResourceId=\'+setUpResourceId+\'&stimulus=\'+stimulus+\'&randomization=\'+randomization+\'&min1=\'+min1+\'&min2=\'+min2+\'&min3=\'+min3');
-${remoteFunction(controller:'lab', action:'initialExp', params:'\'experimentName=\'+experimentName+\'&experimentTopic=\'+experimentTopic+\'&setuptemplate=\'+setuptemplate+\'&loadingtemplate=\'+loadingtemplate+\'&rawdatatemplate=\'+rawdatatemplate+\'&gelinspectortemplate=\'+gelinspectortemplate+\'&setUpResourceId=\'+setUpResourceId+\'&stimulus=\'+stimulus+\'&randomization=\'+randomization+\'&min1=\'+min1+\'&min2=\'+min2+\'&min3=\'+min3', update:'updateMe', onLoading:'showSpinner()', onComplete:'hideSpinner()') };
+${remoteFunction(controller:'lab', action:'initialExp', params:'\'experimentName=\'+experimentName+\'&experimentTopic=\'+experimentTopic+\'&setuptemplate=\'+setuptemplate+\'&loadingtemplate=\'+loadingtemplate+\'&rawdatatemplate=\'+rawdatatemplate+\'&gelinspectortemplate=\'+gelinspectortemplate+\'&setUpResourceId=\'+setUpResourceId+\'&blotnum=\'+blotnum+\'&randomization=\'+randomization+\'&min1=\'+min1+\'&min2=\'+min2+\'&min3=\'+min3', update:'updateMe', onLoading:'showSpinner()', onComplete:'hideSpinner()') };
                                   $( this ).dialog( "close" );
 
                                 }, //end create experiment
@@ -261,17 +264,20 @@ ${remoteFunction(controller:'lab', action:'clear', params:'\'after=\'+1', update
        	$( "#performed-dialog-form" ).dialog({
                         autoOpen: false,
                         height:760,
-                        width: 600,
+                        width: 650,
                         modal: true,
                         buttons: {
                                 "Backing up performed experiment": function() {
                                  var experimentName= $("#expname3").val();
                                   var experimentTopic=$("#topic3").val();
                                   var setuptemplate=$("#template3").val();
-                                  
-                                    var loadingtemplate=$("#templateloading3").val();
-                                  var rawdatatemplate=$("#templaterawdata3").val();
-                                   var gelinspectortemplate=$("#templategelinspector3").val();
+                                   var loadingtemplate="default";
+                                  var rawdatatemplate="default";
+                                  var gelinspectortemplate="default";
+//                                  
+//                                    var loadingtemplate=$("#templateloading3").val();
+//                                  var rawdatatemplate=$("#templaterawdata3").val();
+//                                   var gelinspectortemplate=$("#templategelinspector3").val();
                                   //var geltemplate=$("#template4").val();
                                   var setUpResourceId="${session.getAttribute('performedSetUpResourceId')}";
 
@@ -298,33 +304,30 @@ ${remoteFunction(controller:'lab', action:'clear', params:'\'after=\'+3', update
        	$( "#dialog-form-update" ).dialog({
                         autoOpen: false,
                         height:760,
-                        width: 600,
+                        width: 650,
                         modal: true,
                         buttons: {
-                                "Update an experiment": function() {
+                                
+                                "Update Experiment": function() {
                                   var experimentId="${session.getAttribute('experimentId')}";                          
                                   var experimentTopic=$("#topic2").val();
                                   var setuptemplate=$("#template2").val();     
-                                  var loadingtemplate=$("#templateloading2").val();
-                                  var rawdatatemplate=$("#templaterawdata2").val();
-                                  var gelinspectortemplate=$("#templategelinspector2").val();
+                                   var loadingtemplate="default";
+                                  var rawdatatemplate="default";
+                                  var gelinspectortemplate="default";
                                   var setUpResourceId="${session.getAttribute('setUpResourceIdUpdate')}";                     
-                                  var stimulus
+                                //  var stimulus
+                                var blotnum=$("#blotnumupdate").val();
                                   var randomization
-                                         var min1=$("#minDis1update").val();
+                                  var min1=$("#minDis1update").val();
                                   var min2=$("#minDis2update").val();
                                   var min3=$("#minDis3update").val();
-                                  if($('input[name=attribute3]').is(':checked')){
-                                    stimulus=true
-                                  }else{
-                                     stimulus=false
-                                  }
                                    if($('input[name=attribute4]').is(':checked')){
                                     randomization=true
                                   }else{
                                     randomization=false
                                   }
-${remoteFunction(controller:'lab', action:'updateExp', params:'\'experimentName=\'+experimentName+\'&experimentId=\'+experimentId+\'&experimentTopic=\'+experimentTopic+\'&setuptemplate=\'+setuptemplate+\'&loadingtemplate=\'+loadingtemplate+\'&rawdatatemplate=\'+rawdatatemplate+\'&gelinspectortemplate=\'+gelinspectortemplate+\'&setUpResourceId=\'+setUpResourceId+\'&stimulus=\'+stimulus+\'&randomization=\'+randomization+\'&min1=\'+min1+\'&min2=\'+min2+\'&min3=\'+min3', update:'updateMe', onLoading:'showSpinner()', onComplete:'hideSpinner()') };
+${remoteFunction(controller:'lab', action:'updateExp', params:'\'experimentName=\'+experimentName+\'&experimentId=\'+experimentId+\'&experimentTopic=\'+experimentTopic+\'&setuptemplate=\'+setuptemplate+\'&loadingtemplate=\'+loadingtemplate+\'&rawdatatemplate=\'+rawdatatemplate+\'&gelinspectortemplate=\'+gelinspectortemplate+\'&setUpResourceId=\'+setUpResourceId+\'&blotnum=\'+blotnum+\'&randomization=\'+randomization+\'&min1=\'+min1+\'&min2=\'+min2+\'&min3=\'+min3', update:'updateMe', onLoading:'showSpinner()', onComplete:'hideSpinner()') };
                                   $( this ).dialog( "close" );
 
                                 }, //end update experiment
@@ -347,22 +350,12 @@ ${remoteFunction(controller:'lab', action:'clear', params:'\'after=\'+2', update
         $('select#template').selectmenu({style:'popup'});
         $('select#template2').selectmenu({style:'popup'});
        $('select#template3').selectmenu({style:'popup'});
-          $('select#templaterawdata').selectmenu({style:'popup'});
-        $('select#templaterawdata2').selectmenu({style:'popup'});
-       $('select#templaterawdata3').selectmenu({style:'popup'});
-       
-           $('select#templateloading').selectmenu({style:'popup'});
-        $('select#templateloading2').selectmenu({style:'popup'});
-       $('select#templateloading3').selectmenu({style:'popup'});
-         
-        $('select#templategelinspector').selectmenu({style:'popup'});
-        $('select#templategelinspector2').selectmenu({style:'popup'});
-        $('select#templategelinspector3').selectmenu({style:'popup'});
 
-        
+          $('select#blotnum').selectmenu({style:'popup'});
         $('select#minDis1').selectmenu({style:'popup'});
         $('select#minDis2').selectmenu({style:'popup'});
         $('select#minDis3').selectmenu({style:'popup'});
+                $('select#blotnumupdate').selectmenu({style:'popup'});
         $('select#minDis1update').selectmenu({style:'popup'});
         $('select#minDis2update').selectmenu({style:'popup'});
         $('select#minDis3update').selectmenu({style:'popup'});
@@ -398,9 +391,17 @@ ${remoteFunction(controller:'lab', action:'clear', params:'\'after=\'+2', update
              }
      refreshTableSorter();
 
-          
+     //test configure togetherJS
+    TogetherJSConfig_getUserName = function () {return "${User.get(Integer.parseInt(sec.loggedInUserInfo(field:'id').toString()?:'0'))}";};
+    TogetherJSConfig_on_ready = function () {sendTogetherJSURLToServer(TogetherJS.shareUrl());};  //call TogetgerJS.shareUrl() can get the session link
+
     
      }//end load
+     
+     //customized togetherJS
+      
+     
+     
      
      function sectionSelection(nr){
      $("#accordion").accordion({ active: nr}); //works
@@ -480,19 +481,19 @@ ${remoteFunction(controller:'lab', action:'clear', params:'\'after=\'+2', update
       $("#layout-form" ).dialog( "open" );
      }
 
-     function uploadRawData(id){
+//     function uploadRawData(id){
+//       /**
+//        * ./lab/uploadr?experimentId='+id,'Uploading'
+//        */
+//       str="./lab/uploadr?experimentType=new&&resourceType=rawdata&&experimentId="+id
+//
+//     document.location.href =str
+//     }
+       function uploadData(type, rtype,id){
        /**
         * ./lab/uploadr?experimentId='+id,'Uploading'
         */
-       str="./lab/uploadr?experimentType=new&&experimentId="+id
-
-     document.location.href =str
-     }
-       function uploadGels(id){
-       /**
-        * ./lab/uploadr?experimentId='+id,'Uploading'
-        */
-       str="./lab/uploadr?experimentType=old&&experimentId="+id
+       str="./lab/uploadr?experimentType="+type+"&&resourceType="+rtype+"&&experimentId="+id
 
      document.location.href =str
      }
@@ -508,8 +509,9 @@ ${remoteFunction(controller:'lab', action:'clear', params:'\'after=\'+2', update
        
           $("#profile-form" ).dialog( "open" ); 
      }
-     function Mail(id){
+     function Mail(id,type){
       $("#sendSEEKExpId").html(id); 
+        $("#sendType").html(type); 
       $("#email-form").dialog( "open" );
      }
 
@@ -563,9 +565,14 @@ ${remoteFunction(controller:'experiment', action:'stopShareExperiment',  params:
     </span>
     <span class="navspan" onclick="initialPerformedExperiment()">  <img alt="Performed Experiment" src="${createLinkTo(dir: 'images/ui', file: 'plus.png')}" title="For Your Performed (Old) Experiment" />Performed Experiment
     </span>
-    <span> <p id="waitingPlace"></p></span>
+    <span class="navspan" > <p id="waitingPlace"></p></span>
+<!--     <span class="navspan"> <g:link controller="search" class="menuButton" action="sparqlQuery"><img alt="Go To Search Page" src="${createLinkTo(dir: 'images/ui', file: 'search.png')}" title="Go To Search Page" />Go To Search Page</g:link>
+  </span>-->
+    <span class="navspan"><a href="${createLink(uri:'/lab/search')}" ><img alt="Go To Search Page" src="${createLinkTo(dir: 'images/ui', file: 'search.png')}" title="Go To Search Page" />Go To Search Page</a>
+    </span>
   </div>
-
+<!--  <button onclick="TogetherJS(this);return false;">Start Discuss</button>
+<button onclick="alert(TogetherJS.shareUrl());">Share Url</button>-->
   <div id="resource" class="messagecontent">
     <g:if test="${flash.message}">
       <P style="float:right;" > oops~ <img onclick="warning()" style=" cursor: pointer"  src="${createLinkTo(dir:'images/ui', file:'warning.png')}" alt="warning" >
@@ -586,7 +593,7 @@ ${remoteFunction(controller:'experiment', action:'stopShareExperiment',  params:
     <div id="updateTemplate" style=" max-height: 350px; overflow:  auto" >
 
       <g:render template="/ui/user/template" model="['templateInstanceList': Template?.findAll('from Template as b where b.type =:templateType and b.visible=:visibility',[templateType:'public', visibility:true]), 'templateInstanceTotal': Template?.findAll('from Template as b where b.type =:templateType and b.visible=:visibility',[templateType:'public', visibility:true]).size(), params:params]"/>
-  </div>
+    </div>
   </div>
   <div class="hiddencontent">
     <div id="dialog-form" title="Initialize A New Experiment" >
@@ -617,23 +624,36 @@ ${remoteFunction(controller:'experiment', action:'stopShareExperiment',  params:
           </td>
         </tr>
         <tr><td>
-         <g:render template="/ui/user/templateSelec" model="['templateInstanceList': Template?.findAll('from Template as b where b.type =:templateType and b.purpose=:purpose and b.visible=:visibility', [templateType:'public', purpose:'setup', visibility:true]), 'templateLoadingInstanceList': Template?.findAll('from Template as b where b.type =:templateType and b.purpose=:purpose and b.visible=:visibility', [templateType:'public', purpose:'loading',visibility:true]),'templateRawDataInstanceList': Template?.findAll('from Template as b where b.type =:templateType and b.purpose=:purpose and b.visible=:visibility', [templateType:'public', purpose:'rawdata',visibility:true]),'templateGelInstanceList': Template?.findAll('from Template as b where b.type =:templateType and b.purpose=:purpose and b.visible=:visibility', [templateType:'public', purpose:'gelInspector',visibility:true])]"/>
+
+        <g:render template="/ui/user/templateSelec" model="['templateInstanceList': Template?.findAll('from Template as b where b.type =:templateType and b.purpose=:purpose and b.visible=:visibility order by b.id desc', [templateType:'public', purpose:'setup', visibility:true])]"/>
         <br></td>
         </tr>
-
-        <tr><td ><label for="attribute"><b>Properties: </b></label></td></tr>
-        <tr><td >
-            <input class="checkbox" name="attribute1" type="checkbox" value="stimulus">Stimulus (+/-)
+        <tr><td style="border: 1px; border-color: blue; border-style:dashed"><b>Blot Numbers:</b>
+            <select name="blotnum" style=" width:50px;" id="blotnum">
+              <option  value="1">1</option>
+              <option  value="2">2</option>
+              <option selected="true" value="3">3</option>
+              <option   value="4">4</option>
+              <option  value="5">5</option>
+              <option  value="6">6</option>
+              <option  value="7">7</option>
+              <option  value="8">8</option>
+            </select>
           </td>
         </tr>
+        <tr><td ><label for="attribute"><b>Properties: </b></label></td></tr>
+<!--        <tr><td >
+            <input class="checkbox" name="attribute1" type="checkbox" value="stimulus">Stimulus (+/-)
+          </td>
+        </tr>-->
         <tr><td style="border: 1px; border-color: blue; border-style:dashed">
             <input class="checkbox" name="attribute2" type="checkbox" checked="checked"  value="random">Randomization
             <table style="width: 100%">
               <tr><td >Minimal slot distance between sample(i, i+1): 
                   <select name="minDis1" style=" width:50px;" id="minDis1">
                     <option value="1">1</option>
-                    <option  selected="true"  value="2">2</option>
-                    <option value="3">3</option>
+                    <option   value="2">2</option>
+                    <option selected="true" value="3">3</option>
                   </select>
                 </td></tr>
               <tr><td>Minimal slot distance between sample(i, i+2): 
@@ -644,8 +664,8 @@ ${remoteFunction(controller:'experiment', action:'stopShareExperiment',  params:
                   </select></td></tr>
               <tr><td>Minimal slot distance between sample(i, i+3):
                   <select name="minDis3" style=" width:50px;" id="minDis3">
-                    <option value="1">1</option>
-                    <option  selected="true"  value="2">2</option>
+                    <option  selected="true" value="1">1</option>
+                    <option  value="2">2</option>
                     <option value="3">3</option>
                   </select>
                 </td></tr>
@@ -684,7 +704,7 @@ ${remoteFunction(controller:'experiment', action:'stopShareExperiment',  params:
           </td>
         </tr>
         <tr>
-        <g:render template="/ui/user/templateSelec3" model="['templateInstanceList': Template?.findAll('from Template as b where b.type =:templateType and b.purpose=:purpose and b.visible=:visibility', [templateType:'public', purpose:'setup', visibility:true]), 'templateLoadingInstanceList': Template?.findAll('from Template as b where b.type =:templateType and b.purpose=:purpose and b.visible=:visibility', [templateType:'public', purpose:'loading',visibility:true]),'templateRawDataInstanceList': Template?.findAll('from Template as b where b.type =:templateType and b.purpose=:purpose and b.visible=:visibility', [templateType:'public', purpose:'rawdata',visibility:true]),'templateGelInstanceList': Template?.findAll('from Template as b where b.type =:templateType and b.purpose=:purpose and b.visible=:visibility', [templateType:'public', purpose:'gelInspector',visibility:true])]"/>
+        <g:render template="/ui/user/templateSelec3"  model="['templateInstanceList': Template?.findAll('from Template as b where b.type =:templateType and b.purpose=:purpose and b.visible=:visibility order by b.id desc', [templateType:'public', purpose:'setup', visibility:true])]"/>
         <br>
         </tr>
 
@@ -721,13 +741,23 @@ ${remoteFunction(controller:'experiment', action:'stopShareExperiment',  params:
           </td>
         </tr>
         <tr>
-        <g:render template="/ui/user/templateSelec2" model="['templateInstanceList': Template?.findAll('from Template as b where b.type =:templateType and b.purpose=:purpose and b.visible=:visibility', [templateType:'public', purpose:'setup', visibility:true]), 'templateLoadingInstanceList': Template?.findAll('from Template as b where b.type =:templateType and b.purpose=:purpose and b.visible=:visibility', [templateType:'public', purpose:'loading',visibility:true]),'templateRawDataInstanceList': Template?.findAll('from Template as b where b.type =:templateType and b.purpose=:purpose and b.visible=:visibility', [templateType:'public', purpose:'rawdata',visibility:true]),'templateGelInstanceList': Template?.findAll('from Template as b where b.type =:templateType and b.purpose=:purpose and b.visible=:visibility', [templateType:'public', purpose:'gelInspector',visibility:true])]"/>
+        <g:render template="/ui/user/templateSelec2"  model="['templateInstanceList': Template?.findAll('from Template as b where b.type =:templateType and b.purpose=:purpose and b.visible=:visibility order by b.id desc', [templateType:'public', purpose:'setup', visibility:true])]"/>
         <br>
+        </tr>   
+        <tr><td style="border: 1px; border-color: blue; border-style:dashed"><b>Blot Numbers:</b>
+            <select name="blotnumupdate" style=" width:50px;" id="blotnumupdate">
+              <option  value="1">1</option>
+              <option  value="2">2</option>
+              <option selected="true" value="3">3</option>
+              <option   value="4">4</option>
+              <option  value="5">5</option>
+              <option  value="6">6</option>
+              <option  value="7">7</option>
+              <option  value="8">8</option>
+            </select>
+          </td>
         </tr>
         <tr><td><label for="attribute"><b>Properties: </b></label></td></tr>
-        <tr><td >
-            <input class="checkbox" name="attribute3" type="checkbox" value="stimulus">Stimulus (+/-)
-          </td></tr>
         <tr><td style="border: 1px; border-color: blue; border-style:dashed">
             <input class="checkbox" name="attribute4" type="checkbox" checked="checked"  value="random">Randomization
           </td></tr>
@@ -736,8 +766,8 @@ ${remoteFunction(controller:'experiment', action:'stopShareExperiment',  params:
               <tr><td >Minimal slot distance between sample(i, i+1): 
                   <select name="minDis1update" style=" width:50px;" id="minDis1update">
                     <option  value="1">1</option>
-                    <option selected="true" value="2">2</option>
-                    <option value="3">3</option>
+                    <option  value="2">2</option>
+                    <option selected="true" value="3">3</option>
                   </select>
                 </td></tr>
               <tr><td>Minimal slot distance between sample(i, i+2): 
@@ -748,8 +778,8 @@ ${remoteFunction(controller:'experiment', action:'stopShareExperiment',  params:
                   </select></td></tr>
               <tr><td>Minimal slot distance between sample(i, i+3):
                   <select name="minDis3update" style=" width:50px;" id="minDis3update">
-                    <option value="1">1</option>
-                    <option  selected="true"  value="2">2</option>
+                    <option selected="true"  value="1">1</option>
+                    <option  value="2">2</option>
                     <option value="3">3</option>
                   </select>
                 </td></tr>
@@ -769,7 +799,7 @@ ${remoteFunction(controller:'experiment', action:'stopShareExperiment',  params:
     </div>
 
     <div id="email-form" title="Your email account registered in SEEK VLN">
-      <p>Experiment <span id="sendSEEKExpId"></span> will be sent to SEEK</p>
+      <p>Experiment<span id="sendType" hidden="true"></span> <span id="sendSEEKExpId"></span> will be sent to SEEK</p>
       <p class="ui-widget" > Please provide us your registered email address in SEEK virtual liver</p>
       <br>
       <input  name="emailaddress" id="email"  type="text" size="15" value="${User.findById((sec.loggedInUserInfo(field:"id")).toString())?.seekEmailAddress}" />

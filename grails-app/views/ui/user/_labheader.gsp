@@ -22,14 +22,16 @@
 
 <div class="ui-widget-header" > 
   <table style="width: 100%;  vertical-align:  middle ">
-    <tr><td colspan="2" style=" text-align: left; color: #ffffff; cursor: pointer" >  <a href="${createLink(uri:'/')}" > 
+    <tr><td colspan="3" style=" text-align: left; color: #ffffff; cursor: pointer" >  <a href="${createLink(uri:'/')}" > 
           <img alt="logo"  title="Back to Welcome Page" src="${createLinkTo(dir:'images/ui', file:'excemplify.png')}" style="cursor: pointer" ></a>
       </td>
     </tr>
     <tr>
-       <td style=" width: 60%; text-align: right; vertical-align: baseline;"><img alt="Public Experiment Library " src="${resource(dir: 'images/ui', file: 'publicusersmall.png')}" />
+      <td style=" width: 30%;"><img alt="Back To Lab" src="${resource(dir: 'images/skin', file: 'house.png')}" />
+         <a class="link" href="${createLink(uri:'/lab')}" >Home</a> </td>
+       <td style=" width: 40%; text-align: center; vertical-align: baseline;"><img alt="Public Experiment Library " src="${resource(dir: 'images/ui', file: 'publicusersmall.png')}" />
          <a class="link" href="${createLink(uri:'/public')}" >Public Experiment Library</a> </td>
-      <td style="width: 40%; text-align: right;vertical-align: baseline; font-family: serif;font-size: 15px; font-weight:normal;  color: black">
+      <td style="width: 30%; text-align: right;vertical-align: baseline; font-family: serif;font-size: 15px; font-weight:normal;  color: black">
     <sec:ifLoggedIn>
       <img alt="log in as " src="${createLinkTo(dir: 'images/ui', file: 'user.png')}" /> <sec:username/><img alt="edit profile" style="cursor: pointer" title="update your profile" onclick="updateProfile()" src="${createLinkTo(dir: 'images/ui', file: 'useredit.png')}" /> (<g:link class="link" controller="logout">log out</g:link>)
     </sec:ifLoggedIn>

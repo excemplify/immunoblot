@@ -36,7 +36,7 @@ class KnowledgeFetcher {
             throw new ConceptMissingException("$knowledgeName concept is one of the mandatory concepts, but the mapping for it is missing");
                 
         }else{
-            def matcher=cellKnowledge.markCellRange=~ /(\w)(\d+)/
+            def matcher=cellKnowledge.markCellRange=~ /(\w+)(\d+)/
             println matcher[0]
             def cols=matcher[0][1]  
             def rows=matcher[0][2] 

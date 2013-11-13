@@ -22,16 +22,16 @@ and open the template in the editor.
     <td colspan="2" ><label><b>Using Templates (Stage Specific):</b></label></td>
   </tr>
 <tr >
-  <td style=" width:60px"><label for="template">Setup</label>  </td>
-  <td>
-    <select name="template" id="template">
+  <td style=" width:50px"><label for="template">Setup</label>  </td>
+  <td style=" width:500px">
+    <select name="template" id="template" style=" width:500px">
       <g:each in="${templateInstanceList}" status="i" var="templateInstance">
         <option value="${templateInstance.id}">${i+1}. ${fieldValue(bean: templateInstance, field: "templateName")}</option>
       </g:each>
     </select>
   </td>
 </tr>
-<tr >
+<!--<tr >
   <td style=" width:60px"><label for="templateloading">Loading</label></td>
   <td>
     <select name="templateloading"  id="templateloading">
@@ -66,6 +66,6 @@ and open the template in the editor.
       </g:if>
     </select>
   </td>
-</tr>
+</tr>-->
 
 </table>

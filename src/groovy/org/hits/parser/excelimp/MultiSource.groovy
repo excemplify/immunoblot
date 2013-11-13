@@ -30,35 +30,40 @@ import org.apache.poi.ss.usermodel.*
  * @author jongle
  */
 class MultiSource implements Source{
-	List<Source> sources
-        SourceType sourceType //this tells us how to handle the multiple sources 
-        //          whether to merge them together or outerproduct etc
-       int firstRow
-       int firstColumn
-       int lastRow
-       int lastColumn
+    List<Source> sources
+    SourceType sourceType //this tells us how to handle the multiple sources 
+    //          whether to merge them together or outerproduct etc
+    int firstRow
+    int firstColumn
+    int lastRow
+    int lastColumn
     
-       def knowledgeMap=[:]
+    def knowledgeMap=[:]
     
     public MultiSource(SourceDef sourceDef, StateAndQueue state){
         sources=[new ExpandingExcelSource(sourceDef,state)]
-       }
+    }
        
     public MultiSource(List<SourceDef> sourceDefs, StateAndQueue state){
         sources=[]
-        log.info "sourceDef $sourceDefs"
+        Workbook experimentWorkbook
+        println "start new MultiSource"
         sourceDefs.eachWithIndex{it,n->
             def source
-            println it.class
+            // println it.class
             println it.properties
             if (it.sourceType==SourceType.CURRWORKBOOK.toString()){ //in this case we want the experiment workbook as the source, not the uploaded file
-                def instream = new ByteArrayInputStream(state.state.experimentWorkbookFile)
-                Workbook experimentWorkbook=WorkbookFactory.create(instream)
+              
+                if(experimentWorkbook==null){
+                    def instream = new ByteArrayInputStream(state.state.experimentWorkbookFile)
+                    experimentWorkbook=WorkbookFactory.create(instream)       
+               
+                }
                 state.state.experimentWorkbook=experimentWorkbook
                 source=new ExpandingExcelSource(it,experimentWorkbook,state)
             }
             else{ source = new ExpandingExcelSource(it,state)} //source spreadsheet is the uploaded file
-            println "setting up sources"
+            println "setting up multi sources"
             sources<<source
             if (source.getKnowledge().size()>0){
                 knowledgeMap.put((n), source.getKnowledge().first()) //first because at the moment we only have one item per source
@@ -74,7 +79,7 @@ class MultiSource implements Source{
         
         lastRow=sources.collect{ it.getLastRow()}.max()
         
-        lastColumn=sources.collect{ it.getLastRow()}.max()
+        lastColumn=sources.collect{ it.getLastColumn()}.max()
     }
     
     def setSourceType(SourceType type){
@@ -88,102 +93,102 @@ class MultiSource implements Source{
         }
     }
     
-        def traverse(action){ //how this is done depends on the action. actually quite fundamentally different ways of calling them
+    def traverse(action){ //how this is done depends on the action. actually quite fundamentally different ways of calling them
         println "multi source traversing..." 
         println sourceType
         if (sourceType==SourceType.CONCAT){
             //not all sources need to be of the same dimensions, but does 
-               println "hello, traversing with the concat"
-         def cells=[]                           //the best it can until it runs out of cells in all sources
-         boolean allEmpty=false
-        while (!allEmpty){
-            cells=[]
-            sources.each{
-                def nextCell=it.getNextCell()
+            println "hello, traversing with the concat"
+            def cells=[]                           //the best it can until it runs out of cells in all sources
+            boolean allEmpty=false
+            while (!allEmpty){
+                cells=[]
+                sources.each{
+                    def nextCell=it.getNextCell()
                 
-                if (nextCell!=null){
+                    if (nextCell!=null){
                    
-                    cells<<nextCell
+                        cells<<nextCell
+                    }
                 }
-            }
-           if (cells.size()==0) allEmpty=true
-           else {
+                if (cells.size()==0) allEmpty=true
+                else {
                     println cells
                     action.call(cells)
                 }
-           }
+            }
            
         }
         else if (sourceType==SourceType.OUTERPRODUCT){ //tricky to generalise to n sources.
         
-        def cellLists=[]
-        println "hello, traversing with the outerproduct action"
+            def cellLists=[]
+            println "hello, traversing with the outerproduct action"
         
-        sources.each{ source->
+            sources.each{ source->
             
-            def cellList=[]
-            for (int i=source.firstRow; i<=source.lastRow;i++){
+                def cellList=[]
+                for (int i=source.firstRow; i<=source.lastRow;i++){
                 
-            Row row = source.sheet.getRow(i)
-            if(row){
-            for (int j=source.firstColumn; j<=source.lastColumn;j++){
+                    Row row = source.sheet.getRow(i)
+                    if(row){
+                        for (int j=source.firstColumn; j<=source.lastColumn;j++){
 
-                Cell cell = row.getCell(j)
-                  if(cell){
-                       cellList.add(cell)    
-                  }
+                            Cell cell = row.getCell(j)
+                            if(cell&&cell.getCellType()!=Cell.CELL_TYPE_BLANK){
+                                cellList.add(cell)    
+                            }
                 
             
                
 
+                        }
+                    }
                 }
-            }
-            }
-            cellLists<<cellList
+                cellLists<<cellList
 
             }
-             println "finish sources cellLists $cellLists"   
-             
+            println "finish sources cellLists $cellLists"   
+           
             action.call(cellLists)
         }else if (sourceType==SourceType.OUTERPRODUCTALLOWNULL){ //tricky to generalise to n sources.
         
-        def cellLists=[]
-        println "hello, traversing with the outerproduct allow null action"
+            def cellLists=[]
+            println "hello, traversing with the outerproduct allow null action"
         
-        sources.each{ source->
+            sources.each{ source->
             
-            def cellList=[]
-            for (int i=source.firstRow; i<=source.lastRow;i++){
+                def cellList=[]
+                for (int i=source.firstRow; i<=source.lastRow;i++){
                 
-            Row row = source.sheet.getRow(i)
-            if(row){
-            for (int j=source.firstColumn; j<=source.lastColumn;j++){
+                    Row row = source.sheet.getRow(i)
+                    if(row){
+                        for (int j=source.firstColumn; j<=source.lastColumn;j++){
 
-                Cell cell = row.getCell(j)
+                            Cell cell = row.getCell(j)
                  
-                       cellList.add(cell)    
+                            cellList.add(cell)    
             
                 
             
                
 
+                        }
+                    }
                 }
-            }
-            }
-            cellLists<<cellList
+                cellLists<<cellList
 
             }
-             println "finish sources cellLists $cellLists"   
+            println "finish sources cellLists $cellLists"   
              
             action.call(cellLists)
         }
         
-     println "finish multi source traversing"
+        println "finish multi source traversing"
     }
     
-   def getFirstRow(){
-       return this.firstRow
-   }
+    def getFirstRow(){
+        return this.firstRow
+    }
    
     def getFirstColumn(){
         return this.firstColumn
@@ -206,7 +211,7 @@ enum SourceType{
     private String type
     
     SourceType(String type){
-       this.type=type
+        this.type=type
     }
     
     def getType(){

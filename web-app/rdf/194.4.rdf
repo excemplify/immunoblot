@@ -1,0 +1,380 @@
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+    xmlns:excemplify="http://hits.org/ontology/lab#" > 
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#1-smad4-1-2">
+    <excemplify:hasTimePoints rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.0</excemplify:hasTimePoints>
+    <excemplify:hasTreatments rdf:datatype="http://www.w3.org/2001/XMLSchema#string">HGF [10mM]</excemplify:hasTreatments>
+    <excemplify:hasCells rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Hepa1-6</excemplify:hasCells>
+    <excemplify:hasProteins rdf:datatype="http://www.w3.org/2001/XMLSchema#string">smad4</excemplify:hasProteins>
+    <excemplify:hasDataValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">935.5</excemplify:hasDataValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#1-smad4-1-6">
+    <excemplify:hasTimePoints rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">30.0</excemplify:hasTimePoints>
+    <excemplify:hasTreatments rdf:datatype="http://www.w3.org/2001/XMLSchema#string">HGF [10mM]</excemplify:hasTreatments>
+    <excemplify:hasCells rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Hepa1-6</excemplify:hasCells>
+    <excemplify:hasProteins rdf:datatype="http://www.w3.org/2001/XMLSchema#string">smad4</excemplify:hasProteins>
+    <excemplify:hasDataValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">4065.5</excemplify:hasDataValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#Experiment">
+    <excemplify:hasName>test2</excemplify:hasName>
+    <excemplify:hasMetaData rdf:resource="http://hits.org/ontology/lab#Proteins0"/>
+    <excemplify:hasData rdf:resource="http://hits.org/ontology/lab#1-psmad2-1-8"/>
+    <excemplify:hasData rdf:resource="http://hits.org/ontology/lab#1-psmad2-1-5"/>
+    <excemplify:hasData rdf:resource="http://hits.org/ontology/lab#2-smad4-1-1"/>
+    <excemplify:hasData rdf:resource="http://hits.org/ontology/lab#1-psmad2-1(1)-5"/>
+    <excemplify:hasData rdf:resource="http://hits.org/ontology/lab#1-psmad2-1(1)-2"/>
+    <excemplify:hasData rdf:resource="http://hits.org/ontology/lab#1-smad4-1-4"/>
+    <excemplify:hasData rdf:resource="http://hits.org/ontology/lab#2-psmad2-1-7"/>
+    <excemplify:hasData rdf:resource="http://hits.org/ontology/lab#1-smad4-1-1"/>
+    <excemplify:hasData rdf:resource="http://hits.org/ontology/lab#2-psmad2-1-6"/>
+    <excemplify:hasData rdf:resource="http://hits.org/ontology/lab#2-psmad2-1-3"/>
+    <excemplify:hasData rdf:resource="http://hits.org/ontology/lab#2-smad4-1-8"/>
+    <excemplify:hasMetaData rdf:resource="http://hits.org/ontology/lab#Treatments0"/>
+    <excemplify:hasMetaData rdf:resource="http://hits.org/ontology/lab#Treatments1"/>
+    <excemplify:hasData rdf:resource="http://hits.org/ontology/lab#2-smad4-1-5"/>
+    <excemplify:hasMetaData rdf:resource="http://hits.org/ontology/lab#Proteins1"/>
+    <excemplify:hasMetaData rdf:resource="http://hits.org/ontology/lab#Proteins2"/>
+    <excemplify:hasData rdf:resource="http://hits.org/ontology/lab#2-psmad2-1-2"/>
+    <excemplify:hasData rdf:resource="http://hits.org/ontology/lab#1-psmad2-1-7"/>
+    <excemplify:hasData rdf:resource="http://hits.org/ontology/lab#2-smad4-1-4"/>
+    <excemplify:hasData rdf:resource="http://hits.org/ontology/lab#2-smad4-1-3"/>
+    <excemplify:hasData rdf:resource="http://hits.org/ontology/lab#1-smad4-1-8"/>
+    <excemplify:hasData rdf:resource="http://hits.org/ontology/lab#1-psmad2-1(1)-7"/>
+    <excemplify:hasData rdf:resource="http://hits.org/ontology/lab#1-psmad2-1(1)-4"/>
+    <excemplify:hasMetaData rdf:resource="http://hits.org/ontology/lab#Cells0"/>
+    <excemplify:hasData rdf:resource="http://hits.org/ontology/lab#1-psmad2-1-4"/>
+    <excemplify:hasData rdf:resource="http://hits.org/ontology/lab#1-smad4-1-3"/>
+    <excemplify:hasData rdf:resource="http://hits.org/ontology/lab#2-psmad2-1-5"/>
+    <excemplify:hasID>194</excemplify:hasID>
+    <excemplify:hasMetaData rdf:resource="http://hits.org/ontology/lab#TimePoints0"/>
+    <excemplify:hasMetaData rdf:resource="http://hits.org/ontology/lab#TimePoints3"/>
+    <excemplify:hasData rdf:resource="http://hits.org/ontology/lab#2-smad4-1-7"/>
+    <excemplify:hasData rdf:resource="http://hits.org/ontology/lab#2-psmad2-1-1"/>
+    <excemplify:hasData rdf:resource="http://hits.org/ontology/lab#2-smad4-1-2"/>
+    <excemplify:hasData rdf:resource="http://hits.org/ontology/lab#1-smad4-1-7"/>
+    <excemplify:hasData rdf:resource="http://hits.org/ontology/lab#1-psmad2-1(1)-6"/>
+    <excemplify:hasData rdf:resource="http://hits.org/ontology/lab#1-smad4-1-6"/>
+    <excemplify:hasData rdf:resource="http://hits.org/ontology/lab#1-psmad2-1(1)-1"/>
+    <excemplify:hasData rdf:resource="http://hits.org/ontology/lab#1-psmad2-1-6"/>
+    <excemplify:hasData rdf:resource="http://hits.org/ontology/lab#1-psmad2-1-3"/>
+    <excemplify:hasData rdf:resource="http://hits.org/ontology/lab#1-smad4-1-5"/>
+    <excemplify:hasTopic>Immunoblot</excemplify:hasTopic>
+    <excemplify:hasData rdf:resource="http://hits.org/ontology/lab#1-psmad2-1-2"/>
+    <excemplify:hasData rdf:resource="http://hits.org/ontology/lab#1-psmad2-1(1)-3"/>
+    <excemplify:hasData rdf:resource="http://hits.org/ontology/lab#1-psmad2-1(1)-8"/>
+    <excemplify:hasData rdf:resource="http://hits.org/ontology/lab#1-psmad2-1-1"/>
+    <excemplify:hasData rdf:resource="http://hits.org/ontology/lab#2-psmad2-1-8"/>
+    <excemplify:hasMetaData rdf:resource="http://hits.org/ontology/lab#TimePoints1"/>
+    <excemplify:hasMetaData rdf:resource="http://hits.org/ontology/lab#TimePoints2"/>
+    <excemplify:hasData rdf:resource="http://hits.org/ontology/lab#1-smad4-1-2"/>
+    <excemplify:hasData rdf:resource="http://hits.org/ontology/lab#2-psmad2-1-4"/>
+    <excemplify:hasData rdf:resource="http://hits.org/ontology/lab#2-smad4-1-6"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#1-psmad2-1-5">
+    <excemplify:hasTimePoints rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">30.0</excemplify:hasTimePoints>
+    <excemplify:hasTreatments rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TGFb [5mM]</excemplify:hasTreatments>
+    <excemplify:hasCells rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Hepa1-6</excemplify:hasCells>
+    <excemplify:hasProteins rdf:datatype="http://www.w3.org/2001/XMLSchema#string">psmad2</excemplify:hasProteins>
+    <excemplify:hasDataValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">202851.65</excemplify:hasDataValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#2-psmad2-1-7">
+    <excemplify:hasTimePoints rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.0</excemplify:hasTimePoints>
+    <excemplify:hasTreatments rdf:datatype="http://www.w3.org/2001/XMLSchema#string">HGF [10mM]</excemplify:hasTreatments>
+    <excemplify:hasCells rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Hepa1-6</excemplify:hasCells>
+    <excemplify:hasProteins rdf:datatype="http://www.w3.org/2001/XMLSchema#string">psmad2</excemplify:hasProteins>
+    <excemplify:hasDataValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">14141.2</excemplify:hasDataValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#2-smad4-1-5">
+    <excemplify:hasTimePoints rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">15.0</excemplify:hasTimePoints>
+    <excemplify:hasTreatments rdf:datatype="http://www.w3.org/2001/XMLSchema#string">HGF [10mM]</excemplify:hasTreatments>
+    <excemplify:hasCells rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Hepa1-6</excemplify:hasCells>
+    <excemplify:hasProteins rdf:datatype="http://www.w3.org/2001/XMLSchema#string">smad4</excemplify:hasProteins>
+    <excemplify:hasDataValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">9585.5</excemplify:hasDataValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#TimePoints0">
+    <excemplify:isA>TimePoints</excemplify:isA>
+    <excemplify:hasValue>0.0</excemplify:hasValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#2-psmad2-1-4">
+    <excemplify:hasTimePoints rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">30.0</excemplify:hasTimePoints>
+    <excemplify:hasTreatments rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TGFb [5mM]</excemplify:hasTreatments>
+    <excemplify:hasCells rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Hepa1-6</excemplify:hasCells>
+    <excemplify:hasProteins rdf:datatype="http://www.w3.org/2001/XMLSchema#string">psmad2</excemplify:hasProteins>
+    <excemplify:hasDataValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">361358.0</excemplify:hasDataValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#1-psmad2-1(1)-6">
+    <excemplify:hasTimePoints rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">30.0</excemplify:hasTimePoints>
+    <excemplify:hasTreatments rdf:datatype="http://www.w3.org/2001/XMLSchema#string">HGF [10mM]</excemplify:hasTreatments>
+    <excemplify:hasCells rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Hepa1-6</excemplify:hasCells>
+    <excemplify:hasProteins rdf:datatype="http://www.w3.org/2001/XMLSchema#string">psmad2</excemplify:hasProteins>
+    <excemplify:hasDataValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">41940.41</excemplify:hasDataValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#Treatments1">
+    <excemplify:isA>Treatments</excemplify:isA>
+    <excemplify:hasValue>TGFb [5mM]</excemplify:hasValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#Proteins0">
+    <excemplify:isA>Proteins</excemplify:isA>
+    <excemplify:hasValue>Smad2</excemplify:hasValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#1-psmad2-1(1)-2">
+    <excemplify:hasTimePoints rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.0</excemplify:hasTimePoints>
+    <excemplify:hasTreatments rdf:datatype="http://www.w3.org/2001/XMLSchema#string">HGF [10mM]</excemplify:hasTreatments>
+    <excemplify:hasCells rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Hepa1-6</excemplify:hasCells>
+    <excemplify:hasProteins rdf:datatype="http://www.w3.org/2001/XMLSchema#string">psmad2</excemplify:hasProteins>
+    <excemplify:hasDataValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">500490.71</excemplify:hasDataValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#1-psmad2-1-1">
+    <excemplify:hasTimePoints rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.0</excemplify:hasTimePoints>
+    <excemplify:hasTreatments rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TGFb [5mM]</excemplify:hasTreatments>
+    <excemplify:hasCells rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Hepa1-6</excemplify:hasCells>
+    <excemplify:hasProteins rdf:datatype="http://www.w3.org/2001/XMLSchema#string">psmad2</excemplify:hasProteins>
+    <excemplify:hasDataValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">34558.0</excemplify:hasDataValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#TimePoints1">
+    <excemplify:isA>TimePoints</excemplify:isA>
+    <excemplify:hasValue>15.0</excemplify:hasValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#2-smad4-1-4">
+    <excemplify:hasTimePoints rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">30.0</excemplify:hasTimePoints>
+    <excemplify:hasTreatments rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TGFb [5mM]</excemplify:hasTreatments>
+    <excemplify:hasCells rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Hepa1-6</excemplify:hasCells>
+    <excemplify:hasProteins rdf:datatype="http://www.w3.org/2001/XMLSchema#string">smad4</excemplify:hasProteins>
+    <excemplify:hasDataValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">42548.5</excemplify:hasDataValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#2-smad4-1-8">
+    <excemplify:hasTimePoints rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.0</excemplify:hasTimePoints>
+    <excemplify:hasTreatments rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TGFb [5mM]</excemplify:hasTreatments>
+    <excemplify:hasCells rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Hepa1-6</excemplify:hasCells>
+    <excemplify:hasProteins rdf:datatype="http://www.w3.org/2001/XMLSchema#string">smad4</excemplify:hasProteins>
+    <excemplify:hasDataValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">4347473.0</excemplify:hasDataValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#1-smad4-1-1">
+    <excemplify:hasTimePoints rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.0</excemplify:hasTimePoints>
+    <excemplify:hasTreatments rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TGFb [5mM]</excemplify:hasTreatments>
+    <excemplify:hasCells rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Hepa1-6</excemplify:hasCells>
+    <excemplify:hasProteins rdf:datatype="http://www.w3.org/2001/XMLSchema#string">smad4</excemplify:hasProteins>
+    <excemplify:hasDataValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">856.5</excemplify:hasDataValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#2-psmad2-1-8">
+    <excemplify:hasTimePoints rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.0</excemplify:hasTimePoints>
+    <excemplify:hasTreatments rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TGFb [5mM]</excemplify:hasTreatments>
+    <excemplify:hasCells rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Hepa1-6</excemplify:hasCells>
+    <excemplify:hasProteins rdf:datatype="http://www.w3.org/2001/XMLSchema#string">psmad2</excemplify:hasProteins>
+    <excemplify:hasDataValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">4805235.57</excemplify:hasDataValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#1-smad4-1-5">
+    <excemplify:hasTimePoints rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">30.0</excemplify:hasTimePoints>
+    <excemplify:hasTreatments rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TGFb [5mM]</excemplify:hasTreatments>
+    <excemplify:hasCells rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Hepa1-6</excemplify:hasCells>
+    <excemplify:hasProteins rdf:datatype="http://www.w3.org/2001/XMLSchema#string">smad4</excemplify:hasProteins>
+    <excemplify:hasDataValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">9585.5</excemplify:hasDataValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#1-psmad2-1-6">
+    <excemplify:hasTimePoints rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">30.0</excemplify:hasTimePoints>
+    <excemplify:hasTreatments rdf:datatype="http://www.w3.org/2001/XMLSchema#string">HGF [10mM]</excemplify:hasTreatments>
+    <excemplify:hasCells rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Hepa1-6</excemplify:hasCells>
+    <excemplify:hasProteins rdf:datatype="http://www.w3.org/2001/XMLSchema#string">psmad2</excemplify:hasProteins>
+    <excemplify:hasDataValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">41940.41</excemplify:hasDataValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#2-psmad2-1-3">
+    <excemplify:hasTimePoints rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">30.0</excemplify:hasTimePoints>
+    <excemplify:hasTreatments rdf:datatype="http://www.w3.org/2001/XMLSchema#string">HGF [10mM]</excemplify:hasTreatments>
+    <excemplify:hasCells rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Hepa1-6</excemplify:hasCells>
+    <excemplify:hasProteins rdf:datatype="http://www.w3.org/2001/XMLSchema#string">psmad2</excemplify:hasProteins>
+    <excemplify:hasDataValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">36.89</excemplify:hasDataValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#1-psmad2-1-2">
+    <excemplify:hasTimePoints rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.0</excemplify:hasTimePoints>
+    <excemplify:hasTreatments rdf:datatype="http://www.w3.org/2001/XMLSchema#string">HGF [10mM]</excemplify:hasTreatments>
+    <excemplify:hasCells rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Hepa1-6</excemplify:hasCells>
+    <excemplify:hasProteins rdf:datatype="http://www.w3.org/2001/XMLSchema#string">psmad2</excemplify:hasProteins>
+    <excemplify:hasDataValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">500490.71</excemplify:hasDataValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#1-psmad2-1(1)-8">
+    <excemplify:hasTimePoints rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">60.0</excemplify:hasTimePoints>
+    <excemplify:hasTreatments rdf:datatype="http://www.w3.org/2001/XMLSchema#string">HGF [10mM]</excemplify:hasTreatments>
+    <excemplify:hasCells rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Hepa1-6</excemplify:hasCells>
+    <excemplify:hasProteins rdf:datatype="http://www.w3.org/2001/XMLSchema#string">psmad2</excemplify:hasProteins>
+    <excemplify:hasDataValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">4805235.57</excemplify:hasDataValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#Treatments0">
+    <excemplify:isA>Treatments</excemplify:isA>
+    <excemplify:hasValue>HGF [10mM]</excemplify:hasValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#1-psmad2-1(1)-7">
+    <excemplify:hasTimePoints rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">60.0</excemplify:hasTimePoints>
+    <excemplify:hasTreatments rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TGFb [5mM]</excemplify:hasTreatments>
+    <excemplify:hasCells rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Hepa1-6</excemplify:hasCells>
+    <excemplify:hasProteins rdf:datatype="http://www.w3.org/2001/XMLSchema#string">psmad2</excemplify:hasProteins>
+    <excemplify:hasDataValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">1.45841412E7</excemplify:hasDataValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#1-psmad2-1(1)-3">
+    <excemplify:hasTimePoints rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">15.0</excemplify:hasTimePoints>
+    <excemplify:hasTreatments rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TGFb [5mM]</excemplify:hasTreatments>
+    <excemplify:hasCells rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Hepa1-6</excemplify:hasCells>
+    <excemplify:hasProteins rdf:datatype="http://www.w3.org/2001/XMLSchema#string">psmad2</excemplify:hasProteins>
+    <excemplify:hasDataValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">364823.89</excemplify:hasDataValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#2-smad4-1-1">
+    <excemplify:hasTimePoints rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">60.0</excemplify:hasTimePoints>
+    <excemplify:hasTreatments rdf:datatype="http://www.w3.org/2001/XMLSchema#string">HGF [10mM]</excemplify:hasTreatments>
+    <excemplify:hasCells rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Hepa1-6</excemplify:hasCells>
+    <excemplify:hasProteins rdf:datatype="http://www.w3.org/2001/XMLSchema#string">smad4</excemplify:hasProteins>
+    <excemplify:hasDataValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">856.5</excemplify:hasDataValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#TimePoints2">
+    <excemplify:isA>TimePoints</excemplify:isA>
+    <excemplify:hasValue>30.0</excemplify:hasValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#1-psmad2-1-7">
+    <excemplify:hasTimePoints rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">60.0</excemplify:hasTimePoints>
+    <excemplify:hasTreatments rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TGFb [5mM]</excemplify:hasTreatments>
+    <excemplify:hasCells rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Hepa1-6</excemplify:hasCells>
+    <excemplify:hasProteins rdf:datatype="http://www.w3.org/2001/XMLSchema#string">psmad2</excemplify:hasProteins>
+    <excemplify:hasDataValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">1.45841412E7</excemplify:hasDataValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#Cells0">
+    <excemplify:isA>Cells</excemplify:isA>
+    <excemplify:hasValue>Hepa1-6</excemplify:hasValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#2-smad4-1-7">
+    <excemplify:hasTimePoints rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.0</excemplify:hasTimePoints>
+    <excemplify:hasTreatments rdf:datatype="http://www.w3.org/2001/XMLSchema#string">HGF [10mM]</excemplify:hasTreatments>
+    <excemplify:hasCells rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Hepa1-6</excemplify:hasCells>
+    <excemplify:hasProteins rdf:datatype="http://www.w3.org/2001/XMLSchema#string">smad4</excemplify:hasProteins>
+    <excemplify:hasDataValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">2.3231702E7</excemplify:hasDataValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#Proteins2">
+    <excemplify:isA>Proteins</excemplify:isA>
+    <excemplify:hasValue>Snon</excemplify:hasValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#1-psmad2-1-3">
+    <excemplify:hasTimePoints rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">15.0</excemplify:hasTimePoints>
+    <excemplify:hasTreatments rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TGFb [5mM]</excemplify:hasTreatments>
+    <excemplify:hasCells rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Hepa1-6</excemplify:hasCells>
+    <excemplify:hasProteins rdf:datatype="http://www.w3.org/2001/XMLSchema#string">psmad2</excemplify:hasProteins>
+    <excemplify:hasDataValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">364823.89</excemplify:hasDataValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#1-smad4-1-4">
+    <excemplify:hasTimePoints rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">15.0</excemplify:hasTimePoints>
+    <excemplify:hasTreatments rdf:datatype="http://www.w3.org/2001/XMLSchema#string">HGF [10mM]</excemplify:hasTreatments>
+    <excemplify:hasCells rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Hepa1-6</excemplify:hasCells>
+    <excemplify:hasProteins rdf:datatype="http://www.w3.org/2001/XMLSchema#string">smad4</excemplify:hasProteins>
+    <excemplify:hasDataValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">42548.5</excemplify:hasDataValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#2-psmad2-1-2">
+    <excemplify:hasTimePoints rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">60.0</excemplify:hasTimePoints>
+    <excemplify:hasTreatments rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TGFb [5mM]</excemplify:hasTreatments>
+    <excemplify:hasCells rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Hepa1-6</excemplify:hasCells>
+    <excemplify:hasProteins rdf:datatype="http://www.w3.org/2001/XMLSchema#string">psmad2</excemplify:hasProteins>
+    <excemplify:hasDataValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">500490.71</excemplify:hasDataValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#2-psmad2-1-6">
+    <excemplify:hasTimePoints rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">15.0</excemplify:hasTimePoints>
+    <excemplify:hasTreatments rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TGFb [5mM]</excemplify:hasTreatments>
+    <excemplify:hasCells rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Hepa1-6</excemplify:hasCells>
+    <excemplify:hasProteins rdf:datatype="http://www.w3.org/2001/XMLSchema#string">psmad2</excemplify:hasProteins>
+    <excemplify:hasDataValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">41940.41</excemplify:hasDataValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#1-psmad2-1(1)-4">
+    <excemplify:hasTimePoints rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">15.0</excemplify:hasTimePoints>
+    <excemplify:hasTreatments rdf:datatype="http://www.w3.org/2001/XMLSchema#string">HGF [10mM]</excemplify:hasTreatments>
+    <excemplify:hasCells rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Hepa1-6</excemplify:hasCells>
+    <excemplify:hasProteins rdf:datatype="http://www.w3.org/2001/XMLSchema#string">psmad2</excemplify:hasProteins>
+    <excemplify:hasDataValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">361358.0</excemplify:hasDataValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#TimePoints3">
+    <excemplify:isA>TimePoints</excemplify:isA>
+    <excemplify:hasValue>60.0</excemplify:hasValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#2-smad4-1-2">
+    <excemplify:hasTimePoints rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">60.0</excemplify:hasTimePoints>
+    <excemplify:hasTreatments rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TGFb [5mM]</excemplify:hasTreatments>
+    <excemplify:hasCells rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Hepa1-6</excemplify:hasCells>
+    <excemplify:hasProteins rdf:datatype="http://www.w3.org/2001/XMLSchema#string">smad4</excemplify:hasProteins>
+    <excemplify:hasDataValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">935.5</excemplify:hasDataValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#1-smad4-1-8">
+    <excemplify:hasTimePoints rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">60.0</excemplify:hasTimePoints>
+    <excemplify:hasTreatments rdf:datatype="http://www.w3.org/2001/XMLSchema#string">HGF [10mM]</excemplify:hasTreatments>
+    <excemplify:hasCells rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Hepa1-6</excemplify:hasCells>
+    <excemplify:hasProteins rdf:datatype="http://www.w3.org/2001/XMLSchema#string">smad4</excemplify:hasProteins>
+    <excemplify:hasDataValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">4347473.0</excemplify:hasDataValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#1-psmad2-1-8">
+    <excemplify:hasTimePoints rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">60.0</excemplify:hasTimePoints>
+    <excemplify:hasTreatments rdf:datatype="http://www.w3.org/2001/XMLSchema#string">HGF [10mM]</excemplify:hasTreatments>
+    <excemplify:hasCells rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Hepa1-6</excemplify:hasCells>
+    <excemplify:hasProteins rdf:datatype="http://www.w3.org/2001/XMLSchema#string">psmad2</excemplify:hasProteins>
+    <excemplify:hasDataValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">4805235.57</excemplify:hasDataValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#1-psmad2-1(1)-1">
+    <excemplify:hasTimePoints rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.0</excemplify:hasTimePoints>
+    <excemplify:hasTreatments rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TGFb [5mM]</excemplify:hasTreatments>
+    <excemplify:hasCells rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Hepa1-6</excemplify:hasCells>
+    <excemplify:hasProteins rdf:datatype="http://www.w3.org/2001/XMLSchema#string">psmad2</excemplify:hasProteins>
+    <excemplify:hasDataValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">34558.0</excemplify:hasDataValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#Proteins1">
+    <excemplify:isA>Proteins</excemplify:isA>
+    <excemplify:hasValue>Pmad2</excemplify:hasValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#2-smad4-1-6">
+    <excemplify:hasTimePoints rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">15.0</excemplify:hasTimePoints>
+    <excemplify:hasTreatments rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TGFb [5mM]</excemplify:hasTreatments>
+    <excemplify:hasCells rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Hepa1-6</excemplify:hasCells>
+    <excemplify:hasProteins rdf:datatype="http://www.w3.org/2001/XMLSchema#string">smad4</excemplify:hasProteins>
+    <excemplify:hasDataValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">4065.5</excemplify:hasDataValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#1-smad4-1-3">
+    <excemplify:hasTimePoints rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">15.0</excemplify:hasTimePoints>
+    <excemplify:hasTreatments rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TGFb [5mM]</excemplify:hasTreatments>
+    <excemplify:hasCells rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Hepa1-6</excemplify:hasCells>
+    <excemplify:hasProteins rdf:datatype="http://www.w3.org/2001/XMLSchema#string">smad4</excemplify:hasProteins>
+    <excemplify:hasDataValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">19182.5</excemplify:hasDataValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#1-psmad2-1-4">
+    <excemplify:hasTimePoints rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">15.0</excemplify:hasTimePoints>
+    <excemplify:hasTreatments rdf:datatype="http://www.w3.org/2001/XMLSchema#string">HGF [10mM]</excemplify:hasTreatments>
+    <excemplify:hasCells rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Hepa1-6</excemplify:hasCells>
+    <excemplify:hasProteins rdf:datatype="http://www.w3.org/2001/XMLSchema#string">psmad2</excemplify:hasProteins>
+    <excemplify:hasDataValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">361358.0</excemplify:hasDataValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#2-psmad2-1-1">
+    <excemplify:hasTimePoints rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">60.0</excemplify:hasTimePoints>
+    <excemplify:hasTreatments rdf:datatype="http://www.w3.org/2001/XMLSchema#string">HGF [10mM]</excemplify:hasTreatments>
+    <excemplify:hasCells rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Hepa1-6</excemplify:hasCells>
+    <excemplify:hasProteins rdf:datatype="http://www.w3.org/2001/XMLSchema#string">psmad2</excemplify:hasProteins>
+    <excemplify:hasDataValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">558.0</excemplify:hasDataValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#1-psmad2-1(1)-5">
+    <excemplify:hasTimePoints rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">30.0</excemplify:hasTimePoints>
+    <excemplify:hasTreatments rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TGFb [5mM]</excemplify:hasTreatments>
+    <excemplify:hasCells rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Hepa1-6</excemplify:hasCells>
+    <excemplify:hasProteins rdf:datatype="http://www.w3.org/2001/XMLSchema#string">psmad2</excemplify:hasProteins>
+    <excemplify:hasDataValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">202851.65</excemplify:hasDataValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#2-psmad2-1-5">
+    <excemplify:hasTimePoints rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">15.0</excemplify:hasTimePoints>
+    <excemplify:hasTreatments rdf:datatype="http://www.w3.org/2001/XMLSchema#string">HGF [10mM]</excemplify:hasTreatments>
+    <excemplify:hasCells rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Hepa1-6</excemplify:hasCells>
+    <excemplify:hasProteins rdf:datatype="http://www.w3.org/2001/XMLSchema#string">psmad2</excemplify:hasProteins>
+    <excemplify:hasDataValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">202851.65</excemplify:hasDataValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#2-smad4-1-3">
+    <excemplify:hasTimePoints rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">30.0</excemplify:hasTimePoints>
+    <excemplify:hasTreatments rdf:datatype="http://www.w3.org/2001/XMLSchema#string">HGF [10mM]</excemplify:hasTreatments>
+    <excemplify:hasCells rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Hepa1-6</excemplify:hasCells>
+    <excemplify:hasProteins rdf:datatype="http://www.w3.org/2001/XMLSchema#string">smad4</excemplify:hasProteins>
+    <excemplify:hasDataValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">19182.5</excemplify:hasDataValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#1-smad4-1-7">
+    <excemplify:hasTimePoints rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">60.0</excemplify:hasTimePoints>
+    <excemplify:hasTreatments rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TGFb [5mM]</excemplify:hasTreatments>
+    <excemplify:hasCells rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Hepa1-6</excemplify:hasCells>
+    <excemplify:hasProteins rdf:datatype="http://www.w3.org/2001/XMLSchema#string">smad4</excemplify:hasProteins>
+    <excemplify:hasDataValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">2.3231702E7</excemplify:hasDataValue>
+  </rdf:Description>
+</rdf:RDF>

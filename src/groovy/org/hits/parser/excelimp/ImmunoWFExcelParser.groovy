@@ -22,6 +22,7 @@ package org.hits.parser.excelimp
 
 import org.hits.parser.core.*
 import org.apache.poi.ss.usermodel.*
+import org.hits.ui.exceptions.*
 
 
 /**

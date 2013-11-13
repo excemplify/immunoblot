@@ -22,7 +22,9 @@ package org.hits.parser.excelimp
 
 import org.hits.parser.core.*
 import org.apache.poi.ss.usermodel.*
-
+import org.hits.ui.exceptions.*
+import org.apache.poi.xssf.usermodel.XSSFWorkbook
+import org.apache.poi.hssf.usermodel.HSSFWorkbook
 
 /**
  *
@@ -53,7 +55,11 @@ class RawDataExcelParser implements Parser{
         // configurations has: target, action, name, nodeType, sources
         //first check if we need one source or multiple... assuming use of expanding excelsource in both
         if (!state.state.workbook){
+            println"null workbook"
             origWorkbook=WorkbookFactory.create(state.state.file) 
+            if(!origWorkbook){
+                println"still null?"
+            }
             //origWorkbook=WorkbookFactory.create(state.state.experimentWorkbookFile) 
             state.state.workbook=origWorkbook
         }
@@ -78,18 +84,14 @@ class RawDataExcelParser implements Parser{
                     println "dirty"
                     it.sheetName=it.sheetName.getPersistentValue()
                 }
-                println "source sheet name ${it.sheetName}"
+                // println "source sheet name ${it.sheetName}"
                 if (it.sheetName.contains("auto_Loading")){ //it seems to be caching or saving the domain object somewhere
                     println "changing to add blot Num"
                     it.sheetName = "auto_Loading_$blotNum"// for when we have multiple blots we need to make sure we are getting the corresponding lane loading
                 }
                 
             }
-            println "and after making sure domain object is the same..."
-            configurations.sources.each{
-                println "source sheet name ${it.sheetName}"
-                
-            }
+             
             source= new MultiSource(configurations.sources, state)
             
             if ( action==ImmunoParserAction.MATCH_AND_SPLIT)
@@ -104,17 +106,26 @@ class RawDataExcelParser implements Parser{
                 source.setSourcesSameLength()
             } 
         }
-        else source = new ExpandingExcelSource(configurations.sources.first(), state)
+        else if (configurations.sources.size()==1){
+              source = new ExpandingExcelSource(configurations.sources.first(), state)
+        }
+
         // set which action
-        knowledgeMap=source.getKnowledgeMap()
+       
+        knowledgeMap=source?.getKnowledgeMap()
+          
         println action
         //set the target
+        println "going to get target"
         this.target=new TemplateExcelTarget(configurations.target,state)
         this.targetSheetPrefix=configurations.target.sheetName
+       
         if (state.state.experimentWorkbook.getSheet("$targetSheetPrefix $blotNum")){ //we want to test if we have already written to
+           // println "here1"
             target.sheet=state.state.experimentWorkbook.getSheet("$targetSheetPrefix $blotNum")
         }
         else {
+            //println"here2"
             def newsheet=state.state.experimentWorkbook.createSheet("$targetSheetPrefix $blotNum")
             copyRows(target.sheet,newsheet) //we do this here to make sure we are just copying the template part, not overwriting data
             target.sheet=newsheet
@@ -123,7 +134,8 @@ class RawDataExcelParser implements Parser{
      
         target.setRowDiff(source.getFirstRow())
         target.setColDiff(source.getFirstColumn())
-        
+        println"finish configure"
+     
     }
    
     
@@ -144,12 +156,45 @@ class RawDataExcelParser implements Parser{
         
         state.state.blankcells=blankcells
         byte[] parsedBook
-        def outstream = new ByteArrayOutputStream()
+    
         
         state.state.workbook=origWorkbook //to make sure we don't overwrite old changes //but now there's a problem with the sheets
-        //origWorkbook.write(outstream)
-        state.state.experimentWorkbook.write(outstream)
+       def outstream = new ByteArrayOutputStream() 
+        println"start write stream"
+         state.state.experimentWorkbook.write(outstream)
         parsedBook=outstream.toByteArray()
+       
+        
+            
+//        def f
+//        def fileOut
+//        if(state.state.experimentWorkbook instanceof XSSFWorkbook){    
+//            println"xssf workbook, you need renew for multiply write"
+//            f=new File("tempworkbook.xlsx")
+//            fileOut = new FileOutputStream(f);
+//            println "start write outstream"
+//            state.state.experimentWorkbook.write(fileOut);
+//              
+//            fileOut.close();
+//            println"finish write stream"
+//         InputStream inputStream = new FileInputStream(f);
+//     state.state.experimentWorkbook =new XSSFWorkbook(inputStream);
+//  
+//    
+//            println "renewed"
+//         
+//        }else{
+//        
+//            f=new File("tempworkbook.xls")
+//            fileOut = new FileOutputStream(f);
+//            println "start write outstream"
+//            state.state.experimentWorkbook.write(fileOut);
+//             
+//            fileOut.close();
+//            println"finish write stream"
+//        }
+//       parsedBook=f.getBytes()
+
         state.state.parsedFile=parsedBook
         state.state.success=true
         return state
@@ -268,66 +313,7 @@ class RawDataExcelParser implements Parser{
         }
         println "finish copy"
     }
-    
-    // new strategy get the lane and name from the loading sheet, 
-    
-    //    def matchAndSplit={List cellLists-> 
-    //        //format for first cellLi
-    //        println "cellLists $cellLists"
-    //        def matchLists=cellLists[0]
-    //        println "matchLists $matchLists"
-    //        def times=[] 
-    //        def doses=[] 
-    //        def inhibitors=[]
-    //        cellLists[2].each{times<<"${parseCell(it)}"}
-    //        // print "times $times"
-    //        cellLists[3].each{doses<<"${parseCell(it)}"}
-    //        
-    //        if(cellLists[4]){
-    //            cellLists[4].each{inhibitors<<"${parseCell(it)}"}
-    //        }else{
-    //          inhibitors<<"n/a"
-    //        }
-    //        //cellLists[1].each{times<<"${parseCell(it)}"}
-    //        
-    //        def cellNames = []
-    //        cellLists[1].each{cellNames<<parseCell(it)}
-    //        // cellLists[2].each{cellNames<<parseCell(it)}
-    //        println "cellNames $cellNames"
-    //        def stimuli=["+","-"] // the two kinds of stimulus markers we have
-    //        
-    //        for (int i=0;i<matchLists.size();i=i+2){
-    //            def thisRowCells=[]
-    //           
-    //            def laneNumber=parseCell(matchLists.get(i)) as int //lane number
-    //            //  println "matchLists.get $i = ${matchLists.get(i)} -> $laneNumber"
-    //            def cellLabel=parseCell(matchLists.get(i+1))   //cellLabel 60.0 primary mouse hepatocytes 1.0 inhibitor
-    //            thisRowCells<< times.find{it=="${cellLabel.split(" ")[0]}"} //need that space so that we don't match all to 0.0
-    //            
-    //            thisRowCells<< doses.find{it=="${cellLabel.split(" ")[-2]}"}
-    //            
-    //            thisRowCells<< inhibitors.find{it=="${cellLabel.split(" ")[-1]}"}
-    //            
-    //            thisRowCells<< cellNames.findAll{cellLabel.contains(it)}.max{it.length()}             
-    //            thisRowCells<< stimuli.find{ cellLabel.contains(" $it")}?:""
-    //            // println "thisRowCells $thisRowCells"
-    //            // now write each of them for each row
-    //            Row row=target.sheet.getRow(target.firstRow-1+laneNumber)
-    //            if(row==null){
-    //                row=target.sheet.createRow(target.firstRow-1+laneNumber)
-    //            }
-    //            def indexCell=row.getCell(target.firstColumn)?:row.createCell(target.firstColumn) //set the lane numbers
-    //            indexCell.setCellValue("$laneNumber")
-    //            thisRowCells.eachWithIndex{cellValue,m->
-    //                Cell targetCell = row.getCell(target.firstColumn+1+m)?:row.createCell(target.firstColumn+1+m)
-    //                targetCell.setCellValue(cellValue)
-    //                  
-    //            }
-    //     
-    //        }
-    //         
-    //          
-    //    }
+ 
        
     def matchAndSplit={List cellLists-> 
         //format for first cellLi
@@ -336,50 +322,62 @@ class RawDataExcelParser implements Parser{
         println "rawdata parser matchLists $matchLists"
         def times=[] 
         def doses=[] 
-        def inhibitors=[]
+        //def inhibitors=[]
         cellLists[2].each{times<<"${parseCell(it)}"}
-        // print "times $times"
+        print "times $times"
         cellLists[3].each{doses<<"${parseCell(it)}"}
-        
-        if(cellLists[4]){
-            cellLists[4].each{inhibitors<<"${parseCell(it)}"}
-        }else{
-            inhibitors<<"n/a"
-        }
+        print "doses $doses"
+//        if(cellLists[4]){
+//            cellLists[4].each{inhibitors<<"${parseCell(it)}"}
+//        }else{
+//            inhibitors<<"n/a"
+//        }
+        def conditions=[]
+        cellLists[cellLists.size()-1].each{conditions << Integer.valueOf("${parseCell(it)}")}
+        println"conditions $conditions"
         //cellLists[1].each{times<<"${parseCell(it)}"}
         
         def cellNames = []
         cellLists[1].each{cellNames<<parseCell(it)}
         // cellLists[2].each{cellNames<<parseCell(it)}
         println "cellNames $cellNames"
-        def stimuli=["+","-"] // the two kinds of stimulus markers we have
-        int stimulipos=0
+        // def stimuli=["+","-"] // the two kinds of stimulus markers we have
+        // int stimulipos=0
+        int j=0
         for (int i=0;i<matchLists.size();i=i+2){
             def thisRowCells=[]
-           
+        
             def laneNumber=parseCell(matchLists.get(i)) as int //lane number
-            //  println "matchLists.get $i = ${matchLists.get(i)} -> $laneNumber"
-            def cellLabel=parseCell(matchLists.get(i+1))   //cellLabel 60.0 primary mouse hepatocytes 1.0 inhibitor
-            thisRowCells<< times.find{it=="${cellLabel.split(" ")[0]}"} //need that space so that we don't match all to 0.0
-            if(cellLabel.split(" ")[-1]=="+" ||cellLabel.split(" ")[-1]=="-"){
-                stimulipos=1
-            }
-            if(!cellLists[4] & cellLabel.split(" ")[-1-stimulipos]!="n/a"){  //only for dirty experiments
+            println "laneNumber $laneNumber"
+       
+            def cellLabel=parseCell(matchLists.get(i+1)) //cellLabel 60.0 primary mouse hepatocytes 1.0 inhibitor
+           
+            def conditionLabel=conditions[j] 
+            
+            println "cellLabel $cellLabel  conditionLabel $conditionLabel"
+            thisRowCells<< times.find{it=="${cellLabel.split(" \\| ")[0]}"} //need that space so that we don't match all to 0.0
+
+//            if(!cellLists[4] & cellLabel.split(" \\| ")[-1]!="n/a"){  //only for dirty experiments
+//                
+//                thisRowCells<< doses.find{it=="${cellLabel.split(" \\| ")[-1]}"}
+//            
+//                thisRowCells<< "n/a"
+//            
+//            }else{
+                if(cellLists.size()==6)
+                  thisRowCells<< doses.find{it=="${cellLabel.split(" \\| ")[-2]}"}
+                  else
+                thisRowCells<< doses.find{it=="${cellLabel.split(" \\| ")[-1]}"}
                 
-                thisRowCells<< doses.find{it=="${cellLabel.split(" ")[-1-stimulipos]}"}
             
-                thisRowCells<< "n/a"
+             //   thisRowCells<< inhibitors.find{it=="${cellLabel.split(" \\| ")[-1]}"}
+         //   }
             
-            }else{
-               
             
-                thisRowCells<< doses.find{it=="${cellLabel.split(" ")[-2-stimulipos]}"}
-            
-                thisRowCells<< inhibitors.find{it=="${cellLabel.split(" ")[-1-stimulipos]}"}
-            }
-            
-            thisRowCells<< cellNames.findAll{cellLabel.contains(it)}.max{it.length()}             
-            thisRowCells<< stimuli.find{ cellLabel.contains(" $it")}?:""
+            thisRowCells<< cellNames.findAll{cellLabel.contains(it)}.max{it.length()}   
+            if(conditionLabel)
+            thisRowCells<< Integer.valueOf(conditionLabel)
+            // thisRowCells<< stimuli.find{ cellLabel.contains(" $it")}?:""
             // println "thisRowCells $thisRowCells"
             // now write each of them for each row
             Row row=target.sheet.getRow(target.firstRow-1+laneNumber)
@@ -388,79 +386,81 @@ class RawDataExcelParser implements Parser{
             }
             def indexCell=row.getCell(target.firstColumn)?:row.createCell(target.firstColumn) //set the lane numbers
             indexCell.setCellValue("$laneNumber")
+            println "thisRowCells $thisRowCells"
             thisRowCells.eachWithIndex{cellValue,m->
                 Cell targetCell = row.getCell(target.firstColumn+1+m)?:row.createCell(target.firstColumn+1+m)
+                targetCell.setCellType(Cell.CELL_TYPE_STRING)
                 targetCell.setCellValue(cellValue)
                   
             }
-     
+            j=j+1
         }
          
           
     }
     
-    def outerProductMatch={List cellLists ->  //flattens to one column //we use this closure to set up the cells/time/lanenumber/stimulation columns in the sheet, problem is with stimulation
-        //Sheet targetSheet=target.sheet
-        //first two lists  
-        def matchLists=cellLists[0]
-        def nameToLaneMap=[:]
-        for (int i=0;i<matchLists.size();i=i+2){
-            def name=parseCell(matchLists.get(i+1))
-            if(parseCell(matchLists.get(i)))
-            nameToLaneMap.putAt((name),parseCell(matchLists.get(i)))
-            else
-            nameToLaneMap.putAt((name), "n/a")
-        }
-          
-        println "rawdata outerProduct match" nameToLaneMap
-        //all remaining lists we do the combos stuff with
-        def allcombos=cellLists[1..-1].combinations()
-         
-        println "rawdata outerProduct match allcombos $allcombos"
-          
-        allcombos.eachWithIndex{it,n->
-             
-              
-            String targetCellName=""    
-             
-            it.each{cell->        
-                if (targetCellName=="") targetCellName=parseCell(cell)
-                else
-                targetCellName="${parseCell(cell)} ${targetCellName}" //whether we prepend or append depends on ordering of sources
-                   
-            }
-            println "targetCellName $targetCellName"
-             
-            def laneNumber = nameToLaneMap.get(targetCellName) as int
-            
-            Row row=target.sheet.getRow(target.firstRow-1+laneNumber)
-            if(row==null){
-                row=target.sheet.createRow(target.firstRow-1+laneNumber)
-            }
-            def indexCell=row.getCell(target.firstColumn)?:row.createCell(target.firstColumn) //set the lane numbers
-            indexCell.setCellValue(nameToLaneMap.get(targetCellName))
-            it.eachWithIndex{cell,m->
-                Cell targetCell = row.getCell(target.firstColumn+1+m)?:row.createCell(target.firstColumn+1+m)
-                targetCell.setCellValue(parseCell(cell))
-                targetCell.setCellType(cell.getCellType())
-            }
-        }
-                                
-    }
-        
+    //    def outerProductMatch={List cellLists ->  //flattens to one column //we use this closure to set up the cells/time/lanenumber/stimulation columns in the sheet, problem is with stimulation
+    //        //Sheet targetSheet=target.sheet
+    //        //first two lists  
+    //        def matchLists=cellLists[0]
+    //        def nameToLaneMap=[:]
+    //        for (int i=0;i<matchLists.size();i=i+2){
+    //            def name=parseCell(matchLists.get(i+1))
+    //            if(parseCell(matchLists.get(i)))
+    //            nameToLaneMap.putAt((name),parseCell(matchLists.get(i)))
+    //            else
+    //            nameToLaneMap.putAt((name), "n/a")
+    //        }
+    //          
+    //        println "rawdata outerProduct match" nameToLaneMap
+    //        //all remaining lists we do the combos stuff with
+    //        def allcombos=cellLists[1..-1].combinations()
+    //         
+    //        println "rawdata outerProduct match allcombos $allcombos"
+    //          
+    //        allcombos.eachWithIndex{it,n->
+    //             
+    //              
+    //            String targetCellName=""    
+    //             
+    //            it.each{cell->        
+    //                if (targetCellName=="") targetCellName=parseCell(cell)
+    //                else
+    //                targetCellName="${parseCell(cell)} ${targetCellName}" //whether we prepend or append depends on ordering of sources
+    //                   
+    //            }
+    //            println "targetCellName $targetCellName"
+    //             
+    //            def laneNumber = nameToLaneMap.get(targetCellName) as int
+    //            
+    //            Row row=target.sheet.getRow(target.firstRow-1+laneNumber)
+    //            if(row==null){
+    //                row=target.sheet.createRow(target.firstRow-1+laneNumber)
+    //            }
+    //            def indexCell=row.getCell(target.firstColumn)?:row.createCell(target.firstColumn) //set the lane numbers
+    //            indexCell.setCellValue(nameToLaneMap.get(targetCellName))
+    //            it.eachWithIndex{cell,m->
+    //                Cell targetCell = row.getCell(target.firstColumn+1+m)?:row.createCell(target.firstColumn+1+m)
+    //                targetCell.setCellValue(parseCell(cell))
+    //                targetCell.setCellType(cell.getCellType())
+    //            }
+    //        }
+    //                                
+    //    }
+    //        
           
   
   
     
-    def defaultErrorHandler={Cell cell->
-        Workbook wbook = cell.getSheet().getWorkbook()
-        CellStyle colourCell = wbook.createCellStyle()
-        colourCell.setFillForegroundColor(HSSFColor.AQUA.index)
-        colourCell.setFillPattern(CellStyle.SOLID_FOREGROUND);
-        
-        cell.setCellStyle(colourCell)
-        
-    } 
+//    def defaultErrorHandler={Cell cell->
+//        Workbook wbook = cell.getSheet().getWorkbook()
+//        CellStyle colourCell = wbook.createCellStyle()
+//        colourCell.setFillForegroundColor(HSSFColor.AQUA.index)
+//        colourCell.setFillPattern(CellStyle.SOLID_FOREGROUND);
+//        
+//        cell.setCellStyle(colourCell)
+//        
+//    } 
     
     def copyRows(Sheet origSheet, Sheet toSheet){
         def iterator = origSheet.rowIterator()

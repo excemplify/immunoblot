@@ -1,21 +1,21 @@
 %{--===================================================
-   Copyright 2010-2013 HITS gGmbH
+Copyright 2010-2013 HITS gGmbH
 
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
 
-       http://www.apache.org/licenses/LICENSE-2.0
+http://www.apache.org/licenses/LICENSE-2.0
 
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
-   ========================================================== 
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+limitations under the License.
+    ========================================================== 
 --}%<!--
-  To change this template, choose Tools | Templates
-  and open the template in the editor.
+To change this template, choose Tools | Templates
+and open the template in the editor.
 -->
 <!--
   To change this template, choose Tools | Templates
@@ -38,11 +38,13 @@
         <table id="experimentList2" class="tablesorter">
           <thead>
             <tr>             
-              <th>Experiment</th>
+              <th>Experiment (zip)</th>
               <th>Type</th>
-              <th>Creation Date</th>
-              <th>Workbook</th>
+              <th>Created At</th>
+<!--              <th>Workbook</th>-->
+              <th>Rawdata Files</th>
               <th>Orig. GelInspector(Upload/Export)</th>
+              <th>Other Files<img style="cursor: pointer" onclick="warningMessage('Here you can upload other non excel files. e.g. image file, pdf file');" src="${createLinkTo(dir:'images/ui', file:'attention.png')}" alt="other related files" ></th>
               <th>Update details (log)</th>
               <th>State(share/private it)</th>
               <th>Delete</th>
@@ -54,24 +56,68 @@
           <g:each  in="${experimentPInstanceList}" status="i" var="experimentPInstance">
 
             <tr class="${(i % 2) == 0 ? 'odd' : 'even'}">
-              <td style=" white-space:pre-line; text-align: justify"><b>${i+1}. </b>${fieldValue(bean: experimentPInstance, field: "filename")}</td>
+              <td style=" white-space:pre-line; text-align: justify"><b>${i+1}. </b>${fieldValue(bean: experimentPInstance, field: "filename")}<g:if test="${experimentPInstance.resources.findAll{(it.type=='rawdata'||it.type=="gelinspector")&& it.state=='active'}.size()>0}"><g:link controller="experiment" class="menuButton" action="downloadAllZip" id="${experimentPInstance.id}"><img src="${createLinkTo(dir:'images/ui', file:'download.png')}" alt="download whole experiment" ></g:link></g:if></td>
               <td>${fieldValue(bean: experimentPInstance, field: "topic")}</td>
               <td><g:formatDate type="datetime" style="medium" date="${experimentPInstance.createdOn}" /></td>
 
-            <td><g:link controller="experiment" class="menuButton" action="downloadPerform" id="${experimentPInstance.id}"><img src="${createLinkTo(dir:'images/ui', file:'download.png')}" alt="download workbook" ></g:link></td>
-            <td>
+<!--            <td><g:link controller="experiment" class="menuButton" action="downloadPerform" id="${experimentPInstance.id}"><img src="${createLinkTo(dir:'images/ui', file:'download.png')}" alt="download workbook" ></g:link></td>-->
+
+            <td >
               <ul class="inline">
                 <li>                
-                  <img  style="cursor: pointer" onclick="uploadGels('${experimentPInstance.id}')"  src="${createLinkTo(dir:'images/ui', file:'Import.png')}" alt="upload existing gel inspector files" >
+                  <img  style="cursor: pointer" onclick="uploadData('old','rawdata','${experimentPInstance.id}')"  src="${createLinkTo(dir:'images/ui', file:'Import.png')}" alt="upload existing gel inspector files" >
                 </li>
-                <g:if test="${experimentPInstance.resources.findAll{it.type=='gelinspector'}.size()>0}">
-                  <li>   <g:link controller="resource"  action="list" params="[expId:experimentPInstance.id, type:'gelinspector']" id="${experimentPInstance.id}">  (<font color="green"> ${experimentPInstance.resources.findAll{it.type=='gelinspector'&& it.state=='active'}.size()}</font>|<font color="red">${experimentPInstance.resources.findAll{it.type=='gelinspector' && it.state=='inactive'}.size()}</font>)</g:link>
-                  <g:link controller="experiment" class="menuButton" action="downloadOrigExport" id="${experimentPInstance.id}"><img src="${createLinkTo(dir:'images/ui', file:'export.png')}" alt="download gelInspector" ></g:link>
-                  </li>
+                <g:if test="${experimentPInstance.resources.findAll{it.type=='rawdata'}.size()>0}">
+                  <li>  
+                  <g:link controller="experiment" class="menuButton" action="downloadRawData" id="${experimentPInstance.id}">
+                    <img style="cursor: pointer" src="${createLinkTo(dir:'images/ui', file:'download.png')}" alt="download all raw data" >
+                  </g:link> 
+                  
+                  <g:link controller="resource"  action="list" params="[expId:experimentPInstance.id, type:'rawdata']" id="${experimentPInstance.id}">  (<font color="green"> ${experimentPInstance.resources.findAll{it.type=='rawdata'&& it.state=='active'}.size()}</font>|<font color="red">${experimentPInstance.resources.findAll{it.type=='rawdata' && it.state=='inactive'}.size()}</font>)</g:link>
+                    <g:link controller="experiment" class="menuButton" action="generateExport" id="${experimentPInstance.id}" params="[layout:'gelinspector']"><img style="cursor: pointer" src="${createLinkTo(dir:'images/ui', file:'export.png')}" alt="export into gelinspector" ></g:link>
+                AutoGelInspector   
+                
+                </li>
                 </g:if>
 
 
 
+              </ul>
+            </td>
+
+
+            <td>
+              <ul class="inline">
+                <li>                
+                  <img  style="cursor: pointer" onclick="uploadData('old','gelinspector','${experimentPInstance.id}')"  src="${createLinkTo(dir:'images/ui', file:'Import.png')}" alt="upload existing gel inspector files" >
+                </li>
+                <g:if test="${experimentPInstance.resources.findAll{it.type=='gelinspector'}.size()>0}">
+                  <li>   <g:link controller="resource"  action="list" params="[expId:experimentPInstance.id, type:'gelinspector']" id="${experimentPInstance.id}">  (<font color="green"> ${experimentPInstance.resources.findAll{it.type=='gelinspector'&& it.state=='active'}.size()}</font>|<font color="red">${experimentPInstance.resources.findAll{it.type=='gelinspector' && it.state=='inactive'}.size()}</font>)</g:link>            
+                  <g:link controller="experiment" class="menuButton" params="[type:'gelinspector']" action="downloadOrigExport" id="${experimentPInstance.id}"><img src="${createLinkTo(dir:'images/ui', file:'download.png')}" alt="download gelInspector" ></g:link>
+                  </li>
+                </g:if>
+              </ul>
+            </td>
+            
+                   <td>
+                <ul class="inline">             <li> 
+                  <img  style="cursor: pointer" onclick="uploadData('old','other','${experimentPInstance.id}')"  src="${createLinkTo(dir:'images/ui', file:'Import.png')}" alt="upload other data" >
+                </li>
+                <g:if test="${experimentPInstance.resources.findAll{it.type=='other'}.size()>0}">  
+
+                  <li> 
+                  <g:link controller="experiment" class="menuButton" params="[type:'other']" action="downloadOrigExport" id="${experimentPInstance.id}">
+                    <img style="cursor: pointer" src="${createLinkTo(dir:'images/ui', file:'download.png')}" alt="download all other data" >
+                  </g:link> 
+                  <g:link controller="resource"  action="list" params="[expId:experimentPInstance.id, type:'other']" id="${experimentPInstance.id}">  (<font color="green"> ${experimentPInstance.resources.findAll{it.type=='other'&& it.state=='active'}.size()}</font>|<font color="red">${experimentPInstance.resources.findAll{it.type=='other' && it.state=='inactive'}.size()}</font>)</g:link>
+                  </li>
+
+                </g:if>
+                <g:else>
+                  <li> 
+                    (<font size="2" color="green"> ${experimentPInstance.resources.findAll{it.type=='other'&& it.state=='active'}.size()}</font>|<font size="2" color="red">${experimentPInstance.resources.findAll{it.type=='other' && it.state=='inactive'}.size()}</font> )
+                  </li>
+                </g:else>
               </ul>
             </td>
 
@@ -90,7 +136,7 @@
             <td> 
               <img  style="cursor: pointer" onclick="DeletePExp('${experimentPInstance.id}','${experimentPInstance.filename}')" src="${createLinkTo(dir:'images/ui', file:'trash.png')}" alt="delete the whole experiment" >
             </td>
-            <td><img  style="cursor: pointer" onclick="Mail('${experimentPInstance.id}')" src="${createLinkTo(dir:'images/ui', file:'seek-logo.png')}" alt="upload to seek" >
+            <td><img  style="cursor: pointer" onclick="Mail('${experimentPInstance.id}','updatePMe')" src="${createLinkTo(dir:'images/ui', file:'seek-logo.png')}" alt="upload to seek" >
             </td>
             </tr>
           </g:each>

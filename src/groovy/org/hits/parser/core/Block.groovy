@@ -19,7 +19,7 @@
  */
 
 package org.hits.parser.core
-
+import org.hits.ui.exceptions.*
 
 /**
  * A Block is part of a parser.

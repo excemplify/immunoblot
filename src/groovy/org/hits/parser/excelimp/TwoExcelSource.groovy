@@ -95,8 +95,8 @@ class TwoExcelSource implements Source{
        
         println "first column1 ${firstColumn} first column2 $firstColumn2"
         println "last column1 ${lastColumn} last column2 $lastColumn2"
-        this.lastRow = findColumnEnd(firstRow, firstColumn, endOfColumnTest) //assuming we will count the first row
-        this.lastRow2 = findColumnEnd(firstRow2, firstColumn2, endOfColumnTest) //assuming we will count the first row
+        this.lastRow = findColumnEnd(firstRow, firstColumn) //assuming we will count the first row
+        this.lastRow2 = findColumnEnd(firstRow2, firstColumn2) //assuming we will count the first row
 
 
         println "last Row ${lastRow} lasRow2 $lastRow2"
@@ -130,25 +130,34 @@ class TwoExcelSource implements Source{
     def getSourceCRA2(){
         return sourceCRA2
     }
-
-    def findColumnEnd(int firstRow, int colnumber,endOfColumnTest){
-        int i=firstRow+2
-        println firstRow
-        println "finding column end ${sheet.getLastRowNum()}"
-        Cell cell = sheet.getRow(firstRow+1).getCell(colnumber) //want the first data row not the header
-        def origCellType = cell.getCellType()
-        println cell.getCellType()
-        while (i<sheet.getLastRowNum() ){
-
-            println "row number $i"
-            cell = sheet.getRow(i).getCell(colnumber) //want the first data row not the header
-            if (endOfColumnTest(cell,origCellType)) {
-                i++
-            }
-            else break
-
+        private boolean isRowEmpty(Row row) {
+        
+    def empty=true
+    
+    for (int c = 0; c <= row.getLastCellNum(); c++) {
+        Cell cell = row.getCell(c);
+        if (cell != null && cell.getCellType() != Cell.CELL_TYPE_BLANK){
+              empty=empty&&false
         }
-        return i
+          
+    }
+    return empty;
+}
+    def findColumnEnd(int colnumber){
+        int i=firstRow
+        println "first row $firstRow"
+
+        int  lastEmptyRow=firstRow
+          def rowIterator = sheet.rowIterator()
+                while(rowIterator.hasNext()) {
+                    def row = rowIterator.next()
+                    if(!isRowEmpty(row)){
+                        lastEmptyRow=row.getRowNum()+1 
+                    }
+              
+                }
+           println "finding column end ${lastEmptyRow}"
+ return lastEmptyRow
     }
 
     def traverse(action){
@@ -233,11 +242,6 @@ class TwoExcelSource implements Source{
         return this.size2
     }
 
-    def endOfColumnTest ={Cell cell,origCellType ->
-
-        return (cell.getCellType()==origCellType)
-
-    }
 	
 }
 

@@ -54,7 +54,7 @@ class ExpandingExcelSource implements Source{
        
 
         println "sheetNum: ${sourceDef.sheetNum}"
-        println "sheetNum: ${sourceDef.sheetName}"
+        println "sheetName: ${sourceDef.sheetName}"
         
         this.sheet=state.state.workbook.getSheet(sourceDef.sheetName)  //this could be problematic for sources requiring a different workbook to the one in the state
         //PatchedPoi.getInstance().clearValidationData(this.sheet)
@@ -76,7 +76,7 @@ class ExpandingExcelSource implements Source{
        
 
         if (lastRow==firstRow){
-            this.lastRow = findColumnEnd(firstColumn,endOfColumnTest) //assuming we will count the first row
+            this.lastRow = findColumnEnd(firstColumn) //assuming we will count the first row
             println "last Row ${lastRow}"
              sourceCRA.setLastRow(lastRow)
         }
@@ -88,7 +88,7 @@ class ExpandingExcelSource implements Source{
     }
     
     public ExpandingExcelSource(SourceDef sourceDef, Workbook workbook, StateAndQueue state){
-        println sourceDef.sheetNum
+        println"new Expanding Excel Source"
         
             this.sheet=workbook.getSheet(sourceDef.sheetName) //if the number doesn't work try the name careful here, not the same for all parse
         if (sheet==null) {
@@ -110,7 +110,7 @@ class ExpandingExcelSource implements Source{
         println "associated knowledge $knowledgeList"
         
         if (lastRow==firstRow){
-            this.lastRow = findColumnEnd(firstColumn,endOfColumnTest) //assuming we will count the first row
+            this.lastRow = findColumnEnd(firstColumn) //assuming we will count the first row
             println "last Row ${lastRow}"
          //reset cra
              sourceCRA.setLastRow(lastRow)
@@ -159,23 +159,34 @@ class ExpandingExcelSource implements Source{
    
     }
     
+        private boolean isRowEmpty(Row row) {
+        
+    def empty=true
     
-    def findColumnEnd(int colnumber,endOfColumnTest){
+    for (int c = 0; c <= row.getLastCellNum(); c++) {
+        Cell cell = row.getCell(c);
+        if (cell != null && cell.getCellType() != Cell.CELL_TYPE_BLANK){
+              empty=empty&&false
+        }
+          
+    }
+    return empty;
+}
+    def findColumnEnd(int colnumber){
         int i=firstRow
         println "first row $firstRow"
-        println "finding column end ${sheet.getLastRowNum()}"
-        Cell cell = sheet.getRow(firstRow).getCell(colnumber) 
-            def origCellType = cell.getCellType()
-        while (i<=sheet.getLastRowNum() ){
-          
-            cell = sheet.getRow(i).getCell(colnumber) //want the first data row not the header          
-            if (endOfColumnTest(cell,origCellType)) {
-                i++
-            }
-            else break
-        
-        }
-        return i-1
+
+        int  lastEmptyRow=firstRow
+          def rowIterator = sheet.rowIterator()
+                while(rowIterator.hasNext()) {
+                    def row = rowIterator.next()
+                    if(!isRowEmpty(row)){
+                        lastEmptyRow=row.getRowNum()+1 
+                    }
+              
+                }
+           println "finding column end ${lastEmptyRow}"
+ return lastEmptyRow
     }
     
     def resetCellCounter(){
@@ -257,11 +268,7 @@ class ExpandingExcelSource implements Source{
       return this.size
   }
   
-  def endOfColumnTest ={Cell cell,origCellType ->
-      
-        return (cell!=null && cell.getCellType()==origCellType) 
-      
-  }
+ 
   
   def setKnowledgeList(knowledge){
       //iterate through columns to find out what we have in the list that is applicable for this source

@@ -37,7 +37,6 @@ div .buttonTable tr td {
 
 }
 .ui-widget-header2 { border: 1px solid #494437; background: #817865 url(images/ui-bg_gloss-wave_45_817865_500x100.png) 20% 20% repeat-x; color: #ffffff; font-weight: bold; }
-
 #follower{
     position : absolute;
     background-color : lightblue;
@@ -83,7 +82,7 @@ div .buttonTable tr td {
     text-align: center;
 }
 .tablecontent{
-    width: 98%;
+    width: 97%;
     max-height: 400px;
     overflow: auto;
     font-family: serif;
@@ -92,13 +91,14 @@ div .buttonTable tr td {
 }
 .maincontent{
     width:100%;
-    height:87%;
+    height:85%;
     min-height: 550px;
     overflow: auto;
     vertical-align: middle;
 
 }
 .buttoncontent{
+    width:98%;
     height: 4%;
     text-align: left;
     margin-top: 5px;
@@ -117,7 +117,7 @@ div .buttonTable tr td {
 .navspan{
 
     color:black;
-    width:300px;
+    width:23%;
     display:inline-block;
     cursor: pointer;
 
@@ -159,7 +159,7 @@ div .buttonTable tr td {
     border: 1px; 
     border-color: blue;
     border-style:dashed;
-    width: 550px;
+    width: 600px;
 }
 .footer{
 
@@ -411,7 +411,7 @@ select { width: 400px; }
 #funding{
 
     margin: 2px auto;
-    width: 700px;
+    width: 800px;
     text-align: center;
 }
 #funding ul li{
@@ -426,7 +426,8 @@ select { width: 400px; }
 #item2{width:80px;background:url('../images/ui/hits.png'); background-repeat: no-repeat}
 #item3{width:180px;background:url('../images/ui/dkfz_logo_en.gif'); background-repeat: no-repeat}
 #item4{width:90px;background:url('../images/ui/SABIO-RK.png'); background-repeat: no-repeat}
-#item5{width:120px;background:url('../images/ui/seek-logo.png'); background-repeat: no-repeat}
+#item5{width:120px;background:url('../images/ui/virtualliver-logo.png'); background-repeat: no-repeat}
+#item6{width:32px;background:url('../images/ui/SBEpo_logo.jpg'); background-repeat: no-repeat}
 
 /*each funding img has a height of 40px*/
 #funding img{

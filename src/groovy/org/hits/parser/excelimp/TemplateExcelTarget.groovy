@@ -58,6 +58,7 @@ class TemplateExcelTarget implements Target{
         this.lastRow=targetCRA.getLastRow()
         this.targetString=targetDef.cellRange
         this.size=targetCRA.getNumberOfCells()
+        println "gettemplate target"
    }
     
    

@@ -1,0 +1,85 @@
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+    xmlns:excemplify="http://hits.org/ontology/lab#" > 
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#Inhibitors0">
+    <excemplify:isA>Inhibitors</excemplify:isA>
+    <excemplify:hasValue>0.0</excemplify:hasValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#Proteins5">
+    <excemplify:isA>Proteins</excemplify:isA>
+    <excemplify:hasValue>Smad7</excemplify:hasValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#Proteins4">
+    <excemplify:isA>Proteins</excemplify:isA>
+    <excemplify:hasValue>totSmad3</excemplify:hasValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#Cells0">
+    <excemplify:isA>Cells</excemplify:isA>
+    <excemplify:hasValue>Hepa1-6</excemplify:hasValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#Proteins1">
+    <excemplify:isA>Proteins</excemplify:isA>
+    <excemplify:hasValue>pSmad2</excemplify:hasValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#Experiment">
+    <excemplify:hasMetaData rdf:resource="http://hits.org/ontology/lab#Proteins5"/>
+    <excemplify:hasMetaData rdf:resource="http://hits.org/ontology/lab#TimePoints1"/>
+    <excemplify:hasMetaData rdf:resource="http://hits.org/ontology/lab#Treatments2"/>
+    <excemplify:hasMetaData rdf:resource="http://hits.org/ontology/lab#Proteins4"/>
+    <excemplify:hasMetaData rdf:resource="http://hits.org/ontology/lab#Inhibitors1"/>
+    <excemplify:hasName>tz</excemplify:hasName>
+    <excemplify:hasMetaData rdf:resource="http://hits.org/ontology/lab#Treatments1"/>
+    <excemplify:hasMetaData rdf:resource="http://hits.org/ontology/lab#Proteins3"/>
+    <excemplify:hasMetaData rdf:resource="http://hits.org/ontology/lab#Inhibitors0"/>
+    <excemplify:hasMetaData rdf:resource="http://hits.org/ontology/lab#Treatments0"/>
+    <excemplify:hasMetaData rdf:resource="http://hits.org/ontology/lab#Proteins2"/>
+    <excemplify:hasTopic>Immunoblot</excemplify:hasTopic>
+    <excemplify:hasMetaData rdf:resource="http://hits.org/ontology/lab#Cells0"/>
+    <excemplify:hasMetaData rdf:resource="http://hits.org/ontology/lab#Proteins0"/>
+    <excemplify:hasMetaData rdf:resource="http://hits.org/ontology/lab#Proteins1"/>
+    <excemplify:hasMetaData rdf:resource="http://hits.org/ontology/lab#TimePoints2"/>
+    <excemplify:hasID>26</excemplify:hasID>
+    <excemplify:hasMetaData rdf:resource="http://hits.org/ontology/lab#TimePoints0"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#Proteins2">
+    <excemplify:isA>Proteins</excemplify:isA>
+    <excemplify:hasValue>SnoN</excemplify:hasValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#Proteins3">
+    <excemplify:isA>Proteins</excemplify:isA>
+    <excemplify:hasValue>Smad4</excemplify:hasValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#Inhibitors1">
+    <excemplify:isA>Inhibitors</excemplify:isA>
+    <excemplify:hasValue>U0126[10uM]</excemplify:hasValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#TimePoints0">
+    <excemplify:isA>TimePoints</excemplify:isA>
+    <excemplify:hasValue>0.0</excemplify:hasValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#Treatments2">
+    <excemplify:isA>Treatments</excemplify:isA>
+    <excemplify:hasValue>HGF[10mM] TGFb[5mM]</excemplify:hasValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#Proteins0">
+    <excemplify:isA>Proteins</excemplify:isA>
+    <excemplify:hasValue>pSmad3</excemplify:hasValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#Treatments1">
+    <excemplify:isA>Treatments</excemplify:isA>
+    <excemplify:hasValue>TGFb[5mM]</excemplify:hasValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#Treatments0">
+    <excemplify:isA>Treatments</excemplify:isA>
+    <excemplify:hasValue>HGF[10mM]</excemplify:hasValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#TimePoints1">
+    <excemplify:isA>TimePoints</excemplify:isA>
+    <excemplify:hasValue>15.0</excemplify:hasValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://hits.org/ontology/lab#TimePoints2">
+    <excemplify:isA>TimePoints</excemplify:isA>
+    <excemplify:hasValue>30.0</excemplify:hasValue>
+  </rdf:Description>
+</rdf:RDF>

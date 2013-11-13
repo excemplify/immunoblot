@@ -42,7 +42,11 @@ class RuleViolateException extends Exception{
         mistake ="error: $err  and hints: $hints";  // save message
     }
   
-
+    public RuleViolateException(String err, String hints, Throwable throwable) {
+     
+        super(err, throwable);
+        mistake ="error: $err  and hints: $hints";  // save message
+    }
 
     //------------------------------------------------  
     // public method, callable by exception catcher. It returns the error message.

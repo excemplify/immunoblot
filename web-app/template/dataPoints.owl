@@ -1,0 +1,231 @@
+<?xml version="1.0"?>
+
+
+<!DOCTYPE rdf:RDF [
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+]>
+
+
+<rdf:RDF xmlns="http://hits.org/ontology/excemplify#"
+     xml:base="http://hits.org/ontology/excemplify"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+    <owl:Ontology rdf:about="http://hits.org/ontology/excemplify"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://hits.org/ontology/excemplify#hasAntibody -->
+
+    <owl:ObjectProperty rdf:about="http://hits.org/ontology/excemplify#hasAntibody">
+        <rdfs:range rdf:resource="http://hits.org/ontology/excemplify#Antibody"/>
+        <rdfs:domain rdf:resource="http://hits.org/ontology/excemplify#Experiment"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://hits.org/ontology/excemplify#hasCondition -->
+
+    <owl:ObjectProperty rdf:about="http://hits.org/ontology/excemplify#hasCondition">
+        <rdfs:range rdf:resource="http://hits.org/ontology/excemplify#Condition"/>
+        <rdfs:domain rdf:resource="http://hits.org/ontology/excemplify#Experiment"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://hits.org/ontology/excemplify#hasDataPoint -->
+
+    <owl:ObjectProperty rdf:about="http://hits.org/ontology/excemplify#hasDataPoint">
+        <rdfs:range rdf:resource="http://hits.org/ontology/excemplify#DataPoint"/>
+        <rdfs:domain rdf:resource="http://hits.org/ontology/excemplify#Experiment"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://hits.org/ontology/excemplify#underCondition -->
+
+    <owl:ObjectProperty rdf:about="http://hits.org/ontology/excemplify#underCondition">
+        <rdfs:range rdf:resource="http://hits.org/ontology/excemplify#Condition"/>
+        <rdfs:domain rdf:resource="http://hits.org/ontology/excemplify#DataPoint"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Data properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://hits.org/ontology/excemplify#associateWithProtein -->
+
+    <owl:DatatypeProperty rdf:about="http://hits.org/ontology/excemplify#associateWithProtein">
+        <rdfs:domain rdf:resource="http://hits.org/ontology/excemplify#DataPoint"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://hits.org/ontology/excemplify#conditionUnit -->
+
+    <owl:DatatypeProperty rdf:about="http://hits.org/ontology/excemplify#conditionUnit">
+        <rdfs:domain rdf:resource="http://hits.org/ontology/excemplify#Condition"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://hits.org/ontology/excemplify#conditionValue -->
+
+    <owl:DatatypeProperty rdf:about="http://hits.org/ontology/excemplify#conditionValue">
+        <rdfs:domain rdf:resource="http://hits.org/ontology/excemplify#Condition"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://hits.org/ontology/excemplify#hasAntibodyName -->
+
+    <owl:DatatypeProperty rdf:about="http://hits.org/ontology/excemplify#hasAntibodyName">
+        <rdfs:domain rdf:resource="http://hits.org/ontology/excemplify#Antibody"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://hits.org/ontology/excemplify#hasBlotNum -->
+
+    <owl:DatatypeProperty rdf:about="http://hits.org/ontology/excemplify#hasBlotNum">
+        <rdfs:domain rdf:resource="http://hits.org/ontology/excemplify#DataPoint"/>
+        <rdfs:range rdf:resource="&xsd;int"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://hits.org/ontology/excemplify#hasConditionDescrip -->
+
+    <owl:DatatypeProperty rdf:about="http://hits.org/ontology/excemplify#hasConditionDescrip">
+        <rdfs:domain rdf:resource="http://hits.org/ontology/excemplify#DataPoint"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://hits.org/ontology/excemplify#hasID -->
+
+    <owl:DatatypeProperty rdf:about="http://hits.org/ontology/excemplify#hasID">
+        <rdfs:domain rdf:resource="http://hits.org/ontology/excemplify#Experiment"/>
+        <rdfs:range rdf:resource="&xsd;int"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://hits.org/ontology/excemplify#hasName -->
+
+    <owl:DatatypeProperty rdf:about="http://hits.org/ontology/excemplify#hasName">
+        <rdfs:domain rdf:resource="http://hits.org/ontology/excemplify#Experiment"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://hits.org/ontology/excemplify#hasUnit -->
+
+    <owl:DatatypeProperty rdf:about="http://hits.org/ontology/excemplify#hasUnit">
+        <rdfs:domain rdf:resource="http://hits.org/ontology/excemplify#DataPoint"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://hits.org/ontology/excemplify#hasValue -->
+
+    <owl:DatatypeProperty rdf:about="http://hits.org/ontology/excemplify#hasValue">
+        <rdfs:domain rdf:resource="http://hits.org/ontology/excemplify#DataPoint"/>
+        <rdfs:range rdf:resource="&xsd;double"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://hits.org/ontology/excemplify#Antibody -->
+
+    <owl:Class rdf:about="http://hits.org/ontology/excemplify#Antibody"/>
+    
+
+
+    <!-- http://hits.org/ontology/excemplify#Condition -->
+
+    <owl:Class rdf:about="http://hits.org/ontology/excemplify#Condition"/>
+    
+
+
+    <!-- http://hits.org/ontology/excemplify#DataPoint -->
+
+    <owl:Class rdf:about="http://hits.org/ontology/excemplify#DataPoint"/>
+    
+
+
+    <!-- http://hits.org/ontology/excemplify#Experiment -->
+
+    <owl:Class rdf:about="http://hits.org/ontology/excemplify#Experiment"/>
+    
+
+
+    <!-- http://hits.org/ontology/excemplify#TimePoint -->
+
+    <owl:Class rdf:about="http://hits.org/ontology/excemplify#TimePoint">
+        <rdfs:subClassOf rdf:resource="http://hits.org/ontology/excemplify#Condition"/>
+    </owl:Class>
+    
+
+
+    <!-- http://hits.org/ontology/excemplify#Treatment -->
+
+    <owl:Class rdf:about="http://hits.org/ontology/excemplify#Treatment">
+        <rdfs:subClassOf rdf:resource="http://hits.org/ontology/excemplify#Condition"/>
+    </owl:Class>
+    
+
+
+    <!-- http://hits.org/ontology/excemplify#WithCell -->
+
+    <owl:Class rdf:about="http://hits.org/ontology/excemplify#WithCell">
+        <rdfs:subClassOf rdf:resource="http://hits.org/ontology/excemplify#Condition"/>
+    </owl:Class>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 3.4.2) http://owlapi.sourceforge.net -->
+

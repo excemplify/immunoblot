@@ -13,7 +13,7 @@ import org.apache.poi.ss.util.CellReference
 class KnowledgeIdentifier {
     static boolean inMarkCellRange(String referenceRange, String unknownLocation){
         boolean inRange=false
-        def pattern=/(\w)(\d+)/
+        def pattern=/(\w+)(\d+)/
         def matcher3 = "$unknownLocation" =~ pattern     
         int col=CellReference.convertColStringToIndex("${matcher3[0][1]}")
         int row= matcher3[0][2] as int

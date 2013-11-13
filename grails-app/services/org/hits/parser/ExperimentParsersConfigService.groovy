@@ -30,6 +30,9 @@ import org.hits.ui.Resource
 import org.hits.ui.KnowledgeFetcher
 
 class ExperimentParsersConfigService {
+    static INNERRAWDATATEMPLATENAME="rawdata_template.xls"
+    static INNERLOADINGTEMPLATENAME="laneloading_template_0723.xls"
+    static INNERGELINSPECTORTEMPLATENAME="gelInspectorTemplate_0723.xls"
     
     def delete(Experiment experiment){
         def configs=ExperimentToParserDef.findAllByExperiment(experiment)
@@ -39,6 +42,27 @@ class ExperimentParsersConfigService {
         
         
     }
+    def defaultConfig(Experiment experiment){
+        
+        if(!experiment.stages){
+            def setUpTemplate=Template.findByTemplateName(experiment.setUpTemplateName)
+            def setUpStage=new Stage(stageIndex:1, stageName:'setup', stageTemplate:setUpTemplate) 
+        
+            def loadingTemplate=Template.findByTemplateName(INNERLOADINGTEMPLATENAME)
+            def rawDataTemplate= Template.findByTemplateName(INNERRAWDATATEMPLATENAME) 
+            def gelInspectorTemplate= Template.findByTemplateName(INNERGELINSPECTORTEMPLATENAME)   
+            def loadingStage=new Stage(stageIndex:2, stageName:'loading', stageTemplate:loadingTemplate)
+            def rawdataStage=new Stage(stageIndex:3, stageName:'rawdata', stageTemplate:rawDataTemplate)      
+            def gelInspectorStage=new Stage(stageIndex:4, stageName:'gelInspector', stageTemplate:gelInspectorTemplate)
+            experiment.addToStages(setUpStage)
+            experiment.addToStages(loadingStage)
+            experiment.addToStages(rawdataStage)
+            experiment.addToStages(gelInspectorStage)  
+            experiment.save(failOnError: true)          
+        }
+        config(experiment)
+    }
+    
     def config(Experiment experiment) {
         //
         println "start config parsers for such experiment $experiment.id"
@@ -106,7 +130,11 @@ class ExperimentParsersConfigService {
                 rawdataSources << rsource
             }
            
+        
         }
+        
+        def crsource=new ExcelSourceDef(knowledgeComment:"condition",sourceType:"CURRWORKBOOK", cellRange:"${KnowledgeFetcher.cellRangeStringFetcher(loadingTemplate, 'Condition')}", sheetNum:2, sheetName:"auto_Loading",template:loadingTemplate)
+                rawdataSources << crsource
         
         def setupToLanesParserDefInstance = new ParserDef(name:"${experiment.id}setupToloading", nextStageName: "Lane Setup", parserConfigurations:[
                 new ParserConfiguration(sources:setupSources, 

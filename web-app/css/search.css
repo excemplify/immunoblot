@@ -1,0 +1,149 @@
+
+
+#ajaxSpinner img{
+    border:none;
+    height: 36px;
+    width: 36px;
+    float: none;
+    margin-top: 64px;
+}
+
+/*#########Searchfield##########*/
+/*BTNS*/
+div#searchForm{
+    width:100%;
+    height:35%;
+}
+div#feedback{
+    width:100%;
+    vertical-align: central;
+    text-align: center;
+    height:2%;   
+}
+div#resultaccordion{
+    width:100%;
+    height:60%;
+}
+
+body div#helpInstruction{
+    display: none;
+    float:right;
+}
+
+textarea#sparqlarea{
+    border:1 solid;
+    width: 65%;
+    height:80%;
+    overflow: scroll;
+}
+
+input#addsearch, input#resetbtn, input#helpbtn{
+    border: 0 solid #000;
+    cursor: pointer;
+    color:transparent;
+}
+
+input#searchbtn{
+    border: 0 solid #000;
+    color:transparent;
+    color:#fff\9;/*IE8*/
+    background-color: #0081D8\9;
+    /*color:#fff; /*IE 7 and below*/
+    /*background-color: #0081D8;*/
+}
+
+input#resetbtn{
+    background: url("../images/search/reset.png") no-repeat scroll center top transparent;
+    height: 32px;
+    width: 35px;
+
+}
+
+input#searchbtn{
+    background: url("../images/search/searchbutton.png") no-repeat scroll center top transparent;
+    height: 32px;
+    width: 35px; 
+
+}
+
+/*input#helpbtn{
+    background: url("../images/search/help.png") no-repeat scroll center top transparent;
+    height: 32px;
+    width: 35px; 
+ 
+}*/
+
+#addsearch{
+    background: url("../images/search/addsearchbutton.png") no-repeat scroll center top transparent;
+    height: 30px;
+    width: 35px;
+    float: right;
+    margin-right:10px;
+}
+
+td#searchreset{
+
+    width: 60%;
+    height:90%;
+}
+
+td#searchoption{
+
+    width: 40%;
+    height:90%;
+}
+
+/*Searchfield*/
+
+table#searchactions{
+    width:100%;
+    height:95%;
+}
+
+
+
+/*Advanced Search*/
+
+
+#option_expand{
+
+    text-align: left;
+    padding: 3px 0px 5px;
+    width: 80%;
+
+    margin-right: 3px;
+
+}
+
+
+/*"Advanced Search"*/
+
+
+select{
+    width: 50px;
+    font-size: 0.85em;
+}
+
+optgroup {
+    font-style: normal;
+}
+
+select[name="searchterms"]{
+    width: 165px;
+}
+input[name="searchtermField"]{
+    width: 188px;
+    border: 1px solid #666666;
+    font-size: 0.85em;
+}
+input[name="from"]{
+    width: 80px;
+    border: 1px solid #666666;
+    font-size: 0.85em;
+}
+input[name="to"]{
+    width: 80px;
+    border: 1px solid #666666;
+    font-size: 0.85em;
+}
+
