@@ -16,8 +16,7 @@
 package org.hits.parser
 import grails.converters.*
 import org.hits.parser.SecUser
-import org.hits.parser.core.ParserConfigException
-import org.hits.parser.core.ParsingException
+import org.hits.ui.exceptions.*
 
 class SpreadsheetController {
 

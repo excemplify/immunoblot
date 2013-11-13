@@ -20,9 +20,9 @@
 
 <%@ page contentType="text/html;charset=UTF-8" %>
 
-<div class="ui-widget-header" style="height: 11%" > 
+<div class="ui-widget-header"> 
   <table style="width: 100%;  vertical-align:  middle;">
-    <tr><td colspan="1" style=" text-align: left; color: #ffffff; cursor: pointer" >  <a href="${createLink(uri:'/')}" > 
+    <tr><td colspan="2" style=" text-align: left; color: #ffffff; cursor: pointer" >  <a href="${createLink(uri:'/')}" > 
           <img alt="logo"  title="Back to Welcome Page" src="${createLinkTo(dir:'images/ui', file:'excemplify.png')}" style="cursor: pointer" ></a></td></tr>
     <tr>  <td style="width:100%; text-align: right;vertical-align: baseline; font-family: serif;font-size: 15px; font-weight:normal;  color: black">
     <sec:ifLoggedIn>

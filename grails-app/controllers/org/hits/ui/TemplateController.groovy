@@ -99,6 +99,24 @@ class TemplateController {
         redirect(action: "show", id: templateInstance.id)
     }
 
+
+    def download={
+        def templateInstance = Template.get(params.id)
+
+        try {
+
+           response.setContentType("application/vnd.ms-excel")
+            response.setHeader("Content-disposition", "attachment;filename=${templateInstance.templateName}")
+            response.outputStream << templateInstance.binaryFileData
+
+        }
+        catch(Exception ex){
+            redirect(uri:"/lab")
+            //  redirect(action: "list")
+        }
+
+    }
+
     def display(){
         Template templateInstance = Template.get(params.id)  
         if(templateInstance){
@@ -125,25 +143,6 @@ class TemplateController {
         render(template:"/template/list", model: [templateInstanceList:Template.list()])
     }
     
-
-    def download={
-        def templateInstance = Template.get(params.id)
-
-        try {
-
-            response.setContentType("application/octet-stream")
-            response.setHeader("Content-disposition", "attachment;filename=${templateInstance.templateName}")
-            response.outputStream << templateInstance.binaryFileData
-
-        }
-        catch(Exception ex){
-            redirect(uri:"/lab")
-            //  redirect(action: "list")
-        }
-
-    }
-
-   
     
     def deleteTemplate(){
      
@@ -155,6 +154,7 @@ class TemplateController {
  
             if(templateInstance.type=="public"&& !Stage.findAllByStageTemplate(templateInstance)){       
                 println "yes you can delete this template"
+                
                 def k = []
                 k += templateInstance.knowledgeList
                 k.each{knowledge->

@@ -85,14 +85,15 @@ and open the template in the editor.
 
   $("#purposeOptions").dialog({
                       autoOpen: false,
-                        height: 300,
-                        width: 400,
+                        height: 350,
+                        width: 500,
                         modal: true,
                         buttons:{
                            "Save":function(){
                             var saveas= $("#saveas").val()
                           var purpose=$("#purpose").val()   //purpose -> stage
-${remoteFunction(controller:'admin', action:'saveTemplate',  params:'\'purpose=\'+purpose+\'&saveas=\'+saveas', update:'warning') };  
+                          var comment=$("#savecommentas").val()
+${remoteFunction(controller:'admin', action:'saveTemplate',  params:'\'purpose=\'+purpose+\'&saveas=\'+saveas+\'&comment=\'+comment', update:'warning') };  
                            $( this ).dialog( "close" );
                            },
                            "Close": function() {
@@ -177,7 +178,7 @@ followMe();
   $('#Lanes').draggable({appendTo: 'body',cursor:'move', containment:'#area', helper: "clone", scroll:false});
   $('#Bands').draggable({appendTo: 'body',cursor:'move', containment:'#area', helper: "clone", scroll:false});
   $('#Volumes').draggable({appendTo: 'body',cursor:'move', containment:'#area', helper: "clone", scroll:false});
-  $('#Inhibitors').draggable({appendTo: 'body',cursor:'move', containment:'#area', helper: "clone", scroll:false});
+//  $('#Inhibitors').draggable({appendTo: 'body',cursor:'move', containment:'#area', helper: "clone", scroll:false});
 
 }//end load
 
@@ -241,6 +242,7 @@ function updateKnowledge(fromr, fromc, endr, endc, sheet, updateClassStr){
         }
 }
 
+
 function handleDropEvent( event, ui) {
 
 var draggable = ui.draggable;
@@ -249,15 +251,16 @@ var knowledgeClass=draggable.attr("title");
 var templateObject=$.sheet.instance[0];
 var row=(templateObject.getTdLocation([event.target])).row;
 var col=(templateObject.getTdLocation([event.target])).col;
+var activeSheetIndex=templateObject.i
+
 var endrow=templateObject.sheetSize().height;
 
 var location=jSE.parseCellName(col,row);
  var excel="${session.getAttribute('openFileName')}";
 //alert(location);
  $(this).removeClass('ui-droppable');
-${remoteFunction(controller:'admin', action:'updateKnowledge', params:'\'location=\'+location+\'&endrow=\'+endrow+\'&knowledgeName=\'+knowledgeName+\'&knowledgeClass=\'+knowledgeClass+\'&file=\'+excel', update:'knowledge') };
+${remoteFunction(controller:'admin', action:'updateKnowledge', params:'\'location=\'+location+\'&endrow=\'+endrow+\'&knowledgeName=\'+knowledgeName+\'&knowledgeClass=\'+knowledgeClass+\'&file=\'+excel+\'&activesheet=\'+activeSheetIndex', update:'knowledge') };
 }
-
 
 
 
@@ -366,12 +369,11 @@ function inlineMenu(I, id){
 
 
 
-function notifyMark(fromr, fromc, endr, endc, sheetIndex, sheetInstanceIndex){ //not used anymore
+function notifyMark(fromr, fromc, endr, endc, sheetIndex, sheetInstanceIndex){
     var cols=endc-fromc+1;
     var start=jSE.parseCellName(fromc, fromr);
     var end=jSE.parseCellName(endc, endr);
     var colsNum=cols.toString();
-    
   makeThemDroppable(sheetInstanceIndex,sheetIndex,fromr,endr,fromc,endc);
  
 }
@@ -447,26 +449,27 @@ function  buildKnowledgeForLabel(text, fromr, endr, fromc, endc, sheetIndex,shee
                   </div>
                 </td>  
                 <td>
-                  <div align="middle" id="Doses" title="ui-state-dose"> <img src="${resource(dir: 'images/ui', file: 'dose.jpg')}" alt="Dose" height="40" width="40" style="border:6px double #545565;"  />
+                  <div align="left" id="Doses" title="ui-state-dose"> <img src="${resource(dir: 'images/ui', file: 'dose.jpg')}" alt="Treatments" height="40" width="40" style="border:6px double #545565;"  />
                   </div>
                 </td>
-                <td>
+<!--                <td>
                   <div align="middle" id="Inhibitors" title="ui-state-inhibitor"> <img src="${resource(dir: 'images/ui', file: 'inhibitor.png')}" alt="inhibitor" height="40" width="40" style="border:6px double #545565;"  />
                   </div>
-                </td>
-                <td>
-                  <div align="middle" id="SampleNames" title="ui-state-samples"> <img src="${resource(dir: 'images/ui', file: 'samples.png')}" alt="Sample detail" height="40" width="40" style="border:6px double #545565;"  />
-                  </div>
-                </td>         
+                </td>-->
+                <!--                <td>
+                                  <div align="middle" id="SampleNames" title="ui-state-samples"> <img src="${resource(dir: 'images/ui', file: 'samples.png')}" alt="Sample detail" height="40" width="40" style="border:6px double #545565;"  />
+                                  </div>
+                                </td>         -->
               </tr>
               <tr>
                 <td align="middle" ><label for="Cells"> Cell </label></td>
-                <td align="middle"><label for="TimePoints">Time</label></td>
-                <td align="middle"><label for="Proteins"> Protein</label></td>
-                <td align="middle"><label for="Doses"> Dose </label></td>          
-                <td align="middle"><label for="Inhibitors"> Inhibitor Dose </label></td>
-                <td align="middle"><label for="SampleNames"> Sample </label></td>
+                <td  align="middle"><label for="TimePoints">Time</label></td>
+                <td  align="middle"><label for="Proteins"> Protein</label></td>
+                <td align="middle"><label for="Doses"> Treatment (stimuli+Inhibitor)</label></td>          
+<!--                <td align="middle"><label for="Inhibitors"> Inhibitor(dose)</label></td>-->
+<!--                <td align="middle"><label for="SampleNames"> Sample </label></td>-->
               </tr>
+            
               <tr><td colspan="6"> <hr> </tr> 
               <tr  >
                 <td  align="middle" id="Lanes" title="ui-state-lane"><img src="${resource(dir: 'images/ui', file: 'Lane.png')}" alt="Lanes" height="40" onmouseover="" width="40"  style="border:6px double #545565;" />
@@ -485,15 +488,7 @@ function  buildKnowledgeForLabel(text, fromr, endr, fromc, endc, sheetIndex,shee
                 <td></td>
                 <td></td>
               </tr>
-<!--                <tr><td colspan="6"> <hr> </td><td>Other</td></tr>
-              <tr >
-                <td align="middle" id="Player" title="ui-state-player"><img  src="${resource(dir: 'images/ui', file: 'Player.png')}" alt="player" height="40" width="40"  style="border:6px double #545565;" />
-                </td >
-                <td align="middle" id="Normalizer" title="ui-state-normalizer"> <img src="${resource(dir: 'images/ui', file: 'Normalizer.png')}" alt="normalizer" height="40" width="40" style="border:6px double #545565;"  />
-                </td >            
-                <td></td>
-                <td></td>
-              </tr>-->
+
             </table>
 
           </div>
@@ -538,7 +533,6 @@ function  buildKnowledgeForLabel(text, fromr, endr, fromc, endc, sheetIndex,shee
 <div id="warning-form" title="Warning">
   <p style="font-family: serif; color: blue;"> ${flash.message}</p>
 </div>
-
 <g:render template="/ui/admin/stageoptions"  model="['oldname': session.getAttribute('openFileName')]"/>
 <div id="follower" style="display:none"> mark </div>
 

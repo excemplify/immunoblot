@@ -1,17 +1,33 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <testsuites>
-  <testsuite errors="0" failures="0" hostname="ubuntu" id="0" name="FileNameValidatorTests" package="excemplify" tests="1" time="0.101" timestamp="2012-07-16T13:33:31">
+  <testsuite errors="1" failures="0" hostname="ubuntu" id="0" name="ExperimentTests" package="org.hits.ui" tests="1" time="1.489" timestamp="2013-10-21T10:06:20">
       <properties />
 
-      <testcase classname="excemplify.FileNameValidatorTests" name="testProvedOrNot" time="0.06" />
+      <testcase classname="org.hits.ui.ExperimentTests" name="testConditionalConstraintsNull" time="1.452">
+          <error message="No such property: type for class: org.hits.ui.Experiment&#xa;Possible solutions: type, topic" type="groovy.lang.MissingPropertyException">groovy.lang.MissingPropertyException: No such property: type for class: org.hits.ui.Experiment
+Possible solutions: type, topic
+	at org.hits.ui.Experiment$__clinit__closure1_closure2.doCall(Experiment.groovy:39)
+	at org.grails.datastore.gorm.GormValidationApi.doValidate(GormValidationApi.groovy:64)
+	at org.grails.datastore.gorm.GormValidationApi.validate(GormValidationApi.groovy:145)
+	at org.grails.datastore.gorm.InstanceMethodInvokingClosure.call(GormEnhancer.groovy:261)
+	at org.grails.datastore.gorm.GormInstanceApi.doSave(GormInstanceApi.groovy:152)
+	at org.grails.datastore.gorm.GormInstanceApi$_save_closure4.doCall(GormInstanceApi.groovy:143)
+	at org.grails.datastore.mapping.core.DatastoreUtils.execute(DatastoreUtils.java:302)
+	at org.grails.datastore.gorm.AbstractDatastoreApi.execute(AbstractDatastoreApi.groovy:34)
+	at org.grails.datastore.gorm.GormInstanceApi.save(GormInstanceApi.groovy:142)
+	at org.grails.datastore.gorm.GormInstanceApi.save(GormInstanceApi.groovy:102)
+	at org.grails.datastore.gorm.InstanceMethodInvokingClosure.call(GormEnhancer.groovy:261)
+	at grails.test.mixin.domain.DomainClassUnitTestMixin.saveDomainList(DomainClassUnitTestMixin.groovy:171)
+	at grails.test.mixin.domain.DomainClassUnitTestMixin.mockDomain(DomainClassUnitTestMixin.groovy:156)
+	at org.hits.ui.ExperimentTests.testConditionalConstraintsNull(ExperimentTests.groovy:38)
+</error>
 
-      <system-out><![CDATA[--Output from testProvedOrNot--
-File formate other than .txt or .xls is not acceptted.
-false
-File formate other than .txt or .xls is not acceptted.
+      </testcase>
+
+      <system-out><![CDATA[--Output from testConditionalConstraintsNull--
 ]]></system-out>
 
-      <system-err><![CDATA[--Output from testProvedOrNot--
+      <system-err><![CDATA[--Output from testConditionalConstraintsNull--
 ]]></system-err>
 
   </testsuite>

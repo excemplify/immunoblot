@@ -23,7 +23,7 @@ class Knowledge extends Mark{
    //String   sourceType
 
     static constraints = {
-        knowledgeName(inList:["New Concept","Cells","TimePoints","Proteins","Antibodies","Volumes","Lanes","Bands","SampleNames","Doses","Inhibitors"]) //may be more
+      //  knowledgeName(inList:["New Concept","Cells","TimePoints","Proteins","Antibodies","Volumes","Lanes","Bands","SampleNames","Treatments","Inhibitors"]) //may be more
        
 
     }

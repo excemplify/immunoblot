@@ -62,10 +62,12 @@ class AdminController {
         log.info "update knowledge ${params.file}"
         log.info "drop at location ${params.location}"
         String dropPoint="${params.location}"
+                def ativeSheet="${params.activesheet}"
         //check such location is within which knowledge's markcellrange
         Knowledge currentKnowledge=null
         int count=0
-        def allMarkedKnowledge=Knowledge.findAll{fileName==params.file}
+
+        def allMarkedKnowledge=Knowledge.findAll{(fileName==params.file)&&(sheetIndex==params.activesheet)}
         allMarkedKnowledge.each{knowledge->
             String cellrange=knowledge.markCellRange
             if(KnowledgeIdentifier.inMarkCellRange(cellrange, dropPoint)){
@@ -102,6 +104,7 @@ class AdminController {
         println openFileName
         def purpose=params.purpose
         def fileName=params.saveas
+        def comment=params.comment
         
         if(Template.findByTemplateName(fileName)){
             log.info "$fileName already exist."
@@ -134,7 +137,7 @@ class AdminController {
                 def templateInstance      
                 try{
                     //create the template instance
-                    templateInstance=new Template(templateName:fileName, binaryFileData:file.bytes,  knowledgeList:list, type:"public", purpose:purpose, visible:true).save(failOnError: true);        
+                    templateInstance=new Template(templateName:fileName, binaryFileData:file.bytes,  knowledgeList:list, type:"public", purpose:purpose, comment:comment, visible:true).save(failOnError: true);        
                     log.info "template $Template.count";
            
           
@@ -145,7 +148,7 @@ class AdminController {
                     session.removeAttribute("file")
                     file.delete()   
                     log.error e.getMessage()                
-                    log.info "$fileName already exist."
+                    log.info "might be $fileName already exist."
                     if(e instanceof ConstraintViolationException){
                         flash.message = "${e.getConstraintName()}" 
                     }else{
@@ -263,7 +266,8 @@ class AdminController {
             // new excelReader(filePath ).eachLine{println "First column on row ${it.rowNum} = ${cell(0)}"}
             // def excel=new excelReader(filePath )
             def excel=new excelReader(newFile)
-            def xmlData=excel.excelXmlBuilder()
+           // def xmlData=excel.excelXmlBuilder()
+            def xmlData=excel.excelWithMergedAreaXmlBuilder()
             def dirtyKnowledgeList=Knowledge.findAllByFileName(givenName)
             if(dirtyKnowledgeList){
                 log.info"dirty knowledgeList for templateName $givenName"

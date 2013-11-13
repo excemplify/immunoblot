@@ -38,6 +38,7 @@
           <li id="item3"><a  href="http://www.dkfz.de/" title="cooperate with DKFZ" target="_blank"></a></li>
           <li id="item4"><a  href="http://sabiork.h-its.org/" title="associated database" target="_blank"></a></li>
           <li id="item5"><a  href="http://seek.virtual-liver.de" title="other related project" target="_blank"></a></li>
+          <li id="item6"><a  href="http://www.sbepo.de" title="other related project" target="_blank"></a></li>
         </ul>
       </div>
  </div>

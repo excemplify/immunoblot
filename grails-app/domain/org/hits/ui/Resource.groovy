@@ -27,8 +27,8 @@ class Resource {
 
     
     static constraints = { 
-        binaryData maxSize: 1024 * 1024 * 3// 3MB
-        type(inList:["setup","rawdata","gelinspector"])
+        binaryData maxSize: 1024 * 1024 * 4// 4MB
+        type(inList:["setup","rawdata","gelinspector","other"]) //image is for later
         state(inList:["active","inactive"])
         fileversion blank: true, nullable: true
 

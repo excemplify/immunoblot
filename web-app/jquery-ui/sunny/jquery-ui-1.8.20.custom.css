@@ -93,11 +93,11 @@ lei
 .styleTable TH { text-align: center; padding: .6em .3em; }
 .styleTable TD.first, .styleTable TH.first { border-left-width: 0px !important; }
 
-.ui-state-mark { border: 3px solid  mediumblue;  font-weight: normal; background:  lightcyan ;  color: #1f1f1f ; }
+.ui-state-mark { border: 3px solid  mediumblue;  font-weight: normal; background:  lightcyan ;  color:  #1f1f1f ; }
 .ui-state-copy{ opacity: .6;  border:3px solid  mediumblue;  font-weight: normal; background: lightpink;  color:  lightpink; }
 .ui-state-transpose {opacity: .6;  border: 3px solid  mediumblue;  font-weight: normal; background:   lightyellow;  color: lightyellow; }
 .ui-state-merge {opacity: .6;  border: 3px solid  mediumblue;  font-weight: normal; background:   lightgreen;  color: lightgreen; }
-.ui-state-mark a {  color: #1f1f1f; }
+.ui-state-mark a {  color:  #1f1f1f; }
 .ui-state-copy a{ color: lightpink; }
 .ui-state-transpose a{color: lightyellow; }
 .ui-state-merge a{color: lightgreen; }

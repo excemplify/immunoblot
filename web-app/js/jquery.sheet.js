@@ -622,6 +622,8 @@ jQuery.sheet = {
                                 },
                                 dimensions: function(bar, cell, col) {
                                     var w = s.newColumnWidth;
+                                   // alert("w"+w);
+                                   
                                     col
                                     .width(w)
                                     .css('width', w + 'px')
@@ -749,10 +751,13 @@ jQuery.sheet = {
                     var widthFn;
 
                     if (reloadWidths) {
-                        parents = o.find('tr:first').children();
+                        parents = o.find('tr:last').children();
                         widthFn = function(obj) {
-                            return jS.attrH.width(obj);
+                          //alert("widthFn"+jS.attrH.sysBarWithFromTds(obj));
+                           return jS.attrH.width(obj);
+                          // return jS.attrH.sysBarWithFromTds(obj);
                         };
+          
                     } else {
                         parents = o.find('col');
                         widthFn = function(obj) {
@@ -2216,11 +2221,25 @@ jQuery.sheet = {
                 heightReverse: function(o, skipCorrection) {
                     return jQuery(o).outerHeight() + (skipCorrection ? 0 : s.boxModelCorrection);
                 },
+//                sysBarWithFromTds:function(o) {
+//                    var w = 0;
+//                    o = (o ? o : jS.obj.sheet());
+//                    var number = 0; 
+//                    o.find('col').each(function() {
+//                        w += jQuery(this).width();
+//                        number=number+1;
+//                    });
+//                    o.width(w/number);
+//                    return parseInt(w /number);
+//                },
+                
                 syncSheetWidthFromTds: function(o) {
                     var w = 0;
                     o = (o ? o : jS.obj.sheet());
+          
                     o.find('col').each(function() {
                         w += jQuery(this).width();
+                 
                     });
                     o.width(w);
                     return w;
@@ -4699,11 +4718,30 @@ jQuery.sheet = {
                             var td = tds.find('c' + j);
 
                             if (td) {
+//                                var text = td.text() + '';
+//                              
+//                                var cl = td.attr('class');
+//                                var style = td.attr('style');
+//                                var colSpan = td.attr('colspan');
+//
+//
+//                                var formula = '';
+//                                if (text.charAt(0) == '=') {
+//                                    formula = ' formula="' + text + '"';
+//                                }
+//
+//                                newTd = '<td' + formula +
+//                                (style ? ' style=\"' + style + '\"' : '') +
+//                                (cl ? ' class=\"' + cl + '\"' : '') +
+//                                (colSpan ? ' colspan=\"' + colSpan + '\"' : '') +
+//                                (height ? ' height=\"' + height + 'px\"' : '') +
+//                                '>' + text + '</td>';
+       if(td.text()!="please skip"){  //I do not have better solution now , need to think about it later, lei
                                 var text = td.text() + '';
-                              
                                 var cl = td.attr('class');
                                 var style = td.attr('style');
                                 var colSpan = td.attr('colspan');
+                                var rowSpan=td.attr('rowspan');
 
 
                                 var formula = '';
@@ -4714,11 +4752,17 @@ jQuery.sheet = {
                                 newTd = '<td' + formula +
                                 (style ? ' style=\"' + style + '\"' : '') +
                                 (cl ? ' class=\"' + cl + '\"' : '') +
+                                (rowSpan ? ' rowspan=\"' + rowSpan + '\"' : '') +
                                 (colSpan ? ' colspan=\"' + colSpan + '\"' : '') +
                                 (height ? ' height=\"' + height + 'px\"' : '') +
                                 '>' + text + '</td>';
+                       
+                              thisRow.append(newTd);
                             }
-                            thisRow.append(newTd);
+                            }
+                            
+                            
+                           // thisRow.append(newTd);
                         }
                         tbody.append(thisRow);
                     }

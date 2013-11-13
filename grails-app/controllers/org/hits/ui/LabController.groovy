@@ -21,6 +21,7 @@ import org.hits.ui.KnowledgeFetcher
 import java.text.SimpleDateFormat
 import org.hits.ui.exceptions.RuleViolateException
 
+
 /**
  *
  * @author rongji
@@ -30,13 +31,14 @@ class LabController {
     def springSecurityService
     def parserService
     def experimentParsersConfigService
-    def mailService
+    def performedExperimentParsersConfigService
+    // def mailService
     def formatter=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.GERMANY);
     def auxillarySpreadsheetService
     
     static INNERRAWDATATEMPLATENAME="rawdata_template.xls"
-    static INNERLOADINGTEMPLATENAME="laneloading_template_inner.xls"
-    static INNERGELINSPECTORTEMPLATENAME="gelInspectorTemplate_inner.xls"
+    static INNERLOADINGTEMPLATENAME="laneloading_template_0723.xls"
+    static INNERGELINSPECTORTEMPLATENAME="gelInspectorTemplate_0723.xls"
 
     def index() {
  
@@ -56,159 +58,191 @@ class LabController {
         log.info "Using rawdataTemplate: ${params.rawdatatemplate}"
         log.info "Using gelinspectorTemplate: ${params.gelinspectortemplate}"
         log.info "Set Up Resource: ${params.setUpResourceId}"
-        log.info "Need Stimulus Action: ${params.stimulus}"
+        log.info "Blotnum: ${params.blotnum}"
+        // log.info "Need Stimulus Action: ${params.stimulus}"
         log.info "Need Randomization: ${params.randomization}"
         log.info "min1: ${params.min1}"
         log.info "min2: ${params.min2}"
         log.info "min3: ${params.min3}"
         session.removeAttribute("setUpResourceIdUpdate")
         session.removeAttribute("setUpResourceNameUpdate")
-             File setupFile = session.getAttribute("setupupdate")
-        try{
-            def setUpTemplate=Template.get(params.setuptemplate)
+        File setupFile = session.getAttribute("setupupdate")
+        def experiment=Experiment.get(params.experimentId)
+        def blotnum=params.blotnum
+        def resourcesList=experiment.resources.findAll{(it.type=="rawdata")&&(it.state=="active")}
+        if(resourcesList.size()>0){
+            render(text: """<script type="text/javascript"> warningMessage('Sorry, you already have active raw data files, means you already started the experiment. You can only update the set up before you really start the experiment.'); </script>""", contentType: 'text/javascript')           
+        }else{
+            try{
+                def setUpTemplate=Template.get(params.setuptemplate)
    
        
-            if (setupFile==null) {
-                log.error "no file uploaded yet"
-                render(text: """<script type="text/javascript"> warningMessage('no file uploaded yet'); </script>""", contentType: 'text/javascript')
+                if (setupFile==null) {
+                    log.error "no file uploaded yet"
+                    render(text: """<script type="text/javascript"> warningMessage('no file uploaded yet'); </script>""", contentType: 'text/javascript')
 
-            }else{
+                }else{
    
-                // def experiment = new Experiment()
-                def errorMessage="unknown"
-                def experiment=Experiment.get(params.experimentId)
-                log.info "$experiment"
-                def stages=experiment.stages
-                log.info stages
-                def newSetupResource=Resource.findById(params.setUpResourceId)
-                def resourceName=newSetupResource.fileName
+                    // def experiment = new Experiment()
+                    def errorMessage="unknown"
+             
+                    log.info "$experiment"
+                    def stages=experiment.stages
+                    log.info stages
+                    def newSetupResource=Resource.findById(params.setUpResourceId)
+                    def resourceName=newSetupResource.fileName
                 
-                log.info "new set up resource $resourceName"
+                    log.info "new set up resource $resourceName"
                 
-                def loadingTemplate
-                def rawDataTemplate
-                def gelInspectorTemplate
+                    def loadingTemplate
+                    def rawDataTemplate
+                    def gelInspectorTemplate
                 
-                if(params.loadingtemplate!="default"){
-                    loadingTemplate= Template.get(params.loadingtemplate)
-                }else{
-                    loadingTemplate= Template.findByTemplateName(INNERLOADINGTEMPLATENAME)
-                }
-                if(params.rawdatatemplate!="default"){
-                    rawDataTemplate= Template.get(params.rawdatatemplate)
-                }else{
-                    rawDataTemplate= Template.findByTemplateName(INNERRAWDATATEMPLATENAME) 
-                }
-                if(params.gelinspectortemplate!="default"){
-                    gelInspectorTemplate= Template.get(params.gelinspectortemplate)
-                }else{
-                    gelInspectorTemplate= Template.findByTemplateName(INNERGELINSPECTORTEMPLATENAME) 
-                }
+                    if(params.loadingtemplate!="default"){
+                        loadingTemplate= Template.get(params.loadingtemplate)
+                    }else{
+                        loadingTemplate= Template.findByTemplateName(INNERLOADINGTEMPLATENAME)
+                    }
+                    if(params.rawdatatemplate!="default"){
+                        rawDataTemplate= Template.get(params.rawdatatemplate)
+                    }else{
+                        rawDataTemplate= Template.findByTemplateName(INNERRAWDATATEMPLATENAME) 
+                    }
+                    if(params.gelinspectortemplate!="default"){
+                        gelInspectorTemplate= Template.get(params.gelinspectortemplate)
+                    }else{
+                        gelInspectorTemplate= Template.findByTemplateName(INNERGELINSPECTORTEMPLATENAME) 
+                    }
                 
-                reConfigParsers=false
+                    reConfigParsers=false
                 
-                Stage setUpStage=stages.find{it.stageIndex==1}
-                //println setUpStage.stageTemplate.templateName
+                    Stage setUpStage=stages.find{it.stageIndex==1}
+                    //println setUpStage.stageTemplate.templateName
                 
-                if(setUpStage.stageTemplate!=setUpTemplate){
-                    setUpStage.stageTemplate=setUpTemplate
-                    setUpStage.save(flush:true) 
-                    log.info" setup template changed"
-                    reConfigParsers=true
+                    if(setUpStage.stageTemplate!=setUpTemplate){
+                        setUpStage.stageTemplate=setUpTemplate
+                        setUpStage.save(flush:true) 
+                        log.info" setup template changed"
+                        reConfigParsers=true
                     
-                }
-                Stage loadingStage=stages.find{it.stageIndex==2}
-                if(loadingStage.stageTemplate!=loadingTemplate){
-                    loadingStage.stageTemplate=loadingTemplate
-                    loadingStage.save(flush:true) 
-                    log.info" loading template changed"
-                    reConfigParsers=true
-                }
-                Stage rawdataStage=stages.find{it.stageIndex==3}
-                if(rawdataStage.stageTemplate!=rawDataTemplate){
-                    rawdataStage.stageTemplate=rawDataTemplate
-                    rawdataStage.save(flush:true)
-                    log.info" rawdata template changed"
-                    reConfigParsers=true
-                }
+                    }
+                    Stage loadingStage=stages.find{it.stageIndex==2}
+                    if(loadingStage.stageTemplate!=loadingTemplate){
+                        loadingStage.stageTemplate=loadingTemplate
+                        loadingStage.save(flush:true) 
+                        log.info" loading template changed"
+                        reConfigParsers=true
+                    }
+                    Stage rawdataStage=stages.find{it.stageIndex==3}
+                    if(rawdataStage.stageTemplate!=rawDataTemplate){
+                        rawdataStage.stageTemplate=rawDataTemplate
+                        rawdataStage.save(flush:true)
+                        log.info" rawdata template changed"
+                        reConfigParsers=true
+                    }
                 
-                Stage gelInspectorStage=stages.find{it.stageIndex==4}
-                if(gelInspectorStage.stageTemplate!= gelInspectorTemplate){
-                    gelInspectorStage.stageTemplate=gelInspectorTemplate
-                    gelInspectorStage.save(flush:true) 
-                    log.info"gel template changed"
-                    reConfigParsers=true
-                }
+                    Stage gelInspectorStage=stages.find{it.stageIndex==4}
+                    if(gelInspectorStage.stageTemplate!= gelInspectorTemplate){
+                        gelInspectorStage.stageTemplate=gelInspectorTemplate
+                        gelInspectorStage.save(flush:true) 
+                        log.info"gel template changed"
+                        reConfigParsers=true
+                    }
                 
         
-                def currentSetUpResource=experiment.resources.find{(it.type=="setup")&&(it.state=="active")}
-                if(currentSetUpResource){
-                    currentSetUpResource.state="inactive"
-                    currentSetUpResource.save(flush:true)  
-                }
+                    def currentSetUpResource=experiment.resources.find{(it.type=="setup")&&(it.state=="active")}
+                    if(currentSetUpResource){
+                        currentSetUpResource.state="inactive"
+                        currentSetUpResource.save(flush:true)  
+                    }
          
-                def resources=experiment.resources
-                def date=new Date()
-                resources.add(newSetupResource)
-                experiment.binaryData=newSetupResource.binaryData
-                experiment.resources=resources
-                experiment.setUpTemplateName=setUpTemplate.templateName
-                experiment.topic=params.experimentTopic
+                    def resources=experiment.resources
+                    def date=new Date()
+                    resources.add(newSetupResource)
+                    if(resourceName.endsWith("xlsx")){
+                        experiment.contentType="xlsx"
+                    }else{
+                        experiment.contentType="xls" 
+                    }
+                    experiment.binaryData=newSetupResource.binaryData
+                    experiment.resources=resources
+                    experiment.setUpTemplateName=setUpTemplate.templateName
+                    experiment.topic=params.experimentTopic
                 
-                //        experiment.logFile=logFileName
-                experiment.save(failOnError: true)
+                    //        experiment.logFile=logFileName
+                    experiment.save(failOnError: true)
           
                    
           
-                if(reConfigParsers==true){
-                    log.info "you change the template also, so the parser need reconfiguration"
-                    experimentParsersConfigService.config(experiment)  
-                }
+                    if(reConfigParsers==true){
+                        log.info "you change the template also, so the parser need reconfiguration"
+                        experimentParsersConfigService.config(experiment)  
+                    }
                                       
                     
-                session.putAt("fileName",resourceName)
-                session.removeAttribute("parsedFile")
-                session.removeAttribute("parsedFileName")   
-                // lenneke change here to set up the parserDef
-                def fileToParse=setupFile
-                //we want to do this a certain number of times for the different blots ie 3 times
-                3.times{
-                    println "blotNum $it"
-                       
-                    parserService.parseSpreadsheet(fileToParse,[experiment:experiment, parserType:"Lane Setup", randomization:params.randomization, stimulus:params.stimulus, min1:params.min1, min2:params.min2, min3:params.min3, blotNum:it+1])            //  
-                    fileToParse=session.getAttribute("parsedFile")
+                    session.putAt("fileName",resourceName)
+                    session.removeAttribute("parsedFile")
+                    session.removeAttribute("parsedFileName")   
+                    // lenneke change here to set up the parserDef
+                    def fileToParse=setupFile
                     
+                    def conditionMap=[:]
+                    //we want to do this a certain number of times for the different blots ie 3 times
+                    Integer.parseInt(blotnum).times{
+                        println "blotNum $it"
+                       
+                        parserService.parseSpreadsheet(fileToParse,[experiment:experiment, parserType:"Lane Setup", randomization:params.randomization, min1:params.min1, min2:params.min2, min3:params.min3, blotNum:it+1, conditionMap:conditionMap])            //  
+                        fileToParse=session.getAttribute("parsedFile")
+                        conditionMap=session.getAttribute("conditionMap")
+                    
+                    }
+                    experiment.binaryData=session.getAttribute("parsedFile")
+         
+                    def sheetUpdate = new SheetUpdate(entityName:"ExperimentLoading", state:"update", fileNameVersion:"loading sheet in the workbook",comment:"Automatically update lane loading", dateUpdated:new Date())     
+                    experiment.addToUpdates(sheetUpdate)
+                    experiment.save(flush:true)
+                    def warning=session.getAttribute("warningMessage")
+               
+                    session.removeAttribute("setupupdate")
+                    setupFile.delete()
+                    session.removeAttribute("setUpResourceIdUpdate")
+                    session.removeAttribute("experimentId")
+                    session.removeAttribute("experimentName")
+                    session.removeAttribute("warningMessage")
+                    session.putAt("active", "0")
+        
+                    render(text: """<script type="text/javascript"> afterUpload(2,2); </script>""", contentType: 'text/javascript')
+                    render(text: """<script type="text/javascript"> refreshTableSorter();</script>""", contentType: 'text/javascript')
+                    if(warning!=null){
+                        render(text: """<script type="text/javascript"> warningMessage('${warning}'); </script>""", contentType: 'text/javascript')
+       
+                    }
                 }
-                experiment.binaryData=session.getAttribute("parsedFile")
-                def sheetUpdate = new SheetUpdate(entityName:"ExperimentLoading", state:"update", fileNameVersion:"loading sheet in the workbook",comment:"Automatically update lane loading", dateUpdated:new Date())     
-                experiment.addToUpdates(sheetUpdate)
-                experiment.save(flush:true)
-                session.removeAttribute("setupupdate")
+            }catch(Exception e){
                 setupFile.delete()
-                session.removeAttribute("setUpResourceIdUpdate")
+                session.removeAttribute("setup")
+                session.removeAttribute("setUpResourceId")
                 session.removeAttribute("experimentId")
-                session.removeAttribute("experimentName")
-                session.putAt("active", "1")
-                render(text: """<script type="text/javascript"> afterUpload(2,2); </script>""", contentType: 'text/javascript')
-                render(text: """<script type="text/javascript"> refreshTableSorter();</script>""", contentType: 'text/javascript')
-            }
-        }catch(Exception e){
-            setupFile.delete()
-            if (e instanceof grails.validation.ValidationException){
+                session.removeAttribute("warningMessage")
+                session.removeAttribute("conditionMap")
+                session.putAt("active", "0")
+                if (e instanceof grails.validation.ValidationException){
                          
-                render(text: """<script type="text/javascript"> warningMessage('Please make sure the experiment name is unique.'); </script>""", contentType: 'text/javascript')
+                    render(text: """<script type="text/javascript"> warningMessage('Please make sure the experiment name is unique.'); </script>""", contentType: 'text/javascript')
      
                     
                     
-            }else if(e instanceof RuleViolateException){
-                log.error "rule violat"  
-                render(text: """<script type="text/javascript"> warningMessage('${e.getMessage()}'); </script>""", contentType: 'text/javascript')
+                }
+                else if(e instanceof RuleViolateException){
+                    log.error "rule violat"  
+                    render(text: """<script type="text/javascript"> warningMessage('${e.getMessage()}'); </script>""", contentType: 'text/javascript')
           
-            }else{
-                render(text: """<script type="text/javascript"> warningMessage('unknow exception, not successfull'); </script>""", contentType: 'text/javascript')
+                }else{
+                    render(text: """<script type="text/javascript"> warningMessage('unknow exception, not successfull'); </script>""", contentType: 'text/javascript')
   
-            }
+                }
           
+            }
         }
 
         render(text: """<script type="text/javascript"> refreshTableSorter(); </script>""", contentType: 'text/javascript')
@@ -229,7 +263,7 @@ class LabController {
         log.info "Using loadingTemplate: ${params.loadingtemplate}"
         log.info "Using rawdataTemplate: ${params.rawdatatemplate}"
         log.info "Using gelinspectorTemplate: ${params.gelinspectortemplate}"
-        
+
         log.info "Set Up Resource: ${params.setUpResourceId}"
 
         session.removeAttribute("performedSetUpResourceId")
@@ -296,7 +330,11 @@ class LabController {
                 experiment.createdOn=date
                 experiment.resources=resources
                 experiment.setUpTemplateName=setUpTemplate.templateName
-               
+                if(resourceName.endsWith("xlsx")){
+                    experiment.contentType="xlsx"
+                }else{
+                    experiment.contentType="xls" 
+                }
                 experiment.addToStages(setUpStage)
                 experiment.addToStages(loadingStage)
                 experiment.addToStages(rawdataStage)
@@ -307,6 +345,8 @@ class LabController {
                 experiment.topic=params.experimentTopic
                 experiment.save(failOnError: true)
         
+                 performedExperimentParsersConfigService.config(experiment)
+                
   
                 def sheetUpdate = new SheetUpdate(entityName:"ExperimentBackUp", state:"backup", fileNameVersion:"${setupResource.fileName}[version:${setupResource.fileversion?formatter.format(setupResource.fileversion):"old"}]", comment:"upload the setup files for performed experiment ${params.experimentName}", dateUpdated: setupResource.fileversion)
                 experiment.addToUpdates(sheetUpdate)
@@ -321,10 +361,10 @@ class LabController {
                 render(text: """<script type="text/javascript"> refreshTableSorter(); </script>""", contentType: 'text/javascript')
           
             }catch(Exception e){ 
+                setupFile.delete()
                 if(experiment){
+                     performedExperimentParsersConfigService.delete(experiment)
                     if(experiment.resources){
-           
-                   
                         def r = []
                         r += experiment.resources
                         r.each{resource->
@@ -375,37 +415,41 @@ class LabController {
     }  
     
     
-    def mailToSeek(){
-        def user = User.get(springSecurityService.principal.id)
-        try{
-       
-            def experimentInstance = Experiment.get(params.id)
-            def youremailaccount=params.email
-           
-            log.info "send ${params.id} to $youremailaccount"
-        
-            def filename="${experimentInstance.filename.trim().replaceAll("\\s+", "_")}.xls"
-
-            mailService.sendMail {
-                multipart true
-                to "${params.email}"
-                cc "seek@virtual-liver.de"
-                subject "${experimentInstance.filename}"
-                body "from Excemplify User: ${springSecurityService.authentication.name}"
-                attachBytes filename,'application/vnd.ms-excel', experimentInstance.binaryData
-            }
-            def sheetUpdate = new SheetUpdate(entityName:"ExperimentSentToVLN", state:"vln", comment:"setup files and gelinspector files for performed experiment ${params.experimentName} uploaded to SEEK(VLN)", dateUpdated: new Date())
-            experimentInstance.addToUpdates(sheetUpdate)
-        
-            render(text: """<script type="text/javascript">alert("file uploaded to SEEK via Exemplify Tool User and To Yourself. Please Varify By Checking Your Email");</script>""", contentType: 'text/javascript') 
-        }catch(Exception e){
-            
-            render(text: """<script type="text/javascript"> warningMessage('Exception occurs. ${e.getMessage()}'); </script>""", contentType: 'text/javascript')
-          
-        }
-        render(template:"/ui/user/performedexperiment", model:[experimentPInstanceList:Experiment?.findAllByAuthor(user).findAll{it.type=='performed'}] )
-    
-    }
+    //    def mailToSeek(){
+    //        def user = User.get(springSecurityService.principal.id)
+    //        try{
+    //       
+    //            def experimentInstance = Experiment.get(params.id)
+    //            def youremailaccount=params.email
+    //          
+    //            log.info "send ${params.id} to $youremailaccount"
+    //        
+    //            def filename="${experimentInstance.filename.trim().replaceAll("\\s+", "_")}.xls"
+    //
+    //            mailService.sendMail {
+    //                multipart true
+    //                from "noreply-virtualliver@dkfz-heidelberg.de"
+    //                to "${params.email}" 
+    //                cc "seek@virtual-liver.de"
+    //                subject "${experimentInstance.filename}"
+    //                body "from Excemplify User: ${springSecurityService.authentication.name}"
+    //                attachBytes filename,'application/vnd.ms-excel', experimentInstance.binaryData
+    //            }
+    //            def sheetUpdate = new SheetUpdate(entityName:"ExperimentSentToVLN", state:"vln", comment:"setup files and gelinspector files for performed experiment ${params.experimentName} uploaded to SEEK(VLN)", dateUpdated: new Date())
+    //            experimentInstance.addToUpdates(sheetUpdate)
+    //        
+    //            render(text: """<script type="text/javascript">alert("file uploaded to SEEK via Exemplify Tool User and To Yourself. Please Varify By Checking Your Email");</script>""", contentType: 'text/javascript') 
+    //        }catch(Exception e){
+    //            
+    //            render(text: """<script type="text/javascript"> warningMessage('Exception occurs. ${e.getMessage()}'); </script>""", contentType: 'text/javascript')
+    //          
+    //        }
+    //        if(params.type=="updateMe"){
+    //            render(template:"/ui/user/experiment", model:[experimentInstanceList:Experiment?.findAllByAuthor(user).findAll{it.type=='new'}] )   
+    //        }else if(params.type=="updatePMe"){
+    //            render(template:"/ui/user/performedexperiment", model:[experimentPInstanceList:Experiment?.findAllByAuthor(user).findAll{it.type=='performed'}] )
+    //        }
+    //    }
     def initialExp(){
         println "start initialization of experiment"
         def user = User.get(springSecurityService.principal.id)
@@ -419,7 +463,8 @@ class LabController {
         log.info "Using rawdataTemplate: ${params.rawdatatemplate}"
         log.info "Using gelinspectorTemplate: ${params.gelinspectortemplate}"
         log.info "Set Up Resource: ${params.setUpResourceId}"
-        log.info "Need Stimulus Action: ${params.stimulus}"
+        log.info "BlotNum: ${params.blotnum}"
+        // log.info "Need Stimulus Action: ${params.stimulus}"
         log.info "Need Randomization: ${params.randomization}"
         log.info "min1: ${params.min1}"
         log.info "min2: ${params.min2}"
@@ -430,7 +475,7 @@ class LabController {
          *  put following stuff into stages
          */
     
-   
+   def blotnum=params.blotnum
         def setUpTemplate=Template.get(params.setuptemplate)
         def setUpStage=new Stage(stageIndex:1, stageName:'setup', stageTemplate:setUpTemplate)
     
@@ -487,6 +532,11 @@ class LabController {
             experiment.author=user
             experiment.createdOn=date
             experiment.resources=resources
+            if(resourceName.endsWith("xlsx")){
+                experiment.contentType="xlsx"
+            }else{
+                experiment.contentType="xls" 
+            }
             experiment.setUpTemplateName=setUpTemplate.templateName
             experiment.addToStages(setUpStage)
             experiment.addToStages(loadingStage)
@@ -513,14 +563,15 @@ class LabController {
                 // instead should pass in the template name
                 def fileToParse=setupFile
                 //we want to do this a certain number of times for the different blots ie 3 times
-                3.times{
+                def conditionMap=[:]
+                //we want to do this a certain number of times for the different blots ie 3 times
+                Integer.parseInt(blotnum).times{
                     println "blotNum $it"
-             
-                    parserService.parseSpreadsheet(fileToParse,[experiment:experiment, parserType:"Lane Setup", randomization:params.randomization, stimulus:params.stimulus, min1:params.min1, min2:params.min2, min3:params.min3, blotNum:it+1])            //  
+                       
+                    parserService.parseSpreadsheet(fileToParse,[experiment:experiment, parserType:"Lane Setup", randomization:params.randomization, min1:params.min1, min2:params.min2, min3:params.min3, blotNum:it+1, conditionMap:conditionMap])            //  
                     fileToParse=session.getAttribute("parsedFile")
+                    conditionMap=session.getAttribute("conditionMap")
                     
-                      
-                
                 }
                 if(session.getAttribute("parsedFile")){
                     experiment.binaryData=session.getAttribute("parsedFile")
@@ -530,17 +581,33 @@ class LabController {
        
                     experiment.save(failOnError: true)
                 }
+                
+                def warning=session.getAttribute("warningMessage")
+                   
                 session.removeAttribute("setup")
                 setupFile.delete()
                 session.removeAttribute("setUpResourceId")
                 session.removeAttribute("experimentId")
+                session.removeAttribute("warningMessage")
+                session.removeAttribute("conditionMap")
                 session.putAt("active", "0")
+                if(warning!=null){
+                    render(text: """<script type="text/javascript"> warningMessage('${warning}'); </script>""", contentType: 'text/javascript')
+       
+                }
                 render(text: """<script type="text/javascript"> afterUpload(1,1); </script>""", contentType: 'text/javascript')
                 render(text: """<script type="text/javascript"> refreshTableSorter();</script>""", contentType: 'text/javascript')
           
             }catch(Exception e){
-               
+                
+                setupFile.delete() 
                 log.error e.getMessage()
+                session.removeAttribute("setup")
+                session.removeAttribute("setUpResourceId")
+                session.removeAttribute("experimentId")
+                session.removeAttribute("warningMessage")
+                session.removeAttribute("conditionMap")
+                session.putAt("active", "0")
                 
                 if(experiment){
                     experimentParsersConfigService.delete(experiment)
@@ -625,6 +692,7 @@ class LabController {
         session.removeAttribute("parsedFile")
         session.removeAttribute("parsedFileName") 
         session.removeAttribute("openFileName") 
+        session.removeAttribute("conditionMap")
         session.removeAttribute("file") 
         session.removeAttribute("active") 
         session.removeAttribute("xml") 
@@ -696,12 +764,15 @@ class LabController {
         session.removeAttribute("parsedFile")
         session.removeAttribute("parsedFileName") 
         session.removeAttribute("openFileName") 
+        session.removeAttribute("conditionMap")
         session.removeAttribute("file") 
         session.removeAttribute("active") 
         session.removeAttribute("xml") 
         render(text: """<script type="text/javascript"> afterUpload($after,$after); </script>""", contentType: 'text/javascript')
         // redirect(uri:"/")
     }
+    
+    
     
     def updateupload(){
         log.info "experimentName: ${params.experimentName}"
@@ -727,32 +798,38 @@ class LabController {
         def filePath=savePath
         if(!f.empty) {
             print "upload update "+f.getOriginalFilename()
-            def fileName=f.getOriginalFilename()
+            if(!f.getOriginalFilename().toString().endsWith(".xlsx")){
+                def fileName=f.getOriginalFilename()
          
-            filePath=filePath+"/"+System.nanoTime().toString()+"${f.getOriginalFilename()}"
-            File newFile=new File(filePath)
-            f.transferTo(newFile)
+                filePath=filePath+"/"+System.nanoTime().toString()+"${f.getOriginalFilename()}"
+                File newFile=new File(filePath)
+                f.transferTo(newFile)
             
-            session.putAt("setupupdate", newFile)
+                session.putAt("setupupdate", newFile)
             
-            def user=User.get(springSecurityService.principal.id)
+                def user=User.get(springSecurityService.principal.id)
     
-            def  setUpResource=new Resource(fileName:fileName, type:"setup", binaryData:newFile.bytes, author:user, state:"active", fileversion: new Date());            
-            setUpResource.save();
+                def  setUpResource=new Resource(fileName:fileName, type:"setup", binaryData:newFile.bytes, author:user, state:"active", fileversion: new Date());            
+                setUpResource.save();
                 
-            def sheetUpdate = new SheetUpdate(entityName:"ExperimentSetUp",fileNameVersion:"${setUpResource.fileName}[version:${setUpResource.fileversion}]", state:"update", comment:"update the setup file  ${params.experimentName}", dateUpdated:setUpResource.fileversion)
-            experiment.addToUpdates(sheetUpdate)
-            experiment.save(failOnError: true)
+                def sheetUpdate = new SheetUpdate(entityName:"ExperimentSetUp",fileNameVersion:"${setUpResource.fileName}[version:${setUpResource.fileversion}]", state:"update", comment:"update the setup file  ${params.experimentName}", dateUpdated:setUpResource.fileversion)
+                experiment.addToUpdates(sheetUpdate)
+                if(experiment.contentType==null){
+                    experiment.contentType="xls"
+                }
+                experiment.save(failOnError: true)
             
-            log.info "resourceId ${setUpResource.id}"
-            session.putAt("setUpResourceIdUpdate",setUpResource.id )
-            session.putAt("setUpResourceNameUpdate",fileName )
-            session.putAt("experimentName",experimentName )
-            session.putAt("experimentId",experimentId)
-            session.putAt("active", "0")
-            session.putAt("selector", "update")
-            redirect(uri:"/lab")
-    
+                log.info "resourceId ${setUpResource.id}"
+                session.putAt("setUpResourceIdUpdate",setUpResource.id )
+                session.putAt("setUpResourceNameUpdate",fileName )
+                session.putAt("experimentName",experimentName )
+                session.putAt("experimentId",experimentId)
+                session.putAt("active", "0")
+                session.putAt("selector", "update")
+        
+            }else{
+                flash.message = 'Sorry! currently we only accept .xls setup file (for raw datafile you do not have such restriction), because of some nested memory problem from the programming library we used.'    
+            }
         
         }
         else {
@@ -761,7 +838,7 @@ class LabController {
 
         log.info "Resource: $Resource.count"
   
-    
+        redirect(uri:"/lab")
 
     }
     
@@ -783,73 +860,46 @@ class LabController {
             }
         }
         def f1 = request.getFile('myPerformedSetUp')
-        //        def f2 = request.getFile('myPerformedSetUp2')
-        //        def f3 = request.getFile('myPerformedSetUp3')
-        //        def f4 = request.getFile('myPerformedSetUp4')
+      
         
         def filePath1=savePath
-        //        def filePath2=savePath
-        //        def filePath3=savePath
-        //        def filePath4=savePath
-        
-        //        if((!f1.empty) && (!f2.empty) && (!f3.empty) && (!f4.empty)) {
+  
         if(!f1.empty){
             print "upload1 "+f1.getOriginalFilename()
-            //            print "upload2 "+f2.getOriginalFilename()
-            //            print "upload3 "+f3.getOriginalFilename()
-            //            print "upload4 "+f4.getOriginalFilename()
+            if(!f1.getOriginalFilename().toString().endsWith(".xlsx")){
+     
             
-            def fileName1=f1.getOriginalFilename()   
-            //            def fileName2=f2.getOriginalFilename()   
-            //            def fileName3=f3.getOriginalFilename()   
-            //            def fileName4=f4.getOriginalFilename() 
-            filePath1=filePath1+"/"+System.nanoTime().toString()+"${f1.getOriginalFilename()}"
-            //            filePath2=filePath2+"/"+System.nanoTime().toString()+"${f2.getOriginalFilename()}"
-            //            filePath3=filePath3+"/"+System.nanoTime().toString()+"${f3.getOriginalFilename()}"
-            //            filePath4=filePath4+"/"+System.nanoTime().toString()+"${f4.getOriginalFilename()}"
+                def fileName1=f1.getOriginalFilename()   
+         
+                filePath1=filePath1+"/"+System.nanoTime().toString()+"${f1.getOriginalFilename()}"
+           
             
-            File newFile1=new File(filePath1)
-            //            File newFile2=new File(filePath2)
-            //            File newFile3=new File(filePath3)
-            //            File newFile4=new File(filePath4)
+                File newFile1=new File(filePath1)
+ 
             
-            f1.transferTo(newFile1)
-            //            f2.transferTo(newFile2)
-            //            f3.transferTo(newFile3)
-            //            f4.transferTo(newFile4)
-            
-            session.putAt("performsetup", newFile1)
-            //            session.putAt("performgel1", newFile2)   
-            //            session.putAt("performgel2", newFile3)  
-            //            session.putAt("performgel3", newFile4)
-            
-            def user=User.get(springSecurityService.principal.id)
-            
-            def  setUpResource=new Resource(fileName:fileName1, type:"setup", binaryData:newFile1.bytes, author:user, state:"active", fileversion:new Date());      
-            //            def  performedResource1=new Resource(fileName:fileName2, type:"gelinspector", binaryData:newFile2.bytes, author:user, state:"active", fileversion:new Date());   
-            //            def  performedResource2=new Resource(fileName:fileName3, type:"gelinspector", binaryData:newFile3.bytes, author:user, state:"active", fileversion:new Date());   
-            //            def  performedResource3=new Resource(fileName:fileName4, type:"gelinspector", binaryData:newFile4.bytes, author:user, state:"active", fileversion:new Date());   
-            //         
-            setUpResource.save();
-            //            performedResource1.save();
-            //            performedResource2.save();
-            //            performedResource3.save();
-            
-            log.info "resourceIds ${setUpResource.id}"
+                f1.transferTo(newFile1)
         
-            session.putAt("performedSetUpResourceId",setUpResource.id )
-            session.putAt("performedSetUpResourceName",fileName1)
-            session.putAt("active", "1")
-            session.putAt("selector", "performed")
-            //            session.putAt("performedGelBlot1ResourceId",performedResource1.id)
-            //            session.putAt("performedGelBlot1ResourceName",fileName2)
-            //            session.putAt("performedGelBlot2ResourceId",performedResource2.id)
-            //            session.putAt("performedGelBlot2ResourceName",fileName3)
-            //            session.putAt("performedGelBlot3ResourceId",performedResource3.id)
-            //            session.putAt("performedGelBlot3ResourceName",fileName4)
             
-            redirect(uri:"/lab")
-    
+                session.putAt("performsetup", newFile1)
+       
+                def user=User.get(springSecurityService.principal.id)
+            
+                def  setUpResource=new Resource(fileName:fileName1, type:"setup", binaryData:newFile1.bytes, author:user, state:"active", fileversion:new Date());      
+           
+                setUpResource.save();
+          
+            
+                log.info "resourceIds ${setUpResource.id}"
+        
+                session.putAt("performedSetUpResourceId",setUpResource.id )
+                session.putAt("performedSetUpResourceName",fileName1)
+                session.putAt("active", "1")
+                session.putAt("selector", "performed")
+        
+            
+            }else{
+                flash.message = 'currently we only accept .xls setup file (for raw datafile you do not have such restriction), because of some nested memory problem from the programming library we used.'    
+            }
         
         }
         else {
@@ -857,7 +907,7 @@ class LabController {
         }
 
         log.info "Resource: $Resource.count"
-        
+        redirect(uri:"/lab") 
     }
     
     
@@ -881,24 +931,27 @@ class LabController {
         def filePath=savePath
         if(!f.empty) {
             print "upload "+f.getOriginalFilename()
-            def fileName=f.getOriginalFilename()
+            if(!f.getOriginalFilename().toString().endsWith(".xlsx")){
+                def fileName=f.getOriginalFilename()
          
-            filePath=filePath+"/"+System.nanoTime().toString()+"${f.getOriginalFilename()}"
-            File newFile=new File(filePath)
-            f.transferTo(newFile)
+                filePath=filePath+"/"+System.nanoTime().toString()+"${f.getOriginalFilename()}"
+                File newFile=new File(filePath)
+                f.transferTo(newFile)
             
-            session.putAt("setup", newFile)
+                session.putAt("setup", newFile)
             
-            def user=User.get(springSecurityService.principal.id)
-            def  setUpResource=new Resource(fileName:fileName, type:"setup", binaryData:newFile.bytes, author:user, state:"active", fileversion:new Date());            
-            setUpResource.save();
-            log.info "resourceId ${setUpResource.id}"
-            session.putAt("setUpResourceId",setUpResource.id )
-            session.putAt("setUpResourceName",fileName )
-            session.putAt("active", "0")
-            session.putAt("selector", "new")
-            redirect(uri:"/lab")
-    
+                def user=User.get(springSecurityService.principal.id)
+                def  setUpResource=new Resource(fileName:fileName, type:"setup", binaryData:newFile.bytes, author:user, state:"active", fileversion:new Date());            
+                setUpResource.save();
+                log.info "resourceId ${setUpResource.id}"
+                session.putAt("setUpResourceId",setUpResource.id )
+                session.putAt("setUpResourceName",fileName )
+                session.putAt("active", "0")
+                session.putAt("selector", "new")
+            
+            }else{
+                flash.message = 'Sorry! currently we only accept .xls setup file (for raw datafile you do not have such restriction), because of some nested memory problem from the programming library we used.'    
+            }
         
         }
         else {
@@ -906,7 +959,7 @@ class LabController {
         }
 
         log.info "Resource: $Resource.count"
-  
+        redirect(uri:"/lab")
     
 
     }

@@ -16,28 +16,27 @@
 package org.hits.ui
 import org.hits.parser.Spreadsheet
 
+
 class Experiment extends Spreadsheet{
     
     //    String logFile
     String share
     static hasMany=[resources:Resource,stages:Stage]   //uploaded by experimenter
     String setUpTemplateName
-//    String gelInspectorTemplateName="gelInspectorTemplate" //default value if the inner gelInspector template is used
-//    String rawDataTemplateName="rawdata_template.xls"  //default value if the inner rawdata template is used
-//    String rawDataTextTemplateName="rawTextDataTemplate" //default value if the inner rawdata  text template is used
-//    String loadingTemplateName="laneloading_template_new.xls" //default value if the inner loading template is used
     String type
     String topic
-    
+    String contentType
     static constraints = {
         share(inList:["public","private"])
         type(inList:["new", "performed"])
         topic(nullable:true, inList:["Immunoblot", "FACS", "Protein Array","PCR","ELISA","Luminex"])
         filename(unique: ['type', 'topic', 'author'])
-//        gelInspectorTemplateName blank: true, nullable: true
-//        rawDataTemplateName blank: true, nullable: true
-//        rawDataTextTemplateName blank: true, nullable: true
-//        loadingTemplateName blank: true, nullable: true
+        contentType(nullable:true, inList:["xls", "xlsx"])
+       // setUpTemplateName (nullable:true, validator:{val-> if(type=="performed"){return true}else{return false}})
+        //        gelInspectorTemplateName blank: true, nullable: true
+        //        rawDataTemplateName blank: true, nullable: true
+        //        rawDataTextTemplateName blank: true, nullable: true
+        //        loadingTemplateName blank: true, nullable: true
      
 
     }

@@ -20,7 +20,8 @@ class Template {
     String type
     String purpose
     boolean visible
-    // boolean containValidaion
+    String comment  //to enable a short template name and put some important keywords in the comment area
+   // boolean containValidaion
 
     byte[] binaryFileData
     static hasMany=[knowledgeList:Knowledge]
@@ -28,10 +29,11 @@ class Template {
     //    static hasMany=[analyzeAction:Analyze]
     static constraints = {
  
-        binaryFileData maxSize: 1024 * 1024 * 2 // 2MB
+        binaryFileData maxSize: 1024 * 1024 * 10 // 10MB
         templateName(unique:true)
         type(inList:["public","inner"])
         purpose(inList:["setup","loading","rawdata","rawdata text","gelInspector"])
+        comment(nullable:true, blank:true)
     }
 
  

@@ -21,14 +21,14 @@ hibernate {
 }
 // environment specific settings
 environments {
-    development {//you need to modify the set for your own database
+    development {//HITS
         dataSource {
             dbCreate = "update"
             driverClassName = "com.mysql.jdbc.Driver"
             dialect = org.hibernate.dialect.MySQL5InnoDBDialect
-            url = "jdbc:mysql://xx.xx.xx.xx:3306/yourtestdatabase"    
-            username = "xx"
-            password = "xx"
+            url = "jdbc:mysql://127.0.0.1:3306/ExcemplifyDB"    
+            username = "username"
+            password = "password"
             pooled = true
             properties{  //org.apache.commons.dbcp.BasicDataSource
                 maxActive = 50
@@ -51,14 +51,41 @@ environments {
         }
     }
   
-    production {//
+
+    production { //production
         dataSource {
+            dbCreate = "update"
+           url = "jdbc:mysql://127.0.0.1:3306/ExcemplifyDB"    
+         
+            username = "username"
+            password = "password"
+            //  just try 
+            // driverClassName="com.microsoft.sqlserver.jdbc.SQLServerDriver"
+            driverClassName = "net.sourceforge.jtds.jdbc.Driver"
+            dialect="org.hibernate.dialect.SQLServerDialect"
+            //
+            pooled = true
+            properties {
+                maxActive = -1
+                minEvictableIdleTimeMillis=1800000
+                timeBetweenEvictionRunsMillis=1800000
+                numTestsPerEvictionRun=3
+                testOnBorrow=true
+                testWhileIdle=true
+                testOnReturn=true
+                validationQuery="select 1"
+            }
+        }
+    }
+    
+    test { dataSource {
             dbCreate = "update"
             driverClassName = "com.mysql.jdbc.Driver"
             dialect = org.hibernate.dialect.MySQL5InnoDBDialect
-            url = "jdbc:mysql://xx.xx.xx.xx:3306/your database"    
-            username = "xx"
-            password = "xx"
+            url = "jdbc:mysql://127.0.0.1:3306/ExcemplifyDB"    
+         
+            username = "username"
+            password = "password"
             pooled = true
             properties{  //org.apache.commons.dbcp.BasicDataSource
                 maxActive = 50
@@ -76,38 +103,7 @@ environments {
 
                 validationQuery = "select 1"
             }
-            
-            
-        }
-            
-            
-        }
-    
-    test {
-           dataSource {  //in-memory database might has problem 
-                    dbCreate = "create-drop"
-                    url = "jdbc:h2:mem:devDb"
-                    driverClassName = "org.h2.Driver"
-                    username = "sa"
-                    password = ""
-                    pooled = true
-                    properties{  //org.apache.commons.dbcp.BasicDataSource
-                        maxActive = 50
-                        maxIdle = 25
-                        minIdle = 1
-                        initialSize = 1
-                        minEvictableIdleTimeMillis = 60000
-                        timeBetweenEvictionRunsMillis = 60000
-                        numTestsPerEvictionRun = 3
-                        maxWait = 10000
-        
-                        testOnBorrow = true
-                        testWhileIdle = true
-                        testOnReturn = true
-        
-                        validationQuery = "select 1"
-                    }
-      }
+        }   
 
     }
 }

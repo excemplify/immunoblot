@@ -23,11 +23,7 @@ and open the template in the editor.
 
 
 <html>
-
-
   <body>
-
-
     <div class="body"  style="height:600px; width:95%" >
       <div style="width:100%; max-height: 750px; padding:1em; overflow: auto " >
         <table id="allExperimentsList" class="tablesorter">
@@ -39,7 +35,7 @@ and open the template in the editor.
               <th>Topic</th>
               <th>Creation Date</th>
               <th>All Active Files</th>
-              <th>Auto Generating</th>
+<!--              <th>Auto Generating</th>-->
 
               <th>Update details (log)</th>
               <th>Author</th>
@@ -59,29 +55,8 @@ and open the template in the editor.
            </td>
               <td><g:formatDate type="datetime" style="medium" date="${experimentInstance.createdOn}" /></td>
             <td>
-            <g:link controller="experiment" class="menuButton" action="downloadAll" id="${experimentInstance.id}"><img src="${createLinkTo(dir:'images/ui', file:'download.png')}" alt="download all active files" ></g:link>
+            <g:link controller="experiment" class="menuButton" action="downloadAllZip" id="${experimentInstance.id}"><img src="${createLinkTo(dir:'images/ui', file:'download.png')}" alt="download all active files" ></g:link>
             </td>
-   
-            <td> 
-
-            <g:if test="${(experimentInstance.type.equals("new"))&&(experimentInstance.resources.size()>1)}">
-              <ul class="inline">
-                <li><g:link controller="experiment" class="menuButton" action="download" id="${experimentInstance.id}"><img src="${createLinkTo(dir:'images/ui', file:'download.png')}" alt="download loading related info" ></g:link>
-                 Loading Info
-                </li>
-                <li> <g:link controller="experiment" class="menuButton" action="exportInto" id="${experimentInstance.id}" params="[layout:'gelinspector']"><img style="cursor: pointer" src="${createLinkTo(dir:'images/ui', file:'export.png')}" alt="export into gelinspector" ></g:link>
-                GelInspector
-                </li>
-              </ul>
-            </g:if>
-
-            <g:elseif test="${experimentInstance.type.equals("new")}">
-              no raw data     
-            </g:elseif> 
-
-
-            </td>
-
             <td><g:formatDate  type="datetime" style="medium" date="${experimentInstance?.lastUpdate()}" /><g:link controller="experiment" class="menuButton" action="downloadlog" id="${experimentInstance.id}"><img src="${createLinkTo(dir:'images/ui', file:'log.png')}" alt="check log file" ></g:link>
 
             </td>

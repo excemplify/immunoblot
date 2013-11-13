@@ -94,7 +94,9 @@ ${remoteFunction(controller:'template', action:'deleteTemplate',  params:'\'id=\
            
     $("#warning-form" ).dialog( "open" );
  }
-        function Display(id){
+ 
+
+    function Display(id){
       ${remoteFunction(controller:'template', action:'display',  params:'\'id=\'+id' ,update:[success:'update',failure:'resource'], onFailure:'warning()') };
                                          
     }

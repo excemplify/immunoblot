@@ -45,12 +45,12 @@ and open the template in the editor.
 
       <td class="link"  style="width:50%;height: 50%" align="center"  >
         <img alt="admin login " src="${resource(dir: 'images/ui', file: 'adminuser.png')}" />
-        <a href="${createLink(uri:'/admin')}" >Login As Lab Admin</a> 
+        <a style=" font-size:larger" href="${createLink(uri:'/admin')}" >Login As Lab Admin</a> 
       </td>
   
       <td class="link" style="width:50%;height: 50%" align="center" >
         <img alt="experimenter login " src="${resource(dir: 'images/ui', file: 'labuser.png')}"  />
-        <a href="${createLink(uri:'/lab')}" >Login As Experimenter</a> 
+        <a style=" font-size:larger" href="${createLink(uri:'/lab')}" >Login As Experimenter</a> 
       </td>
     </tr>
     <tr>

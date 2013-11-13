@@ -4533,6 +4533,7 @@ jQuery.sheet = {
                                 (colSpan ? ' colspan=\"' + colSpan + '\"' : '') +
                                 (height ? ' height=\"' + height + 'px\"' : '') +
                                 '>' + text + '</td>';
+                         
                               thisRow.append(newTd);
                             }
                             }
